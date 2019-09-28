@@ -1,0 +1,41 @@
+{
+    "status": {
+      "name": "Knocker",
+      "address": 10,
+      "status": 69,
+      "RSSI": -36
+    },
+    "data": {
+      "status_msg": "Alive & Kicking",
+      "phase": 0,
+      "runtime": 43234,
+      "variables": [
+        {
+          "soundValue": 128
+        },
+        {
+          "knockCounter": 3
+        }
+      ]
+    },
+    "config_get": [
+      {
+        "soundMax": 256
+      },
+      {
+        "soundRange": 20
+      }
+    ],
+    "config_set": [
+      {
+        "soundMax": 224
+      },
+      {
+        "soundRange": 12
+      }
+    ],
+    "actions" : [
+      "knockFast",
+      "knockSlow"
+    ]
+  }
