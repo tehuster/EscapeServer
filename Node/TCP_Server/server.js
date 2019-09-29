@@ -1,12 +1,18 @@
+const WebClient = require('./WebClient')
+const webClient = new WebClient()
+
 const TCP = require('./TCP')
 const tcp = new TCP(8080, '192.168.1.249')
 
 const RequestHandler = require('./RequestHandler')
 const requestHandler = new RequestHandler()
 
-requestHandler.addRequest(10, 'data')
-requestHandler.addRequest(10, 'actions')
-requestHandler.addRequest(20, 'data')
-requestHandler.checkForRequest(10)
+const SocketHandler = require('./SocketHandler')
+const socketHandler = new SocketHandler(webClient.server)
 
-console.log(requestHandler.requests)
+socketHandler.on('request', (data) => {
+   console.log('Handle request event!');   
+   requestHandler.addRequest(data.requestAddress, data.requestType);
+   console.log(requestHandler.requests);   
+})
+

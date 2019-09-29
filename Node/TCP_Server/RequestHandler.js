@@ -1,7 +1,7 @@
-class RequestHandler
+class RequestHandler 
 {    
     constructor()
-    {       
+    {   
         this.requests = [];
         this.requestType = {
             'status' : 0,
@@ -9,7 +9,7 @@ class RequestHandler
             'config_get' : 2,
             'config_set' : 3,
             'actions' : 4,
-        }
+        }        
     }    
 
     addRequest(address, requestType) 

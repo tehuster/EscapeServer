@@ -1,0 +1,42 @@
+html
+  head        
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+
+    title=EscapeServer
+
+    script(src="/socket.io/socket.io.js")
+    script(defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js")
+
+    script(defer src="Main.js")
+    script(defer src="RequestHandler.js")        
+
+    //- script(defer src="webmidi.min.js")
+    //- script(defer src="midiHandler.js")          
+
+    link(rel='stylesheet', href='bulma.css', type='text/css')
+    //- link(rel='stylesheet', href='style.css', type='text/css')
+
+  body    
+    div(class="field has-addons has-addons-centered")                         
+        p(class="control")
+          span(class="select")
+            select(id="requestAddress")
+              option 10
+              option 20
+              option 30
+              option 40    
+            
+        p(class="control")
+          span(class="select")
+            select(id="requestType")
+              option data
+              option config_get
+              option config_set
+              option actions  
+                
+        p(class="control")
+                a(class="button is-primary" onClick="SendRequest()") Request
+
+                
