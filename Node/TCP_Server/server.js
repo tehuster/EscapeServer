@@ -16,3 +16,15 @@ socketHandler.on('request', (data) => {
    console.log(requestHandler.requests);   
 })
 
+socketHandler.on('midi', (data) => {
+   if(data == 0)
+   {
+      requestHandler.clearAllRequests()
+   }else
+   {      
+      requestHandler.addRequest(data * 10, 'data')
+      console.log('Added request to queue. Current queue: ')
+      console.log(requestHandler.requests);   
+   }  
+})
+

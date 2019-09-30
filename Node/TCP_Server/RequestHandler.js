@@ -15,12 +15,12 @@ class RequestHandler
     addRequest(address, requestType) 
     {   
         //TODO: Check if a request already exists for this address 
-        this.requests.push(this.newRequest(address, requestType));        
+        this.requests.push(this.newRequest(address, requestType))    
     }
 
     checkForRequest(address)
     {       
-        console.log( this.requests.filter(request => (request.address === address)) );
+        console.log( this.requests.filter(request => (request.address === address)) )
     }
 
     removeRequest(id) 
@@ -38,6 +38,12 @@ class RequestHandler
             requestType : requestType
         }
         return request;
+    }
+
+    clearAllRequests()
+    {
+        console.log('Clearing all requests...')        
+        this.requests = [];
     }
 }
 

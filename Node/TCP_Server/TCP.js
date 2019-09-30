@@ -14,17 +14,17 @@ class TCP {
     
     onClientConnection(sock) {
         //Log when a client connnects.
-        //console.log(`${sock.remoteAddress}:${sock.remotePort} Connected`);
+        console.log(`${sock.remoteAddress}:${sock.remotePort} Connected`);
        
-        sock.on('data', function (data) {
-            //Send back the data to the client.
-            sock.write(`Hello Client, it's me Server`);
+        sock.on('data', function (data) {            
             //Log data from the client
             console.log(`${sock.remoteAddress}:${sock.remotePort} Says : ${JSON.parse(data).status.name} `)
+            //Send back the data to the client.
+            sock.write(`Hello Client, it's me Server`);
         })
         
         sock.on('timeout', function () {
-            //console.log(`${sock.remoteAddress}:${sock.remotePort} Terminated the connection`);
+            console.log(`${sock.remoteAddress}:${sock.remotePort} Connection Timeout`);
         })
         
         sock.on('close', function () {

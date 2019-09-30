@@ -14,7 +14,7 @@ class SocketHandler extends EventEmitter
     {
         this.io.on('connection', (socket) => {
             socket.on('server', (data) => {
-               console.log(`WebClient: ${data}`)
+               //console.log(`WebClient: ${data}`)
                switch (data.type) {
                   case 'system' :
                   {
@@ -31,7 +31,7 @@ class SocketHandler extends EventEmitter
                   case 'midi' :
                   {
                      console.log(`Received midi from WebClient: ${data.msg}`)
-                     this.emit('midi', data)
+                     this.emit('midi', data.msg)
                      break;
                   }
                   default :
