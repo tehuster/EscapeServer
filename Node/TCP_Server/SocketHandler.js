@@ -28,6 +28,12 @@ class SocketHandler extends EventEmitter
                      this.emit('request', data)
                      break;
                   }
+                  case 'midi' :
+                  {
+                     console.log(`Received midi from WebClient: ${data.msg}`)
+                     this.emit('midi', data)
+                     break;
+                  }
                   default :
                   {
                      console.log(`Unknown message type received from WebClient: ${data.type}`);            
