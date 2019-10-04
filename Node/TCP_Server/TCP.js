@@ -1,38 +1,68 @@
 const net = require('net')
+const EventEmitter = require('events')
 
-class TCP {
-    constructor(port = 8080, ip = '192.168.1.249') {        
+class TCP extends EventEmitter
+{
+    constructor(port = 8080, ip = '192.168.1.249') {
+        super() 
         this.port = port;
         this.ip = ip;
-                
-        this.server = net.createServer(this.onClientConnection)
+        this.server = net.createServer();
 
         this.server.listen(this.port, this.host, function () {
             console.log(`TCP_Server started on port ${port} at ${ip}`)
         })
+
+        this.request = '101';
+
+        this.setupServer()
     }
-    
-    onClientConnection(sock) {
-        //Log when a client connnects.
-        console.log(`${sock.remoteAddress}:${sock.remotePort} Connected`);
-       
-        sock.on('data', function (data) {            
-            //Log data from the client
-            console.log(`${sock.remoteAddress}:${sock.remotePort} Says : ${JSON.parse(data).status.name} `)
-            //Send back the data to the client.
-            sock.write(`Hello Client, it's me Server`);
+
+    setRequest(request)
+    {
+        this.request = request;
+    }
+
+    setupServer() {
+        let tcp = this;
+        // emitted when new client connects
+        this.server.on('connection', function (socket) {
+
+            this.getConnections(function (error, count) {
+                //console.log('Number of concurrent connections to the server : ' + count)
+            })
+
+            socket.on('data', function (data) {                
+                tcp.emit('tcp', data) 
+                //Should we not wait till this even is handled before writing message?  
+                //Needs further testing  
+                socket.write(tcp.request.toString())
+            })
+
+            socket.on('error', function (error) {
+                console.log('Error : ' + error)
+            })
+
+            socket.on('timeout', function () {
+                console.log('Socket timed out !')
+                socket.end('Timed out!')
+                // can call socket.destroy() here too.
+            })
+
+            socket.on('end', function (data) {
+                //console.log('Socket ended from other end!')
+                //console.log('End data : ' + data)
+            })
+
+            socket.on('close', function (error) {
+                if (error) {
+                    console.log('Socket was closed coz of transmission error')
+                }
+            })
         })
-        
-        sock.on('timeout', function () {
-            console.log(`${sock.remoteAddress}:${sock.remotePort} Connection Timeout`);
-        })
-        
-        sock.on('close', function () {
-            //console.log(`${sock.remoteAddress}:${sock.remotePort} Terminated the connection`);
-        })
-        
-        sock.on('error', function (error) {
-            console.error(`${sock.remoteAddress}:${sock.remotePort} Connection Error ${error}`);
+
+        this.server.on('close', function () {
+            console.log('Server closed !')
         })
     }
 }

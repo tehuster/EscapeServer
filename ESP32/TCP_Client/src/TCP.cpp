@@ -26,7 +26,7 @@ void TCP::sendData(const char* data)
     if (!client.connect(host, port)) {
         Serial.println("Connection failed.");
         Serial.println("Waiting 5 seconds before retrying...");
-        delay(5000);
+        delay(1000);
         return;
     }
 
@@ -44,7 +44,7 @@ void TCP::sendData(const char* data)
     }
     //read back one line from the server, NEED TO WAIT FOR THIS.
     while(client.available()) {
-        String line = client.readStringUntil('\r');
+        String line = client.readStringUntil('}');
         Serial.println(line);
     }    
 

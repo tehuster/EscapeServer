@@ -20,13 +20,13 @@ class RequestHandler
 
     checkForRequest(address)
     {       
-        console.log( this.requests.filter(request => (request.address === address)) )
+        return this.requests.filter(request => (request.address === address));
     }
 
     removeRequest(id) 
     {
         //TODO: We need to check if this works
-        this.requests = this.requests.filter(request => (request.id !== id))
+        this.requests = this.requests.filter(request => (request.id !== id)) //find for first entry
     }
 
     newRequest(address, requestType)

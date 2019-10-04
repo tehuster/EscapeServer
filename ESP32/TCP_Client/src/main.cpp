@@ -18,6 +18,6 @@ void setup()
 void loop()
 {
     tcp.sendData(json.jsonBuffer);
-    delay(10000);
+    delay(3000);
 }
 
