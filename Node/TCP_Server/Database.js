@@ -102,16 +102,51 @@ class Database {
 class Devices extends Database{
     constructor () {
         super()
+        this.dbName = 'Devices';
         this.dbPath = './db/devices.db';
         this.dbSchema = `CREATE TABLE IF NOT EXISTS ${this.dbName} (
-            id integer NOT NULL PRIMARY KEY,              
-            addres integer NOT NULL, 
+            id integer NOT NULL PRIMARY KEY, 
+            room text NOT NULL,             
+            address integer NOT NULL, 
             name text NOT NULL,
             description text NOT NULL,
             config text NOT NULL,
             actions text NOT NULL
         )`;  
         this.initDB();
+    }
+    add (address, room, name, description, config, actions) {
+        return new Promise((resolve) => {
+            this.db.run(`INSERT INTO ${this.dbName} (address, room, name, description, config, actions) VALUES(?, ?,?,?,?,?)`, [address, room, name, description, config, actions], function (err) {
+                if (err) {
+                    console.log(err.message)
+                    throw err;
+                }
+                // get the last insert id
+                console.log(`A row has been inserted with row id ${this.lastID}`)
+                resolve(JSON.stringify({msg: `A row has been inserted with row id ${this.lastID}`}))
+            })
+        })
+    }
+
+    update (id, address, room, name, description, config, actions) {
+        let newData = [address, room, name, description, config, actions, id];
+        let sql = `
+            UPDATE ${this.dbName}
+            SET address = ?, room = ?, name = ?, description = ?, config = ?, actions = ?
+            WHERE id = ?
+        `;
+
+        return new Promise((resolve) => {
+            this.db.run(sql, newData, function (err) {
+                if (err) {
+                    console.error(err.message);
+                    throw err;
+                }
+                console.log(`Row updated: ${this.changes}`)
+                resolve()
+            })
+        })
     }
 }
 
@@ -159,9 +194,8 @@ class Hints extends Database{
                 }
                 console.log(`Row updated: ${this.changes}`)
                 resolve()
-            });
-        });
-
+            })
+        })
     }
 }
 

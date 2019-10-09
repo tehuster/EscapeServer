@@ -32,16 +32,19 @@ tcp.on('tcp', (data) => {
 
 ///////////////////////// DEVICES
 const devices = new Database.Devices()
+// devices.add(10, 'room', 'name', 'description', 'config', 'actions')
+// devices.get().then(function(result) { console.log(result) }) 
+// devices.update(2, 10, 'name', 'description', 'config', 'actions')
+// devices.remove(1)
 
 ///////////////////////// HINTS
 const hints = new Database.Hints()
+// hints.add('room', 'hint')
+// hints.get().then(function(result) { console.log(result) }) 
+// hints.update(2, 'room', 'hint')
+// hints.remove(1)
 
-hints.add('room', 'hint')
-hints.get().then(function(result) { console.log(result) }) 
-hints.update(2, 'room', 'hint')
-hints.remove(1)
 ///////////////////////// MIDI
-
 socketHandler.on('midi', (data) => {
    if(data == 0)
    {
