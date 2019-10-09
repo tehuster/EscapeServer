@@ -19,6 +19,9 @@ class WebClient {
       app.get('/', (req, res) => {
          res.render('index')
       });
+      app.get('/devices', (req, res) => {
+         res.render('devices')
+      });
    }
 
    initServer()

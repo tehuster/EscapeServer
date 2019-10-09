@@ -1,18 +1,17 @@
+const RequestHandler = require('./RequestHandler')
+const requestHandler = new RequestHandler()
+requestHandler.addRequest(101, 'data')
+
+const Database = require('./Database')
+
+///////////////////////// WEBCLIENT
 const WebClient = require('./WebClient')
 const webClient = new WebClient()
 
-const RequestHandler = require('./RequestHandler')
-const requestHandler = new RequestHandler()
 
-requestHandler.addRequest(101, 'data')
-
-const TCP = require('./TCP')
-const tcp = new TCP(8080, '192.168.1.249')
-
+///////////////////////// SOCKET
 const SocketHandler = require('./SocketHandler')
 const socketHandler = new SocketHandler(webClient.server)
-
-///////////////////////// SOCKET-EVENTS 
 
 socketHandler.on('request', (data) => {
    console.log('Handle request event!');   
@@ -20,7 +19,9 @@ socketHandler.on('request', (data) => {
    console.log(requestHandler.requests);   
 })
 
-///////////////////////// TCP-EVENTS   
+///////////////////////// TCP  
+const TCP = require('./TCP')
+const tcp = new TCP(8080, '192.168.1.249')
 
 tcp.on('tcp', (data) => {
    console.log('Handling TCP event...' + data) 
@@ -29,7 +30,17 @@ tcp.on('tcp', (data) => {
    tcp.setRequest(request);
 });
 
-///////////////////////// MIDI-EVENTS
+///////////////////////// DEVICES
+const devices = new Database.Devices()
+
+///////////////////////// HINTS
+const hints = new Database.Hints()
+
+hints.add('room', 'hint')
+hints.get().then(function(result) { console.log(result) }) 
+hints.update(2, 'room', 'hint')
+hints.remove(1)
+///////////////////////// MIDI
 
 socketHandler.on('midi', (data) => {
    if(data == 0)
