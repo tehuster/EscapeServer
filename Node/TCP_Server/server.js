@@ -1,6 +1,5 @@
 const RequestHandler = require('./RequestHandler')
 const requestHandler = new RequestHandler()
-requestHandler.addRequest(10, 'data')
 
 const Database = require('./Database')
 const devices = new Database.Devices()
@@ -61,16 +60,7 @@ socketHandler.on('hints', (data) => {
 
 ///////////////////////// TCP  
 const TCP = require('./TCP')
-const tcp = new TCP(8080, '192.168.1.249')
-tcp.requestHandler = requestHandler;
-tcp.on('tcp', (data) => {
-   console.log('Handling TCP event...' + data) 
-
-   let deviceAddress = JSON.parse(data).status.address;
-   let request = requestHandler.checkForRequest(deviceAddress);
-   console.log(request);   
-   tcp.setRequest(request);
-});
+const tcp = new TCP(8080, '192.168.1.249', requestHandler)
 
 ///////////////////////// MIDI
 socketHandler.on('midi', (data) => {

@@ -14,7 +14,6 @@ void JSON::createStatus()
 
 void JSON::receiveMessage(String json)
 {   
-    Serial.println(json);
     DeserializationError err = deserializeJson(JSONRX, json);    
     
     if (err)
@@ -23,7 +22,8 @@ void JSON::receiveMessage(String json)
         Serial.println(err.c_str());  
     }
 
-    const char* id = JSONRX[0]["requestType"];     
-    const char* address = JSONRX[0]["address"];  
-    const char* requestType = JSONRX[0]["requestType"];     
+    const char* id = JSONRX["requestType"];     
+    const char* address = JSONRX["address"];  
+    const char* requestType = JSONRX["requestType"];  
+    Serial.println(requestType);
 }

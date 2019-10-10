@@ -3,12 +3,12 @@ const EventEmitter = require('events')
 
 class TCP extends EventEmitter
 {
-    constructor(port = 8080, ip = '192.168.1.249') {
+    constructor(port = 8080, ip = '192.168.1.249', requestHandler) {
         super() 
         this.port = port;
         this.ip = ip;
         this.server = net.createServer();     
-        this.requestHandler;   
+        this.requestHandler = requestHandler;
 
         this.server.listen(this.port, this.host, function () {
             console.log(`TCP_Server started on port ${port} at ${ip}`)
@@ -30,14 +30,10 @@ class TCP extends EventEmitter
                 //console.log('Number of concurrent connections to the server : ' + count)
             })
 
-            socket.on('data', function (data) {                
-                //tcp.emit('tcp', data) 
-                //Should we not wait till this even is handled before writing message?  
-                //Needs further testing  
-                //-----Inject Requesthandler, add promise to requestHandler, .then when request is handled.
-                
+            socket.on('data', function (data) {                   
+                tcp.requestHandler.handleResponse(data.toString()) 
                 tcp.requestHandler.checkForRequest(10)
-                    .then(async (result) => {                                                                   
+                    .then(async (result) => {                                                                 
                         socket.write(result)                     
                     })           
             })
