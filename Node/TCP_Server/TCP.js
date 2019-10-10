@@ -7,14 +7,12 @@ class TCP extends EventEmitter
         super() 
         this.port = port;
         this.ip = ip;
-        this.server = net.createServer();
+        this.server = net.createServer();     
+        this.requestHandler;   
 
         this.server.listen(this.port, this.host, function () {
             console.log(`TCP_Server started on port ${port} at ${ip}`)
         })
-
-        this.request = '101';
-
         this.setupServer()
     }
 
@@ -33,10 +31,15 @@ class TCP extends EventEmitter
             })
 
             socket.on('data', function (data) {                
-                tcp.emit('tcp', data) 
+                //tcp.emit('tcp', data) 
                 //Should we not wait till this even is handled before writing message?  
                 //Needs further testing  
-                socket.write(tcp.request.toString())
+                //-----Inject Requesthandler, add promise to requestHandler, .then when request is handled.
+                
+                tcp.requestHandler.checkForRequest(10)
+                    .then(async (result) => {                                                                   
+                        socket.write(result)                     
+                    })           
             })
 
             socket.on('error', function (error) {

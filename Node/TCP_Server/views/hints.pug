@@ -1,0 +1,40 @@
+html
+  head        
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+
+    title=EscapeServer
+
+    script(src="/socket.io/socket.io.js")
+    script(defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js")
+
+    script(defer src="Main.js")
+    script(defer src="Hints.js")
+    //- script(defer src="RequestHandler.js")    
+    //- script(defer src="webmidi.min.js")
+    //- script(defer src="MidiManager.js")
+
+
+    //- script(defer src="webmidi.min.js")
+    //- script(defer src="midiHandler.js")          
+
+    link(rel='stylesheet', href='bulma.css', type='text/css')
+    //- link(rel='stylesheet', href='style.css', type='text/css')
+
+  body    
+    div(class="field has-addons has-addons-centered")                         
+        p(class="control")
+          span(class="select")
+            select(id="room")
+              option Cake
+              option Jan                
+            
+        p(class="control")
+          input(id="hint" class="input is-primary" type="text" placeholder="Hint")
+                
+        p(class="control")
+                a(class="button is-primary" onClick="AddHint()") Add
+    
+    each hint, index in hints
+        p(id=`device_${index}`)=hint.hint

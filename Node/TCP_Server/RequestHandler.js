@@ -18,9 +18,9 @@ class RequestHandler
         this.requests.push(this.newRequest(address, requestType))    
     }
 
-    checkForRequest(address)
+    async checkForRequest(address)
     {       
-        return this.requests.filter(request => (request.address === address));
+        return JSON.stringify(this.requests.filter(request => (request.address === address)))
     }
 
     removeRequest(id) 

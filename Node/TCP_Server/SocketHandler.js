@@ -28,6 +28,18 @@ class SocketHandler extends EventEmitter
                      this.emit('request', data)
                      break;
                   }
+                  case 'hints' :
+                  {
+                     console.log(`Received hint from WebClient: ${data.hint} for ${data.room}`)
+                     this.emit('hints', data)
+                     break;
+                  }
+                  case 'devices' :
+                  {
+                     console.log(`Received hint from WebClient: ${data.name} for ${data.room}`)
+                     this.emit('devices', data)
+                     break;
+                  }
                   case 'midi' :
                   {
                      console.log(`Received midi from WebClient: ${data.msg}`)

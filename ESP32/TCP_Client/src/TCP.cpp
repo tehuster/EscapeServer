@@ -42,12 +42,9 @@ void TCP::sendData(const char* data)
             return;
         }
     }
-    //read back one line from the server, NEED TO WAIT FOR THIS.
     while(client.available()) {
-        String line = client.readStringUntil('}');
-        Serial.println(line);
-    }    
-
-    //Serial.println("Closing connection.");    
+        messageRX = client.readStringUntil('\r');
+    } 
+    newMessage = true;
     client.stop();
 }

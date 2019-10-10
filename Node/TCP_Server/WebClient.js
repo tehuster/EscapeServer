@@ -1,5 +1,5 @@
 class WebClient {
-   constructor() {
+   constructor(devices, hints) {
       const express = require("express")
       const path = require('path')
       const bodyParser = require('body-parser')
@@ -12,16 +12,27 @@ class WebClient {
       this.server = require('http').Server(app)
       this.initRoutes(app)
       this.initServer()
+      this.devices = devices;
+      this.hints = hints;
    }
 
    initRoutes(app)
    {
       app.get('/', (req, res) => {
          res.render('index')
-      });
-      app.get('/devices', (req, res) => {
-         res.render('devices')
-      });
+      })
+
+      app.get('/hints', (req, res) => {  
+         //res.render('devices')      
+         this.hints.get()
+            .then(data => res.render('hints', { hints: data }));
+      })
+      
+      app.get('/devices', (req, res) => {  
+         //res.render('devices')      
+         this.devices.get()
+            .then(data => res.render('devices', { devices: data }));
+      })
    }
 
    initServer()

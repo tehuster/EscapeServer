@@ -122,9 +122,8 @@ class Devices extends Database{
                     console.log(err.message)
                     throw err;
                 }
-                // get the last insert id
-                console.log(`A row has been inserted with row id ${this.lastID}`)
-                resolve(JSON.stringify({msg: `A row has been inserted with row id ${this.lastID}`}))
+                console.log(`Device added: ${this.lastID}`)
+                resolve(JSON.stringify({msg: `Device added: ${this.lastID}`}))
             })
         })
     }
@@ -143,7 +142,7 @@ class Devices extends Database{
                     console.error(err.message);
                     throw err;
                 }
-                console.log(`Row updated: ${this.changes}`)
+                console.log(`Device updated: ${this.changes}`)
                 resolve()
             })
         })
@@ -169,11 +168,9 @@ class Hints extends Database{
                 if (err) {
                     console.log(err.message)
                     throw err;
-                }
-
-                // get the last insert id
-                console.log(`A row has been inserted with row id ${this.lastID}`)
-                resolve(JSON.stringify({msg: `A row has been inserted with row id ${this.lastID}`}))
+                }                
+                console.log(`Hint added: ${this.lastID}`)
+                resolve(JSON.stringify({msg: `Hint added: ${this.lastID}`}))
             })
         })
     }
@@ -192,7 +189,7 @@ class Hints extends Database{
                     console.error(err.message);
                     throw err;
                 }
-                console.log(`Row updated: ${this.changes}`)
+                console.log(`Hint updated: ${this.changes}`)
                 resolve()
             })
         })

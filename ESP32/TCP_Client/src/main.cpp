@@ -5,6 +5,8 @@
 TCP tcp;
 JSON json;  
 
+long previousMillis = 0; 
+
 
 void setup()
 {
@@ -16,8 +18,17 @@ void setup()
 }
 
 void loop()
-{
-    tcp.sendData(json.jsonBuffer);
-    delay(3000);
+{   
+    if(tcp.newMessage)
+    {
+        json.receiveMessage(tcp.messageRX);
+        tcp.newMessage = false;
+    }
+    
+    unsigned long currentMillis = millis();
+    if(currentMillis - previousMillis > tcp.interval) {
+        previousMillis = currentMillis; 
+        tcp.sendData(json.jsonTX);
+    }
 }
 
