@@ -11,12 +11,23 @@ function AddDevice()
     console.log(`Adding device: ${name}`);    
     socket.emit('server', {
         type: 'devices', 
-        command: 'add', 
-        address: address, 
+        command: 'add',         
         room: room,
+        address: address, 
         name: name, 
         description: description,
         config: config, 
         actions: actions,
+    });
+}
+
+function RemoveDevice(id)
+{
+    
+    console.log(`Removing device: ${id}`);    
+    socket.emit('server', {
+        type: 'devices', 
+        command: 'remove', 
+        id: id, 
     });
 }

@@ -3,12 +3,13 @@ const EventEmitter = require('events')
 
 class TCP extends EventEmitter
 {
-    constructor(port = 8080, ip = '192.168.1.249', requestHandler) {
+    constructor(port = 8080, ip = '192.168.1.249', requestHandler, responseHandler) {
         super() 
         this.port = port;
         this.ip = ip;
         this.server = net.createServer();     
         this.requestHandler = requestHandler;
+        this.responseHandler = responseHandler;
 
         this.server.listen(this.port, this.host, function () {
             console.log(`TCP_Server started on port ${port} at ${ip}`)
@@ -31,7 +32,7 @@ class TCP extends EventEmitter
             })
 
             socket.on('data', function (data) {                   
-                tcp.requestHandler.handleResponse(data.toString()) 
+                tcp.responseHandler.handleResponse(data.toString()) 
                 tcp.requestHandler.checkForRequest(10)
                     .then(async (result) => {                                                                 
                         socket.write(result)                     

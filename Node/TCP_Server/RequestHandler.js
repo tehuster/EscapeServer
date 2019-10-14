@@ -3,7 +3,6 @@ class RequestHandler
     constructor()
     {   
         this.requests = [];
-        this.responses = [];
         this.requestType = {
             'status' : 0,
             'data' : 1,
@@ -11,39 +10,7 @@ class RequestHandler
             'config_set' : 3,
             'actions' : 4,
         } 
-    }    
-
-    handleResponse(response)
-    {           
-        let res = this.createResponse(response)
-        
-        switch (res.status) {
-            case 69:
-                console.log("Status 69");                
-                break;        
-            default:
-                console.log("Unknown status..");
-                break;
-        }
-        //console.log(res); 
-    }
-
-    createResponse(response)
-    {
-        let date = new Date;
-        let time = date.getTime()
-
-        response = JSON.parse(response)
-
-        let res = {
-            name : response.status.name,
-            address : response.status.address,
-            status : response.status.status,
-            rssi : response.status.rssi,
-            time : time
-        } 
-        return res;
-    }
+    }   
 
     addRequest(address, requestType) 
     {   
