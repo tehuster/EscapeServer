@@ -6,6 +6,7 @@ const responseHandler = new ResponseHandler()
 
 const Database = require('./Database')
 const devices = new Database.Devices()
+responseHandler.loadDevices(devices.get())
 const hints = new Database.Hints()
 
 ///////////////////////// WEBCLIENT
@@ -33,7 +34,9 @@ socketHandler.on('devices', (data) => {
             data.description,
             data.config,
             data.actions
-         )
+         ).then(() => {
+            responseHandler.loadDevices(devices.get())
+         });
          break;
       case 'remove':
          devices.remove(data.id)

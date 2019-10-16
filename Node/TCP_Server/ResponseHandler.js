@@ -2,11 +2,15 @@ class ResponseHandler
 {
     constructor(){
         this.responses = []; 
-        this.device_info = [
-            {room: 'Jan', address: 10, name: 'Client101', config: 'test', actions: 'test'},
-            {room: 'Jan', address: 20, name: 'Knocker', config: 'test', actions: 'test'}
-        ];
+        this.device_info = [];
     }  
+
+    loadDevices(device_info)
+    {
+        device_info.then( (result) => {
+            this.device_info = result;                  
+        })             
+    }
 
     handleResponse(response)
     {           
@@ -38,8 +42,7 @@ class ResponseHandler
             time : time
         } 
         return res;
-    }
-    
+    }    
 }
 
 
