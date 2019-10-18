@@ -3,6 +3,7 @@ class ResponseHandler
     constructor(){
         this.responses = []; 
         this.device_info = [];
+        this.device_status = [];
     }  
 
     loadDevices(device_info)
@@ -19,12 +20,11 @@ class ResponseHandler
         this.device_info.forEach(function (device) {            
             if(device.name === res.name)
             {
-                this.responses[device.name] = res;
+                this.responses = this.responses.filter(response => (response.name !== response.name))
+                this.responses.push(res);
                 //Break exception?
             }
-        }.bind(this));        
-       
-        console.log(this.responses);        
+        }.bind(this));     
     }
 
     createResponse(response)

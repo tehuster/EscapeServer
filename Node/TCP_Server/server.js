@@ -82,3 +82,19 @@ socketHandler.on('midi', (data) => {
    }
 })
 
+///////////////////////
+// setInterval(PollDeviceResponses, 1000);
+
+// function PollDeviceResponses() {
+//    let date = new Date;
+//    let currentTime = date.getTime()
+   
+//    responseHandler.responses.forEach(function (response) {  
+//       let lastTimeSinceRespone = (currentTime - response.time)/1000;
+//       if(lastTimeSinceRespone > 5)
+//       {
+//          console.log(`Error: Last response from ${response.name} was ${lastTimeSinceRespone} seconds ago.`)
+//       }          
+//    })
+// }
+
