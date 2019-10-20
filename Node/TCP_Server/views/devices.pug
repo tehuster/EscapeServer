@@ -22,38 +22,38 @@ html
     link(rel='stylesheet', href='bulma.css', type='text/css')
     link(rel='stylesheet', href='css/devices.css', type='text/css')
 
-  body    
-    div(class="field has-addons has-addons-centered")  
-      p(class="control")
-        span(class="select")
-          select(id="room")
-            option Cake
-            option Jan     
-      p(class="control")
-        input(id="address" class="input is-primary" type="number" placeholder="00")
-      p(class="control")
-        input(id="name" class="input is-primary" type="text" placeholder="Name")           
-      p(class="control")
-        input(id="description" class="input is-primary" type="text" placeholder="Description")
-      p(class="control")
-        input(id="config" class="input is-primary" type="text" placeholder="Config")
-      p(class="control")
-        input(id="actions" class="input is-primary" type="text" placeholder="Action")                
-      p(class="control")
-        a(class="button is-primary" onClick="AddDevice()") Add
+  body 
+    div(class="mainContainer")
+      div(class="topContainer")
+      div(class="centerContainer")
+        each device, index in devices
+          div(class="deviceContainer")
+            p(id=`device_${index}`)=device.room
+            p(id=`device_${index}`)=device.address
+            p(id=`device_${index}`)=device.name
+            p(id=`device_${index}`)=device.description
+            p(id=`device_${index}`)=device.config
+            p(id=`device_${index}`)=device.actions
+            p(class="control")
+              a(class="button is-primary" onClick=`RemoveDevice(${device.id})`) Remove
+      div(class="bottomContainer")
+        div(class="field has-addons has-addons-centered")  
+          p(class="control")
+            span(class="select")
+              select(id="room")
+                option Cake
+                option Jan     
+          p(class="control")
+            input(id="address" class="input is-primary" type="number" placeholder="00")
+          p(class="control")
+            input(id="name" class="input is-primary" type="text" placeholder="Name")           
+          p(class="control")
+            input(id="description" class="input is-primary" type="text" placeholder="Description")
+          p(class="control")
+            input(id="config" class="input is-primary" type="text" placeholder="Config")
+          p(class="control")
+            input(id="actions" class="input is-primary" type="text" placeholder="Action")                
+          p(class="control")
+            a(class="button is-primary" onClick="AddDevice()") Add
 
-    each device, index in devices
-      div(class="deviceContainer")
-        p(id=`device_${index}`)=device.room
-        p(id=`device_${index}`)=device.address
-        p(id=`device_${index}`)=device.name
-        p(id=`device_${index}`)=device.description
-        p(id=`device_${index}`)=device.config
-        p(id=`device_${index}`)=device.actions
-        p(class="control")
-          a(class="button is-primary" onClick=`RemoveDevice(${device.id})`) Remove
-
-    
-    
-
-
+        

@@ -21,7 +21,7 @@ class ResponseHandler
             if(device.name === res.name)
             {
                 this.responses = this.responses.filter(response => (response.name !== response.name))
-                this.responses.push(res);
+                this.responses.push(res)    
                 //Break exception?
             }
         }.bind(this));     
