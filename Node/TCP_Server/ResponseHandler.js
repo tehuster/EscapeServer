@@ -9,7 +9,9 @@ class ResponseHandler
     loadDevices(device_info)
     {
         device_info.then( (result) => {
-            this.device_info = result;                  
+            this.device_info = result; 
+            console.log(result);
+                             
         })             
     }
 

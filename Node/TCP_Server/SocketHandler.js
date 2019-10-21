@@ -36,7 +36,7 @@ class SocketHandler extends EventEmitter
                   }
                   case 'devices' :
                   {
-                     console.log(`Received hint from WebClient: ${data.name} for ${data.room}`)
+                     console.log(`Received device command WebClient: ${data.command}`)
                      this.emit('devices', data)
                      break;
                   }

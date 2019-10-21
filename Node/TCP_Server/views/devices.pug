@@ -29,30 +29,37 @@ html
         each device, index in devices
           div(class="deviceContainer")
             p(id=`device_${index}`)=device.room
-            p(id=`device_${index}`)=device.address
             p(id=`device_${index}`)=device.name
-            p(id=`device_${index}`)=device.description
-            p(id=`device_${index}`)=device.config
-            p(id=`device_${index}`)=device.actions
+            p(id=`device_${index}`)=device.description            
             p(class="control")
               a(class="button is-primary" onClick=`RemoveDevice(${device.id})`) Remove
+            div(class="actionContainer box field has-addons has-addons-centered")
+              p(class="control")
+                input(id=`action_name_${device.id}` class="input is-primary" type="text" placeholder="Action name")
+              p(class="control")
+                input(id=`action_parameter_${device.id}` class="input is-primary" type="text" placeholder="Parameter")
+              p(class="control")
+                a(class="button is-primary" onClick=`AddAction(${device.id})`) Add
+            div(class="configContainer box field has-addons has-addons-centered")
+              p(class="control")
+                input(id=`config_name_${device.id}` class="input is-primary" type="text" placeholder="Config name")
+              p(class="control")
+                a(class="button is-primary" onClick=`AddConfig(${device.id})`) Add
       div(class="bottomContainer")
         div(class="field has-addons has-addons-centered")  
           p(class="control")
             span(class="select")
               select(id="room")
                 option Cake
-                option Jan     
-          p(class="control")
-            input(id="address" class="input is-primary" type="number" placeholder="00")
+                option Jan               
           p(class="control")
             input(id="name" class="input is-primary" type="text" placeholder="Name")           
           p(class="control")
             input(id="description" class="input is-primary" type="text" placeholder="Description")
           p(class="control")
-            input(id="config" class="input is-primary" type="text" placeholder="Config")
+            //- input(id="config" class="input is-primary" type="text" placeholder="Config")
           p(class="control")
-            input(id="actions" class="input is-primary" type="text" placeholder="Action")                
+            //- input(id="actions" class="input is-primary" type="text" placeholder="Action")                
           p(class="control")
             a(class="button is-primary" onClick="AddDevice()") Add
 

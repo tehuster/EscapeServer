@@ -9,7 +9,8 @@ class Database {
         this.dbSchema = `CREATE TABLE IF NOT EXISTS Database (
             id integer NOT NULL PRIMARY KEY,   
             hint text NOT NULL 
-        )`;         
+        )`;      
+        this.enableForeinKeys = 'PRAGMA foreign_keys = ON;';   
     }
 
     initDB () {
@@ -27,7 +28,15 @@ class Database {
             } else {
                 //console.log('Created table')
             }
-        })
+        })  
+        
+        this.db.exec(this.enableForeinKeys, err => {
+            if (err) {
+                console.log(err)
+            } else {
+                //console.log('Created table')
+            }
+        }) 
     }
 
     get () {
@@ -103,21 +112,56 @@ class Devices extends Database{
     constructor () {
         super()
         this.dbName = 'Devices';
+        this.dbName_actions = 'Actions';
+        this.dbName_config = 'Configs';
         this.dbPath = './db/devices.db';
-        this.dbSchema = `CREATE TABLE IF NOT EXISTS ${this.dbName} (
+        this.dbSchema = `
+            CREATE TABLE IF NOT EXISTS ${this.dbName} (
             id integer NOT NULL PRIMARY KEY, 
-            room text NOT NULL,             
-            address integer NOT NULL, 
-            name text NOT NULL,
-            description text NOT NULL,
-            config text NOT NULL,
-            actions text NOT NULL
-        )`;  
+            room text NOT NULL,
+            name text UNIQUE,
+            description text NOT NULL
+            );    
+            CREATE TABLE IF NOT EXISTS ${this.dbName_actions} (
+            action_id integer NOT NULL PRIMARY KEY, 
+            action_name text NOT NULL,             
+            action_parameter text NOT NULL, 
+            action_device_id text NOT NULL,
+            FOREIGN KEY(action_device_id) REFERENCES Devices(id)           
+            );
+            CREATE TABLE IF NOT EXISTS ${this.dbName_config} (
+                config_id integer NOT NULL PRIMARY KEY, 
+                config_name text NOT NULL,   
+                config_device_id text NOT NULL,
+                FOREIGN KEY(config_device_id) REFERENCES Devices(id)           
+            );
+            `;  
+       
         this.initDB();
     }
-    add (address, room, name, description, config, actions) {
+
+    get () {
+        let sql = 
+        `
+            SELECT DISTINCT id, room, name, description
+            FROM ${this.dbName}            
+            ORDER BY id            
+        `;
+
+        // promisify to prevent callback hell
         return new Promise((resolve) => {
-            this.db.run(`INSERT INTO ${this.dbName} (address, room, name, description, config, actions) VALUES(?, ?,?,?,?,?)`, [address, room, name, description, config, actions], function (err) {
+            this.db.all(sql, [], (err, rows) => {
+                if (err) {
+                    throw err;
+                }                
+                resolve(rows)
+            })
+        })
+    }    
+    
+    add (room, name, description) {
+        return new Promise((resolve) => {
+            this.db.run(`INSERT INTO ${this.dbName} (room, name, description) VALUES(?,?,?)`, [room, name, description], function (err) {
                 if (err) {
                     console.log(err.message)
                     throw err;
@@ -146,6 +190,140 @@ class Devices extends Database{
                 resolve()
             })
         })
+    }
+
+    getActions (id) { //one device or all (?)
+        let sql = 
+        `
+            SELECT id, action_id, action_name, action_parameter
+            FROM ${this.dbName}
+            LEFT JOIN Actions ON Actions.action_device_id = Devices.id;
+            ORDER BY id            
+        `;
+
+        // promisify to prevent callback hell
+        return new Promise((resolve) => {
+            this.db.all(sql, [], (err, rows) => {
+                if (err) {
+                    throw err;
+                }                
+                resolve(rows)
+            })
+        })
+    }    
+
+    addAction (action_name, action_parameter, device_id) {
+        return new Promise((resolve) => {
+            this.db.run(`INSERT INTO ${this.dbName_actions} (action_name, action_parameter, action_device_id) VALUES(?,?,?)`, [action_name, action_parameter, device_id], function (err) {
+                if (err) {
+                    console.log(err.message)
+                    throw err;
+                }
+                console.log(`Action added: ${this.lastID}`)
+                resolve(JSON.stringify({msg: `Action added: ${this.lastID}`}))
+            })
+        })
+    }
+
+    updateAction (id, action_name, action_parameter, device_id) {
+        let newData = [action_name, action_parameter, device_id, id];
+        let sql = `
+            UPDATE ${this.dbName_actions}
+            SET action_name = ?, action_parameter = ?, action_device_id = ?
+            WHERE id = ?
+        `;
+
+        return new Promise((resolve) => {
+            this.db.run(sql, newData, function (err) {
+                if (err) {
+                    console.error(err.message);
+                    throw err;
+                }
+                console.log(`Action updated: ${this.changes}`)
+                resolve()
+            })
+        })
+    }
+
+    removeAction (id) {
+        return new Promise(resolve => {
+            this.db.run(`DELETE FROM ${this.dbName_actions} WHERE action_id=?`, id, function (err) {
+                if (err) {
+                    console.error(err.message)
+                    throw err;
+                }
+                console.log(`Action deleted ${this.changes}`)
+                resolve(JSON.stringify({msg: `Action deleted ${this.changes}`}))
+            });
+        });
+
+    }
+
+    getConfigs (id) { //one device or all (?)
+        let sql = 
+        `
+            SELECT id, config_id, config_name
+            FROM ${this.dbName}
+            LEFT JOIN Configs ON Configs.config_device_id = Devices.id;
+            ORDER BY id            
+        `;
+
+        // promisify to prevent callback hell
+        return new Promise((resolve) => {
+            this.db.all(sql, [], (err, rows) => {
+                if (err) {
+                    throw err;
+                }                
+                resolve(rows)
+            })
+        })
+    }    
+
+    addConfig (config_name, config_device_id) {
+        return new Promise((resolve) => {
+            this.db.run(`INSERT INTO ${this.dbName_config} (config_name, config_device_id) VALUES(?,?)`, [config_name, config_device_id], function (err) {
+                if (err) {
+                    console.log(err.message)
+                    throw err;
+                }
+                console.log(`Action added: ${this.lastID}`)
+                resolve(JSON.stringify({msg: `Action added: ${this.lastID}`}))
+            })
+        })
+    }
+
+    updateConfig (id, config_name, config_device_id) {
+        let newData = [config_name, config_device_id, id];
+        let sql = `
+            UPDATE ${this.dbName_config}
+            SET config_name = ?, config_device_id = ?
+            WHERE config_id = ?
+        `;
+
+        return new Promise((resolve) => {
+            this.db.run(sql, newData, function (err) {
+                if (err) {
+                    console.error(err.message);
+                    throw err;
+                }
+                console.log(`Action updated: ${this.changes}`)
+                resolve()
+            })
+        })
+    }
+
+    removeConfig (id) {
+        return new Promise(resolve => {
+            this.db.run(`DELETE FROM ${this.dbName_config} WHERE config_id=?`, id, function (err) {
+                if (err) {
+                    console.error(err.message)
+                    throw err;
+                }
+                console.log(`Action deleted ${this.changes}`)
+                resolve(JSON.stringify({msg: `Action deleted ${this.changes}`}))
+            });
+        });
+
     }
 }
 
@@ -195,6 +373,9 @@ class Hints extends Database{
         })
     }
 }
+
+
+
 
 module.exports = {Database, Devices, Hints}
     

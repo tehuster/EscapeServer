@@ -7,6 +7,7 @@ const responseHandler = new ResponseHandler()
 const Database = require('./Database')
 const devices = new Database.Devices()
 responseHandler.loadDevices(devices.get())
+
 const hints = new Database.Hints()
 
 ///////////////////////// WEBCLIENT
@@ -27,19 +28,22 @@ socketHandler.on('request', (data) => {
 socketHandler.on('devices', (data) => {
    switch (data.command) {
       case 'add':
-         devices.add(
-            data.address,
+         devices.add(            
             data.room,
             data.name,
-            data.description,
-            data.config,
-            data.actions
+            data.description
          ).then(() => {
             responseHandler.loadDevices(devices.get())
          });
          break;
       case 'remove':
          devices.remove(data.id)
+         break;
+      case 'addAction':
+         devices.addAction(data.action_name, data.action_parameter, data.device_id)
+         break;
+      case 'addConfig':
+         devices.addConfig(data.config_name, data.device_id)
          break;
       default:
          console.log('Unknown hint command received...')
