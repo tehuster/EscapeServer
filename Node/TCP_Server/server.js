@@ -34,16 +34,23 @@ socketHandler.on('devices', (data) => {
             data.description
          ).then(() => {
             responseHandler.loadDevices(devices.get())
+            socketHandler.io.emit('webclient', {type:'refresh'})
          });
          break;
       case 'remove':
-         devices.remove(data.id)
+         devices.remove(data.id).then(() => {
+            socketHandler.io.emit('webclient', {type:'refresh'})
+         });
          break;
       case 'addAction':
-         devices.addAction(data.action_name, data.action_parameter, data.device_id)
+         devices.addAction(data.action_name, data.action_parameter, data.device_id).then(() => {
+            socketHandler.io.emit('webclient', {type:'refresh'})
+         });
          break;
       case 'addConfig':
-         devices.addConfig(data.config_name, data.device_id)
+         devices.addConfig(data.config_name, data.device_id).then(() => {
+            socketHandler.io.emit('webclient', {type:'refresh'})
+         });
          break;
       default:
          console.log('Unknown hint command received...')
