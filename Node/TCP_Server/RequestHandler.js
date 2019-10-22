@@ -12,18 +12,24 @@ class RequestHandler
         } 
     }   
 
-    addRequest(address, requestType) 
+    addRequest(name, requestType) 
     {   
         //TODO:?: Check if a request already exists for this address 
-        this.requests.push(this.newRequest(address, requestType))    
+        this.requests.push(this.newRequest(name, requestType))    
     }
 
-    async checkForRequest(address)
-    {                      
-        let req = this.requests.find(request => (request.address === address))    //Save request
+    async checkForRequest(data)
+    {             
+        
+        let name = 'Client101';
+                 
+        let req = this.requests.find(request => (request.name === name))    //Save request
+        
+        //console.log(req);
+        
         if(req == null)
         {
-            req = this.newRequest(address, 'status')       
+            req = this.newRequest(name, 'status')       
         }else{              
             this.requests = this.requests.filter(request => (request.id !== req.id))  //Remove request
         }     
@@ -37,12 +43,12 @@ class RequestHandler
         this.requests = this.requests.filter(request => (request.id !== id)) //find for first entry
     }
 
-    newRequest(address, requestType)
+    newRequest(name, requestType)
     {
         let request =
         {
             id : this.id = Math.random().toString(32).substr(2, 8),
-            address : address,
+            name : name,
             requestType : requestType
         }
         return request;

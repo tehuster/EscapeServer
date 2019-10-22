@@ -10,8 +10,6 @@ class ResponseHandler
     {
         device_info.then( (result) => {
             this.device_info = result; 
-            console.log(result);
-                             
         })             
     }
 

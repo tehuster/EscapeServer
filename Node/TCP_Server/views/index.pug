@@ -25,11 +25,9 @@ html
     div(class="field has-addons has-addons-centered")                         
         p(class="control")
           span(class="select")
-            select(id="requestAddress")
-              option 10
-              option 20
-              option 30
-              option 40    
+            select(id="requestName")
+              option Client101
+              option LoadDevicesFromDB             
             
         p(class="control")
           span(class="select")
@@ -37,7 +35,7 @@ html
               option data
               option config_get
               option config_set
-              option actions  
+              option action 
                 
         p(class="control")
                 a(class="button is-primary" onClick="SendRequest()") Request

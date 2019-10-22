@@ -6,9 +6,9 @@ class JSON
     public:
         char jsonTX[255];
         char jsonRX[255];
-        StaticJsonDocument<255> JSONTX;
-        StaticJsonDocument<255> JSONRX;
+        StaticJsonDocument<255> Response;
+        StaticJsonDocument<255> Request;
         
         void createStatus();
-        void receiveMessage(String json);
+        StaticJsonDocument<255> parseJson(String json);
 };

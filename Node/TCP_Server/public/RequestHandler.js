@@ -1,8 +1,8 @@
 console.log("RequestHandler init..");
 
 function SendRequest() {    
-    let requestAddress = document.getElementById('requestAddress').value;
+    let requestName = document.getElementById('requestName').value;
     let requestType = document.getElementById('requestType').value;
-    socket.emit('server', {type: 'request', requestAddress: requestAddress, requestType: requestType});
-    console.log(`Requesting: ${requestType} @ ${requestAddress}`);    
+    socket.emit('server', {type: 'request', requestName: requestName, requestType: requestType});
+    console.log(`Requesting: ${requestType} @ ${requestName}`);    
 }

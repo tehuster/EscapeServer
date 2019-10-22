@@ -32,8 +32,8 @@ class TCP extends EventEmitter
             })
 
             socket.on('data', function (data) {                   
-                tcp.responseHandler.handleResponse(data.toString()) 
-                tcp.requestHandler.checkForRequest(10)
+                tcp.responseHandler.handleResponse(data.toString())                                
+                tcp.requestHandler.checkForRequest(data)
                     .then(async (result) => {                                                                 
                         socket.write(result)                     
                     })           

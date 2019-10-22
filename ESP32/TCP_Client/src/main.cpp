@@ -1,12 +1,13 @@
 #include <Arduino.h>
 #include <TCP.h>
 #include <JSON.h>
+#include <RequestHandler.h>
 
 TCP tcp;
-JSON json;  
+JSON json;
+RequestHandler requestHandler;  
 
 long previousMillis = 0; 
-
 
 void setup()
 {
@@ -14,14 +15,15 @@ void setup()
     delay(10);
 
     tcp.connectWifi();
-    json.createStatus();      
+    json.createStatus();   
 }
 
 void loop()
 {   
     if(tcp.newMessage)
     {
-        json.receiveMessage(tcp.messageRX);
+        requestHandler.request = json.parseJson(tcp.messageRX);
+        requestHandler.handleRequest();
         tcp.newMessage = false;
     }
     

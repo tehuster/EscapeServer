@@ -24,7 +24,7 @@ class SocketHandler extends EventEmitter
                   }
                   case 'request' :
                   {
-                     console.log(`Received request from WebClient: ${data.requestType} @ ${data.requestAddress}`)
+                     console.log(`Received request from WebClient: ${data.requestType} @ ${data.requestName}`)
                      this.emit('request', data)
                      break;
                   }
