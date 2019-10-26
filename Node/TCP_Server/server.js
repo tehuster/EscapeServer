@@ -57,10 +57,6 @@ socketHandler.on('devices', (data) => {
          break;
    }
 })
-// devices.add(10, 'room', 'name', 'description', 'config', 'actions')
-// devices.get().then(function(result) { console.log(result) }) 
-// devices.update(2, 10, 'name', 'description', 'config', 'actions')
-// devices.remove(1)
 
 ///////////////////////// HINTS
 socketHandler.on('hints', (data) => {
@@ -73,14 +69,6 @@ socketHandler.on('hints', (data) => {
          break;
    }
 })
-// hints.add('room', 'hint')
-// hints.get().then(function(result) { console.log(result) }) 
-// hints.update(2, 'room', 'hint')
-// hints.remove(1)
-
-///////////////////////// TCP  
-const TCP = require('./TCP')
-const tcp = new TCP(8080, '192.168.1.249', requestHandler, responseHandler)
 
 ///////////////////////// MIDI
 socketHandler.on('midi', (data) => {
@@ -92,6 +80,10 @@ socketHandler.on('midi', (data) => {
       console.log(requestHandler.requests);
    }
 })
+
+///////////////////////// TCP  
+const TCP = require('./TCP')
+const tcp = new TCP(8080, '192.168.1.249', requestHandler, responseHandler)
 
 ///////////////////////
 // setInterval(PollDeviceResponses, 1000);
