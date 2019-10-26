@@ -6,9 +6,9 @@ const responseHandler = new ResponseHandler()
 
 const Database = require('./Database')
 const devices = new Database.Devices()
-responseHandler.loadDevices(devices.get())
-
 const hints = new Database.Hints()
+
+responseHandler.loadDevices(devices.get())
 
 ///////////////////////// WEBCLIENT
 const WebClient = require('./WebClient')
