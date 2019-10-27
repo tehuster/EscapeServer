@@ -1,13 +1,16 @@
 #include <Arduino.h>
 #include <TCP.h>
 #include <JSON.h>
-#include <RequestHandler.h>
+#include <Request.h>
 
 TCP tcp;
 JSON json;
-RequestHandler requestHandler;  
+Puzzle puzzle;
+Request request(puzzle);  
 
 long previousMillis = 0; 
+
+int blinkTime = 1000;
 
 void setup()
 {
@@ -22,8 +25,8 @@ void loop()
 {   
     if(tcp.newMessage)
     {
-        requestHandler.request = json.parseJson(tcp.messageRX);
-        requestHandler.handleRequest();
+        request.request = json.parseJson(tcp.messageRX);
+        request.handleRequest();
         tcp.newMessage = false;
     }
     
@@ -33,4 +36,3 @@ void loop()
         tcp.sendData(json.jsonTX);
     }
 }
-
