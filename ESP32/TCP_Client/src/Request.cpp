@@ -2,7 +2,7 @@
 
 void Request::Status()
 {
-    Serial.println("RequestType: Status");
+    //Serial.println("RequestType: Status");
 }
 
 void Request::Data()
@@ -14,31 +14,33 @@ void Request::Action()
 {
     Serial.println("RequestType: Action");
     String actionName = Request::request["actionName"];
-    String actionValue = Request::request["actionValue"];
+    String actionValue = Request::request["actionParameter"];
 
-    if (actionName == "blinkLed")
+    if (actionName == "BlinkLed")
     {
-        Request::puzzle.blinkLed();
+        Request::puzzle.BlinkLed();
     }
     else
     {
-        Serial.println("Unknown: ActionName");
+        Serial.print("Unknown: ActionName: ");
+        Serial.println(actionName);
     }
 }
 
 void Request::Config_set()
 {
     Serial.println("RequestType: Config_set");
-    String variableName = Request::request["variableName"];
-    String variableValue = Request::request["variableValue"];
+    String variableName = Request::request["actionName"];
+    String variableValue = Request::request["actionParameter"];
 
-    if (variableName == "blinkLed")
+    if (variableName == "blinkTime")
     {
         Request::puzzle.blinkTime = variableValue.toInt();
     }
     else
     {
-        Serial.println("Unknown: VariableName");
+        Serial.print("Unknown: VariableName: ");
+        Serial.println(variableName);
     }
 }
 

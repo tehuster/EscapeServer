@@ -12,10 +12,10 @@ class RequestHandler
         } 
     }   
 
-    addRequest(name, requestType) 
+    addRequest(name, requestType, actionName, actionParameter)
     {   
         //TODO:?: Check if a request already exists for this address 
-        this.requests.push(this.newRequest(name, requestType))    
+        this.requests.push(this.newRequest(name, requestType, actionName, actionParameter))    
     }
 
     async checkForRequest(data)
@@ -43,14 +43,18 @@ class RequestHandler
         this.requests = this.requests.filter(request => (request.id !== id)) //find for first entry
     }
 
-    newRequest(name, requestType)
+    newRequest(name, requestType, actionName, actionParameter)
     {
         let request =
         {
             id : this.id = Math.random().toString(32).substr(2, 8),
             name : name,
-            requestType : requestType
+            requestType : requestType,
+            actionName : actionName, 
+            actionParameter : actionParameter            
         }
+        //console.log(request);
+        
         return request;
     }
 

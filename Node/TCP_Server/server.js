@@ -20,7 +20,7 @@ const socketHandler = new SocketHandler(webClient.server)
 
 socketHandler.on('request', (data) => {
    console.log('Handle request event!');
-   requestHandler.addRequest(data.requestName, data.requestType);
+   requestHandler.addRequest(data.requestName, data.requestType, data.actionName, data.actionParameter);
    console.log(requestHandler.requests);
 })
 

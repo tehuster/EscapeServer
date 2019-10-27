@@ -36,6 +36,12 @@ html
               option config_get
               option config_set
               option action 
+        
+        p(class="control")
+                input(id='actionName' class="input is-primary" type="text" placeholder="Action name")
+        
+        p(class="control")
+                input(id='actionParameter' class="input is-primary" type="text" placeholder="Action parameter")
                 
         p(class="control")
                 a(class="button is-primary" onClick="SendRequest()") Request
