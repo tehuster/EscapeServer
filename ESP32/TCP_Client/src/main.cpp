@@ -3,6 +3,7 @@
 #include <JSON.h>
 #include <Request.h>
 
+Preferences preferences;
 TCP tcp;
 JSON json;
 Puzzle puzzle;
@@ -16,9 +17,9 @@ void setup()
 {
     Serial.begin(115200);
     delay(10);
-
+    puzzle.injectPreferences(preferences);
     tcp.connectWifi();
-    json.createStatus();   
+    json.createStatus();  
 }
 
 void loop()
@@ -35,4 +36,6 @@ void loop()
         previousMillis = currentMillis; 
         tcp.sendData(json.jsonTX);
     }
+
+    Serial.println(request.puzzle.getBlinkTime());
 }

@@ -35,7 +35,7 @@ void Request::Config_set()
 
     if (variableName == "blinkTime")
     {
-        Request::puzzle.blinkTime = variableValue.toInt();
+        Request::puzzle.setBlinkTime(variableValue.toInt());
     }
     else
     {
@@ -45,8 +45,21 @@ void Request::Config_set()
 }
 
 void Request::Config_get()
-{
+{   
     Serial.println("RequestType: Config_get");
+    String variableName = Request::request["actionName"];
+    String variableValue = Request::request["actionParameter"];
+
+    if (variableName == "blinkTime")
+    {
+        Serial.print("blinkTime: ");
+        Serial.println(Request::puzzle.getBlinkTime());
+    }
+    else
+    {
+        Serial.print("Unknown: VariableName: ");
+        Serial.println(variableName);
+    }
 }
 
 void Request::handleRequest()

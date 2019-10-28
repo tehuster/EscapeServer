@@ -1,7 +1,14 @@
+#include <Preferences.h>
+
 class Puzzle
 {
     public:
-        int blinkTime = 1000;  
+        Preferences preferences;        
+        void injectPreferences(Preferences _preferences);
         void BlinkLed();
+        void setBlinkTime(int bTime);
+        int getBlinkTime();
     private:
+        int blinkTime; 
+        void loadVariables();
 };
