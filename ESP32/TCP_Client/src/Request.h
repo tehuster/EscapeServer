@@ -6,11 +6,12 @@ class Request
 {
     public:    
         Puzzle puzzle;
-        Request(Puzzle _puzzle)
+        Request(Puzzle &_puzzle)
         {
             puzzle = _puzzle;
         }
-        StaticJsonDocument<255> request;
+        StaticJsonDocument<255> request;               
+        void loadPreferences(Preferences &_preferences);
         void handleRequest();
     private:
         void Status();

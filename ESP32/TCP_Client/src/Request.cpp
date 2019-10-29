@@ -13,12 +13,12 @@ void Request::Data()
 void Request::Action()
 {
     Serial.println("RequestType: Action");
-    String actionName = Request::request["actionName"];
-    String actionValue = Request::request["actionParameter"];
+    String actionName = request["actionName"];
+    String actionValue = request["actionParameter"];
 
     if (actionName == "BlinkLed")
     {
-        Request::puzzle.BlinkLed();
+        puzzle.BlinkLed();
     }
     else
     {
@@ -30,12 +30,14 @@ void Request::Action()
 void Request::Config_set()
 {
     Serial.println("RequestType: Config_set");
-    String variableName = Request::request["actionName"];
-    String variableValue = Request::request["actionParameter"];
+    String variableName = request["actionName"];
+    String variableValue = request["actionParameter"];
 
     if (variableName == "blinkTime")
     {
-        Request::puzzle.setBlinkTime(variableValue.toInt());
+        puzzle.setBlinkTime(variableValue.toInt());
+        Serial.print("blinkTime: ");
+        Serial.println(puzzle.getBlinkTime());        
     }
     else
     {
@@ -47,13 +49,13 @@ void Request::Config_set()
 void Request::Config_get()
 {   
     Serial.println("RequestType: Config_get");
-    String variableName = Request::request["actionName"];
-    String variableValue = Request::request["actionParameter"];
+    String variableName = request["actionName"];
+    String variableValue = request["actionParameter"];
 
     if (variableName == "blinkTime")
     {
         Serial.print("blinkTime: ");
-        Serial.println(Request::puzzle.getBlinkTime());
+        Serial.println(puzzle.getBlinkTime());
     }
     else
     {
@@ -64,7 +66,7 @@ void Request::Config_get()
 
 void Request::handleRequest()
 {
-    String rTypeString = Request::request["requestType"];
+    String rTypeString = request["requestType"];
     //#include <map>
     //std::map<T, T> key value pair dictionairy voor generieke toekomst.
 
@@ -76,25 +78,34 @@ void Request::handleRequest()
     
     if (rTypeString == "status")
     {
-        Request::Status();
+        Status();
     }else if (rTypeString == "data")
     {
-        Request::Data();
+        Data();
     }
     else if (rTypeString == "action")
     {
-        Request::Action();
+        Action();
     }
     else if (rTypeString == "config_get")
     {
-        Request::Config_get();
+        Config_get();
     }
     else if (rTypeString == "config_set")
     {
-        Request::Config_set();
+        Config_set();
     }
     else
     {
         Serial.println("Unknown: RequestType");
     }
+}
+
+void Request::loadPreferences(Preferences &preferences)  //"&" pass by reference (memory address), not by value (copy of memory).
+{
+    Serial.print("Getting preferences variables: ");
+    preferences.begin("puzzle", false);
+    puzzle.setBlinkTime(preferences.getUInt("blinkTime", 0));
+    preferences.end();
+    Serial.println(puzzle.getBlinkTime());
 }

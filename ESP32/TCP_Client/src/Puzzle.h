@@ -3,8 +3,7 @@
 class Puzzle
 {
     public:
-        Preferences preferences;        
-        void loadPreferences(Preferences _preferences);
+        Preferences preferences; 
         void BlinkLed();
         void setBlinkTime(int bTime);
         int getBlinkTime();

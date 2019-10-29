@@ -23,13 +23,6 @@ int Puzzle::getBlinkTime()
     return blinkTime;
 }
 
-void Puzzle::loadPreferences(Preferences& preferences)  //"&" pass by reference (memory address), not by value (copy of memory).
-{
-    Serial.print("Getting preferences variables: ");
-    preferences.begin("puzzle", false);
-    blinkTime = preferences.getUInt("blinkTime", 0);
-    preferences.end();
-    Serial.println(blinkTime);
-}
+
 
         

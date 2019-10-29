@@ -17,7 +17,7 @@ void setup()
 {
     Serial.begin(115200);
     delay(10);
-    puzzle.injectPreferences(preferences);
+    request.loadPreferences(preferences);
     tcp.connectWifi();
     json.createStatus();  
 }
@@ -36,6 +36,4 @@ void loop()
         previousMillis = currentMillis; 
         tcp.sendData(json.jsonTX);
     }
-
-    Serial.println(request.puzzle.getBlinkTime());
 }
