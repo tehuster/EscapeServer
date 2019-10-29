@@ -4,7 +4,7 @@ class Puzzle
 {
     public:
         Preferences preferences;        
-        void injectPreferences(Preferences _preferences);
+        void loadPreferences(Preferences _preferences);
         void BlinkLed();
         void setBlinkTime(int bTime);
         int getBlinkTime();
