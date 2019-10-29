@@ -65,7 +65,15 @@ void Request::Config_get()
 void Request::handleRequest()
 {
     String rTypeString = Request::request["requestType"];
+    //#include <map>
+    //std::map<T, T> key value pair dictionairy voor generieke toekomst.
 
+    //#include <unordered_map>
+    //typedef void (*RequestFunc)(void); // function pointer type
+    //typedef std::unordered_map<String, RequestFunc> funcMap;
+    //funcMap requestFuncs;
+    //requestFuncs.emplace("appel", &Status);
+    
     if (rTypeString == "status")
     {
         Request::Status();
