@@ -11,31 +11,25 @@ void Puzzle::BlinkLed()
 
 void Puzzle::setBlinkTime(int bTime)
 {
-    Puzzle::blinkTime = bTime;    
+    blinkTime = bTime;    
     preferences.begin("puzzle", false);
-    preferences.putUInt("blinkTime", Puzzle::blinkTime);
+    preferences.putUInt("blinkTime", blinkTime);
     preferences.end();
 }
 
 int Puzzle::getBlinkTime()
 {
-    Serial.println(Puzzle::blinkTime);
-    return Puzzle::blinkTime;
+    Serial.println(blinkTime);
+    return blinkTime;
 }
 
-void Puzzle::loadVariables()
+void Puzzle::loadPreferences(Preferences& preferences)  //"&" pass by reference (memory address), not by value (copy of memory).
 {
     Serial.print("Getting preferences variables: ");
     preferences.begin("puzzle", false);
-    Puzzle::blinkTime = preferences.getUInt("blinkTime", 0);
+    blinkTime = preferences.getUInt("blinkTime", 0);
     preferences.end();
-    Serial.println(Puzzle::blinkTime);
-}
-
-void Puzzle::injectPreferences(Preferences _preferences)
-{
-    Puzzle::preferences = _preferences;
-    loadVariables();
+    Serial.println(blinkTime);
 }
 
         
