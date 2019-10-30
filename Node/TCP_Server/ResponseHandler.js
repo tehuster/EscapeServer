@@ -35,11 +35,11 @@ class ResponseHandler
         response = JSON.parse(response)
 
         let res = {
-            name : response.status.name,
-            address : response.status.address,
-            status : response.status.status,
-            rssi : response.status.rssi,
-            time : time
+            name : response.name,
+            //address : response.status.address,
+            //status : response.status.status,
+            //rssi : response.status.rssi,
+            //time : time
         } 
         return res;
     }    

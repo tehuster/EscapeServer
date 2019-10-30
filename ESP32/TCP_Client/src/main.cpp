@@ -16,9 +16,11 @@ int blinkTime = 1000;
 void setup()
 {
     Serial.begin(115200);
+    WiFi.onEvent(tcp.Event);
+    ETH.begin();
     delay(10);
     request.loadPreferences(preferences);
-    tcp.connectWifi();
+    
     json.createStatus();  
 }
 

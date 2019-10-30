@@ -12,7 +12,7 @@ class TCP extends EventEmitter
         this.responseHandler = responseHandler;
 
         this.server.listen(this.port, this.host, function () {
-            console.log(`TCP_Server started on port ${port} at ${ip}`)
+            console.log(`TCP_Server started on port ${port} at UnknownIP, <- fix this `)
         })
         this.setupServer()
     }
@@ -31,7 +31,7 @@ class TCP extends EventEmitter
                 //console.log('Number of concurrent connections to the server : ' + count)
             })
 
-            socket.on('data', function (data) {                   
+            socket.on('data', function (data) {            
                 tcp.responseHandler.handleResponse(data.toString())                                
                 tcp.requestHandler.checkForRequest(data)
                     .then(async (result) => {                                                                 
