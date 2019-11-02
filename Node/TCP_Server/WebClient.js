@@ -29,9 +29,8 @@ class WebClient {
 
       app.get('/devices', (req, res) => {
          //res.render('devices')      
-         this.devices.get()
-            .then((data) => {
-               console.log(data)               
+         this.devices.findAll()
+            .then((data) => {               
                res.render('devices', { devices: data })
             });
       })

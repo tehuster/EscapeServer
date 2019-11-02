@@ -5,20 +5,47 @@ const ResponseHandler = require('./ResponseHandler')
 const responseHandler = new ResponseHandler()
 
 const Database = require('./Database')
-const devices = new Database.Devices()
+// const devices = new Database.Devices()
 const hints = new Database.Hints()
 
-// devices.get().then((result) =>
-// {
-//    console.log(result);   
-// })
+const db = require('./db/Devices')
 
+db.Devices.sync({ force: false }).then(() => { });
+db.Actions.sync({ force: false }).then(() => { });
+db.Configs.sync({ force: false }).then(() => { });
 
-responseHandler.loadDevices(devices.get())
+db.Devices.hasMany(db.Actions)
+db.Devices.hasMany(db.Configs)
+
+db.Actions.belongsTo(db.Devices)
+db.Configs.belongsTo(db.Devices)
+
+db.Devices.findAll({
+   include: [db.Actions, db.Configs]
+})
+   .then((foundUser) => {
+      // Get the User with Company datas included
+      console.log("//////////////////////////////////");
+      foundUser.forEach(element => {
+         console.log(element.dataValues.device_name);
+         foundUser[0].dataValues.Actions.forEach(element => {
+            console.log("   " + element.dataValues.action_name)
+         });
+
+         foundUser[0].dataValues.Configs.forEach(element => {
+            console.log("      " + element.dataValues.config_name)
+         });
+      });
+   })
+   .catch((err) => {
+      console.log("Error while find user : ", err)
+   })
+
+responseHandler.loadDevices(db.Devices.findAll())
 
 ///////////////////////// WEBCLIENT
 const WebClient = require('./WebClient')
-const webClient = new WebClient(devices, hints)
+const webClient = new WebClient(db.Devices, hints)
 
 ///////////////////////// SOCKET
 const SocketHandler = require('./SocketHandler')
@@ -34,28 +61,40 @@ socketHandler.on('request', (data) => {
 socketHandler.on('devices', (data) => {
    switch (data.command) {
       case 'add':
-         devices.add(            
-            data.room,
-            data.name,
-            data.description
-         ).then(() => {
-            responseHandler.loadDevices(devices.get())
-            socketHandler.io.emit('webclient', {type:'refresh'})
+         db.Devices.create({
+            device_room: data.room,
+            device_name: data.name,
+            device_description: data.description
+         }).then(() => {
+            responseHandler.loadDevices(db.Devices.findAll())
+            socketHandler.io.emit('webclient', { type: 'refresh' })
          });
          break;
       case 'remove':
-         devices.remove(data.id).then(() => {
-            socketHandler.io.emit('webclient', {type:'refresh'})
+         console.log(data.id);
+
+         db.Devices.destroy({
+            where: { id: data.id }
+         }).then(() => {
+            socketHandler.io.emit('webclient', { type: 'refresh' })
          });
          break;
       case 'addAction':
-         devices.addAction(data.action_name, data.action_parameter, data.device_id).then(() => {
-            socketHandler.io.emit('webclient', {type:'refresh'})
+         db.Actions.create({
+            DeviceId: data.device_id,
+            action_name: data.action_name,
+            action_parameter_type: data.action_parameter
+         }).then(() => {
+            socketHandler.io.emit('webclient', { type: 'refresh' })
          });
          break;
       case 'addConfig':
-         devices.addConfig(data.config_name, data.device_id).then(() => {
-            socketHandler.io.emit('webclient', {type:'refresh'})
+         db.Configs.create({
+            DeviceId: data.device_id,
+            config_name: data.config_name,
+            config_type: 'string'
+         }).then(() => {
+            socketHandler.io.emit('webclient', { type: 'refresh' })
          });
          break;
       default:
@@ -97,7 +136,7 @@ const tcp = new TCP(8080, '192.168.1.249', requestHandler, responseHandler)
 // function PollDeviceResponses() {
 //    let date = new Date;
 //    let currentTime = date.getTime()
-   
+
 //    responseHandler.responses.forEach(function (response) {  
 //       let lastTimeSinceRespone = (currentTime - response.time)/1000;
 //       if(lastTimeSinceRespone > 5)
