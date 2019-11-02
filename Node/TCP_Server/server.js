@@ -8,6 +8,12 @@ const Database = require('./Database')
 const devices = new Database.Devices()
 const hints = new Database.Hints()
 
+// devices.get().then((result) =>
+// {
+//    console.log(result);   
+// })
+
+
 responseHandler.loadDevices(devices.get())
 
 ///////////////////////// WEBCLIENT

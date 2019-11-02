@@ -117,23 +117,23 @@ class Devices extends Database{
         this.dbPath = './db/devices.db';
         this.dbSchema = `
             CREATE TABLE IF NOT EXISTS ${this.dbName} (
-            id integer NOT NULL PRIMARY KEY, 
-            room text NOT NULL,
-            name text UNIQUE,
-            description text NOT NULL
+            device_id integer NOT NULL PRIMARY KEY, 
+            device_room text NOT NULL,
+            device_name text UNIQUE,
+            device_description text NOT NULL
             );    
             CREATE TABLE IF NOT EXISTS ${this.dbName_actions} (
             action_id integer NOT NULL PRIMARY KEY, 
             action_name text NOT NULL,             
             action_parameter text NOT NULL, 
             action_device_id text NOT NULL,
-            FOREIGN KEY(action_device_id) REFERENCES Devices(id)           
+            FOREIGN KEY(action_device_id) REFERENCES Devices(device_id)           
             );
             CREATE TABLE IF NOT EXISTS ${this.dbName_config} (
-                config_id integer NOT NULL PRIMARY KEY, 
-                config_name text NOT NULL,   
-                config_device_id text NOT NULL,
-                FOREIGN KEY(config_device_id) REFERENCES Devices(id)           
+            config_id integer NOT NULL PRIMARY KEY, 
+            config_name text NOT NULL,   
+            config_device_id text NOT NULL,
+            FOREIGN KEY(config_device_id) REFERENCES Devices(device_id)           
             );
             `;  
        
@@ -143,12 +143,13 @@ class Devices extends Database{
     get () {
         let sql = 
         `
-            SELECT DISTINCT id, room, name, description
-            FROM ${this.dbName}            
-            ORDER BY id            
+            SELECT *
+            FROM ${this.dbName}  
+            LEFT JOIN Configs ON Configs.config_device_id = Devices.device_id
+            LEFT JOIN Actions ON Actions.action_device_id = Devices.device_id
+            ORDER BY device_id            
         `;
 
-        // promisify to prevent callback hell
         return new Promise((resolve) => {
             this.db.all(sql, [], (err, rows) => {
                 if (err) {
@@ -159,24 +160,26 @@ class Devices extends Database{
         })
     }    
     
-    add (room, name, description) {
+    add (device_room, device_name, device_description) {
         return new Promise((resolve) => {
-            this.db.run(`INSERT INTO ${this.dbName} (room, name, description) VALUES(?,?,?)`, [room, name, description], function (err) {
-                if (err) {
-                    console.log(err.message)
-                    throw err;
-                }
-                console.log(`Device added: ${this.lastID}`)
-                resolve(JSON.stringify({msg: `Device added: ${this.lastID}`}))
-            })
+            this.db.run(`INSERT INTO ${this.dbName} (device_room, device_name, device_description) VALUES(?,?,?)`, 
+                         [device_room, device_name, device_description], 
+                         function (err) {
+                            if (err) {
+                                console.log(err.message)
+                                throw err;
+                            }
+                            console.log(`Device added: ${this.lastID}`)
+                            resolve(JSON.stringify({msg: `Device added: ${this.lastID}`}))
+                        })
         })
     }
 
-    update (id, address, room, name, description, config, actions) {
-        let newData = [address, room, name, description, config, actions, id];
+    update (device_id, device_room, device_name, device_description) {
+        let newData = [device_room, device_name, device_description, device_id];
         let sql = `
             UPDATE ${this.dbName}
-            SET address = ?, room = ?, name = ?, description = ?, config = ?, actions = ?
+            SET device_room = ?, device_name = ?, device_description = ?
             WHERE id = ?
         `;
 
@@ -197,7 +200,7 @@ class Devices extends Database{
         `
             SELECT id, action_id, action_name, action_parameter
             FROM ${this.dbName}
-            LEFT JOIN Actions ON Actions.action_device_id = Devices.id;
+            LEFT JOIN Actions ON Actions.action_device_id = Devices.device_id;
             ORDER BY id            
         `;
 
@@ -214,14 +217,16 @@ class Devices extends Database{
 
     addAction (action_name, action_parameter, device_id) {
         return new Promise((resolve) => {
-            this.db.run(`INSERT INTO ${this.dbName_actions} (action_name, action_parameter, action_device_id) VALUES(?,?,?)`, [action_name, action_parameter, device_id], function (err) {
-                if (err) {
-                    console.log(err.message)
-                    throw err;
-                }
-                console.log(`Action added: ${this.lastID}`)
-                resolve(JSON.stringify({msg: `Action added: ${this.lastID}`}))
-            })
+            this.db.run(`INSERT INTO ${this.dbName_actions} (action_name, action_parameter, action_device_id) VALUES(?,?,?)`, 
+                        [action_name, action_parameter, device_id], 
+                        function (err) {
+                            if (err) {
+                                console.log(err.message)
+                                throw err;
+                            }
+                            console.log(`Action added: ${this.lastID}`)
+                            resolve(JSON.stringify({msg: `Action added: ${this.lastID}`}))
+                        })
         })
     }
 
@@ -264,7 +269,7 @@ class Devices extends Database{
         `
             SELECT id, config_id, config_name
             FROM ${this.dbName}
-            LEFT JOIN Configs ON Configs.config_device_id = Devices.id;
+            LEFT JOIN Configs ON Configs.config_device_id = Devices.device_id;
             ORDER BY id            
         `;
 

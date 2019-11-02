@@ -32,19 +32,19 @@ html
             p(id=`device_${index}`)=device.name
             p(id=`device_${index}`)=device.description            
             p(class="control")
-              a(class="button is-primary" onClick=`RemoveDevice(${device.id})`) Remove
+              a(class="button is-primary" onClick=`RemoveDevice(${device.device_id})`) Remove
             div(class="actionContainer box field has-addons has-addons-centered")
               p(class="control")
-                input(id=`action_name_${device.id}` class="input is-primary" type="text" placeholder="Action name")
+                input(id=`action_name_${device.device_id}` class="input is-primary" type="text" placeholder="Action name")
               p(class="control")
-                input(id=`action_parameter_${device.id}` class="input is-primary" type="text" placeholder="Parameter")
+                input(id=`action_parameter_${device.device_id}` class="input is-primary" type="text" placeholder="Parameter")
               p(class="control")
-                a(class="button is-primary" onClick=`AddAction(${device.id})`) Add
+                a(class="button is-primary" onClick=`AddAction(${device.device_id})`) Add
             div(class="configContainer box field has-addons has-addons-centered")
               p(class="control")
-                input(id=`config_name_${device.id}` class="input is-primary" type="text" placeholder="Config name")
+                input(id=`config_name_${device.device_id}` class="input is-primary" type="text" placeholder="Config name")
               p(class="control")
-                a(class="button is-primary" onClick=`AddConfig(${device.id})`) Add
+                a(class="button is-primary" onClick=`AddConfig(${device.device_id})`) Add
       div(class="bottomContainer")
         div(class="field has-addons has-addons-centered")  
           p(class="control")

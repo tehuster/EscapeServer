@@ -16,27 +16,28 @@ class WebClient {
       this.hints = hints;
    }
 
-   initRoutes(app)
-   {
+   initRoutes(app) {
       app.get('/', (req, res) => {
          res.render('index')
       })
 
-      app.get('/hints', (req, res) => {  
+      app.get('/hints', (req, res) => {
          //res.render('devices')      
          this.hints.get()
             .then(data => res.render('hints', { hints: data }));
       })
-      
-      app.get('/devices', (req, res) => {  
+
+      app.get('/devices', (req, res) => {
          //res.render('devices')      
          this.devices.get()
-            .then(data => res.render('devices', { devices: data }));
+            .then((data) => {
+               console.log(data)               
+               res.render('devices', { devices: data })
+            });
       })
    }
 
-   initServer()
-   {
+   initServer() {
       this.server.listen(3000, '127.0.0.1', 0, () => {
          console.log('Webserver is listening on 3000')
       });
