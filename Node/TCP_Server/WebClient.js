@@ -24,15 +24,17 @@ class WebClient {
       app.get('/hints', (req, res) => {
          //res.render('devices')      
          this.hints.get()
-            .then(data => res.render('hints', { hints: data }));
+            .then(data => res.render('hints', { hints: data }))
       })
 
       app.get('/devices', (req, res) => {
          //res.render('devices')      
-         this.devices.findAll()
-            .then((data) => {               
-               res.render('devices', { devices: data })
-            });
+         this.devices.findAll({
+            include: ['actions','configs']
+         })
+         .then((data) => {               
+            res.render('devices', { devices: data })
+         });
       })
    }
 

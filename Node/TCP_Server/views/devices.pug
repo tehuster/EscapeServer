@@ -26,11 +26,17 @@ html
     div(class="mainContainer")
       div(class="topContainer")
       div(class="centerContainer")
-        each device, index in devices
-          div(class="deviceContainer")
-            p(id=`device_${index}`)=device.room
-            p(id=`device_${index}`)=device.name
-            p(id=`device_${index}`)=device.description            
+        each device in devices
+          div(class="deviceContainer")            
+            p(id=`device_${device.id}`)=device.device_room
+            p(id=`device_${device.id}`)=device.device_name
+            p(id=`device_${device.id}`)=device.device_description
+            p Actions:
+              each action in device.actions
+                  p(id=`action_${action.id}`)=action.action_name
+            p Configs:
+              each config in device.configs
+                  p(id=`action_${config.id}`)=config.config_name
             p(class="control")
               a(class="button is-primary" onClick=`RemoveDevice(${device.id})`) Remove
             div(class="actionContainer box field has-addons has-addons-centered")

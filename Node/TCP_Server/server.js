@@ -4,83 +4,83 @@ const requestHandler = new RequestHandler()
 const ResponseHandler = require('./ResponseHandler')
 const responseHandler = new ResponseHandler()
 
-const Database = require('./Database')
-// const devices = new Database.Devices()
-const hints = new Database.Hints()
+//const Database = require('./Database')
+const hints = () => {};//new Database.Hints()
 
-const db = require('./db/Devices')
+//THIS COULD AND SHOULD BE CLEANER...
+const Sequelize = require('sequelize')
+const sqlite = require('./database/sqlite')
+const Devices = require('./database/models/devices')(Sequelize, sqlite)
+const Actions = require('./database/models/actions')(Sequelize, sqlite)
+const Configs = require('./database/models/configs')(Sequelize, sqlite)
+const Triggers = require('./database/models/triggers')(Sequelize, sqlite)
+const Models = {
+   Devices,
+   Actions, 
+   Configs,
+   Triggers
+}
+Devices.associate(Models)
+Actions.associate(Models)
+Configs.associate(Models)
+Triggers.associate(Models)
 
-db.Devices.sync({ force: false }).then(() => { });
-db.Actions.sync({ force: false }).then(() => { });
-db.Configs.sync({ force: false }).then(() => { });
+// Devices.findAll({
+//    include: ['actions','configs']
+// })
+// .then((devices) => {     
+//    devices.forEach(element => {
+//       console.log(element.device_name)
+//       element.dataValues.actions.forEach(action => {
+//          console.log("   " + action.action_name)
+//       })
+//       element.configs.forEach(config => {
+//          console.log("      " + config.config_name)
+//       })
+//    })
+// })
+// .catch((err) => {
+//    console.log("Error while find user : ", err)
+// })
 
-db.Devices.hasMany(db.Actions)
-db.Devices.hasMany(db.Configs)
-
-db.Actions.belongsTo(db.Devices)
-db.Configs.belongsTo(db.Devices)
-
-db.Devices.findAll({
-   include: [db.Actions, db.Configs]
-})
-   .then((foundUser) => {
-      // Get the User with Company datas included
-      console.log("//////////////////////////////////");
-      foundUser.forEach(element => {
-         console.log(element.dataValues.device_name);
-         foundUser[0].dataValues.Actions.forEach(element => {
-            console.log("   " + element.dataValues.action_name)
-         });
-
-         foundUser[0].dataValues.Configs.forEach(element => {
-            console.log("      " + element.dataValues.config_name)
-         });
-      });
-   })
-   .catch((err) => {
-      console.log("Error while find user : ", err)
-   })
-
-responseHandler.loadDevices(db.Devices.findAll())
-
+responseHandler.loadDevices(Devices.findAll())
+ 
 ///////////////////////// WEBCLIENT
 const WebClient = require('./WebClient')
-const webClient = new WebClient(db.Devices, hints)
+const webClient = new WebClient(Devices, hints)
 
 ///////////////////////// SOCKET
 const SocketHandler = require('./SocketHandler')
 const socketHandler = new SocketHandler(webClient.server)
 
 socketHandler.on('request', (data) => {
-   console.log('Handle request event!');
+   console.log('Handle request event!')
    requestHandler.addRequest(data.requestName, data.requestType, data.actionName, data.actionParameter);
-   console.log(requestHandler.requests);
+   console.log(requestHandler.requests)
 })
 
 ///////////////////////// DEVICES
 socketHandler.on('devices', (data) => {
    switch (data.command) {
       case 'add':
-         db.Devices.create({
+         Devices.create({
             device_room: data.room,
             device_name: data.name,
             device_description: data.description
          }).then(() => {
-            responseHandler.loadDevices(db.Devices.findAll())
+            responseHandler.loadDevices(Devices.findAll())
             socketHandler.io.emit('webclient', { type: 'refresh' })
          });
          break;
       case 'remove':
-         console.log(data.id);
-
-         db.Devices.destroy({
+         Devices.destroy({
             where: { id: data.id }
          }).then(() => {
             socketHandler.io.emit('webclient', { type: 'refresh' })
          });
          break;
       case 'addAction':
-         db.Actions.create({
+         Actions.create({
             DeviceId: data.device_id,
             action_name: data.action_name,
             action_parameter_type: data.action_parameter
@@ -89,7 +89,7 @@ socketHandler.on('devices', (data) => {
          });
          break;
       case 'addConfig':
-         db.Configs.create({
+         Configs.create({
             DeviceId: data.device_id,
             config_name: data.config_name,
             config_type: 'string'
@@ -107,10 +107,10 @@ socketHandler.on('devices', (data) => {
 socketHandler.on('hints', (data) => {
    switch (data.command) {
       case 'add':
-         hints.add(data.room, data.hint);
+         hints.add(data.room, data.hint)
          break;
       default:
-         console.log('Unknown hint command received...');
+         console.log('Unknown hint command received...')
          break;
    }
 })
@@ -122,7 +122,7 @@ socketHandler.on('midi', (data) => {
    } else {
       requestHandler.addRequest(data * 10, 'data')
       console.log('Added request to queue. Current queue: ')
-      console.log(requestHandler.requests);
+      console.log(requestHandler.requests)
    }
 })
 
