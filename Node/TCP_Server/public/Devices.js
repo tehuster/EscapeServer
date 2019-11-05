@@ -54,3 +54,33 @@ function AddConfig(id)
     }); 
     console.log(`Adding Config: ${config_name}`); 
 }
+
+function RequestAction(action_id)
+{
+    console.log(action_id)
+    socket.emit('server', {
+        type: 'request', 
+        command: 'action', 
+        action_id: action_id
+    });     
+}
+
+function GETConfig(config_id)
+{
+    console.log(config_id)
+    socket.emit('server', {
+        type: 'request', 
+        command: 'config_get', 
+        config_id: config_id
+    });     
+}
+
+function SETConfig(config_id)
+{
+    console.log(config_id)
+    socket.emit('server', {
+        type: 'request', 
+        command: 'config_set', 
+        config_id: config_id
+    });     
+}

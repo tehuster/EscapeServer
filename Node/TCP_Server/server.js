@@ -80,6 +80,8 @@ socketHandler.on('devices', (data) => {
          });
          break;
       case 'addAction':
+         console.log(data.device_id);
+         
          Actions.create({
             DeviceId: data.device_id,
             action_name: data.action_name,

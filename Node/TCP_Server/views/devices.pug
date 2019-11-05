@@ -32,11 +32,12 @@ html
             p(id=`device_${device.id}`)=device.device_name
             p(id=`device_${device.id}`)=device.device_description
             p Actions:
-              each action in device.actions
-                  p(id=`action_${action.id}`)=action.action_name
+              each action in device.actions   
+                  a(class="button is-primary" onClick=`RequestAction(${action.id})`)=action.action_name
             p Configs:
               each config in device.configs
-                  p(id=`action_${config.id}`)=config.config_name
+                  a(class="button is-primary" onClick=`GETConfig(${config.id})`)=`GET ${config.config_name}`
+                  a(class="button is-primary" onClick=`SETConfig(${config.id})`)=`SET ${config.config_name}`
             p(class="control")
               a(class="button is-primary" onClick=`RemoveDevice(${device.id})`) Remove
             div(class="actionContainer box field has-addons has-addons-centered")

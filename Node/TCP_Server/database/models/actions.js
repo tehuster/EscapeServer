@@ -18,7 +18,7 @@ module.exports = (Sequelize, db) => {
     })
 
     Actions.associate = function(models) {
-        Actions.belongsTo(models.Devices, { foreignKey: 'id'})       
+        Actions.belongsTo(models.Devices)       
     }   
 
     Actions.sync({ force: false }).then(() => { })
