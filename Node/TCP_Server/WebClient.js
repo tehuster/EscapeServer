@@ -1,5 +1,5 @@
 class WebClient {
-   constructor(devices, hints) {
+   constructor(devices, hints, triggers) {
       const express = require("express")
       const path = require('path')
       const bodyParser = require('body-parser')
@@ -13,6 +13,7 @@ class WebClient {
       this.initRoutes(app)
       this.initServer()
       this.devices = devices;
+      this.triggers = triggers;
       this.hints = hints;
    }
 
@@ -22,19 +23,36 @@ class WebClient {
       })
 
       app.get('/hints', (req, res) => {
-         //res.render('devices')      
          this.hints.get()
             .then(data => res.render('hints', { hints: data }))
       })
 
       app.get('/devices', (req, res) => {
-         //res.render('devices')      
          this.devices.findAll({
-            include: ['actions','configs']
+            include: ['actions', 'configs']
          })
-         .then((data) => {               
-            res.render('devices', { devices: data })
-         });
+            .then((data) => {
+               res.render('devices', { devices: data })
+            });
+      })
+
+      app.get('/triggers', (req, res) => {
+         let devices;
+         let triggers;
+         this.devices.findAll({
+            include: ['actions', 'configs']
+         })
+            .then((device_data) => {
+               devices = device_data;
+               this.triggers.findAll()
+                  .then((trigger_data) => {
+                     triggers = trigger_data;
+                     res.render('triggers', { 
+                        devices: devices, 
+                        triggers: triggers 
+                     })
+                  })
+            })
       })
    }
 

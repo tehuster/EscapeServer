@@ -40,6 +40,12 @@ class SocketHandler extends EventEmitter
                      this.emit('devices', data)
                      break;
                   }
+                  case 'triggers' :
+                  {
+                     console.log(`Received trigger command WebClient: ${data.command}`)
+                     this.emit('triggers', data)
+                     break;
+                  }
                   case 'midi' :
                   {
                      console.log(`Received midi from WebClient: ${data.msg}`)

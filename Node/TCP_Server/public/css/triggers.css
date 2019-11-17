@@ -1,0 +1,39 @@
+.mainContainer{
+    border: 1px red solid;
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+}
+
+.topContainer{
+    border: 1px red solid;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    flex: 2;
+}
+
+.centerContainer{
+    border: 1px red solid;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    flex: 7;
+}
+
+.bottomContainer{
+    border: 1px red solid;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    flex: 1;
+}
+
+
+.triggerContainer{
+    border: 1px red solid;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}

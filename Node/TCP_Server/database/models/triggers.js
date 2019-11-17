@@ -3,17 +3,25 @@ module.exports = (Sequelize, db) => {
         trigger_name: {
             type: Sequelize.STRING,
         },
-        input_device: {
-            type: Sequelize.INTEGER,            
+        iDevice: {
+            type: Sequelize.INTEGER, 
+            references: {
+                model: 'Devices',
+                key: 'id'
+            }           
         },
-        input_action: {
-            type: Sequelize.INTEGER,           
+        iAction: {
+            type: Sequelize.STRING,           
         },       
-        output_device: {
-            type: Sequelize.INTEGER,            
+        oDevice: {
+            type: Sequelize.INTEGER,   
+            references: {
+                model: 'Devices',
+                key: 'id'
+            }         
         },
-        output_action: {
-            type: Sequelize.INTEGER,  
+        oAction: {
+            type: Sequelize.STRING,  
         },
         delay_time: {
             type: Sequelize.INTEGER,
@@ -22,7 +30,8 @@ module.exports = (Sequelize, db) => {
     })
 
     Triggers.associate = function(models) {
-       
+    //    Triggers.hasOne(models.Devices, { foreignKey: 'id', as: 'input_device' })
+    //    Triggers.hasOne(models.Devices, { foreignKey: 'id', as: 'output_device' })
     }
 
     Triggers.sync({ force: false }).then(() => { })

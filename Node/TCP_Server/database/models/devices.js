@@ -17,6 +17,8 @@ module.exports = (Sequelize, db) => {
     Devices.associate = function(models) {
         Devices.hasMany(models.Actions, { as: 'actions' })
         Devices.hasMany(models.Configs, { as: 'configs' })
+        // Devices.belongsTo(models.Triggers, { foreignKey: 'id', as: 'input_device' })
+        // Devices.belongsTo(models.Triggers, { foreignKey: 'id', as: 'output_device' })
     }
 
     Devices.sync({ force: false }).then(() => { })
