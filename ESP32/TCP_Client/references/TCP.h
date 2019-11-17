@@ -9,8 +9,9 @@ class TCP
         long interval = 100;
         String messageRX;
         bool newMessage = false;
-        static bool eth_connected;
+        
         static void Event(WiFiEvent_t event);
+        
         void TestClient(const char * host, uint16_t port);
         
         void sendData(const char* d);

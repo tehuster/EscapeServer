@@ -1,6 +1,6 @@
 #include <Preferences.h>
 
-class Puzzle
+class Puzzle 
 {
     public:
         Preferences preferences; 

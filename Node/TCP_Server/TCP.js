@@ -28,7 +28,7 @@ class TCP extends EventEmitter
         this.server.on('connection', function (socket) {
 
             this.getConnections(function (error, count) {
-                //console.log('Number of concurrent connections to the server : ' + count)
+                // console.log('Number of concurrent connections to the server : ' + count)
             })
 
             socket.on('data', function (data) {            
@@ -50,8 +50,8 @@ class TCP extends EventEmitter
             })
 
             socket.on('end', function (data) {
-                //console.log('Socket ended from other end!')
-                //console.log('End data : ' + data)
+                // console.log('Socket ended from other end!')
+                // console.log('End data : ' + data)
             })
 
             socket.on('close', function (error) {

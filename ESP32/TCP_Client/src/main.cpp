@@ -1,13 +1,11 @@
 #include <Arduino.h>
-#include <TCP.h>
-#include <JSON.h>
-#include <Request.h>
+#include <Preferences.h>
+#include <Coms.h>
+
+bool connected = false;
 
 Preferences preferences;
-TCP tcp;
-JSON json;
-Puzzle puzzle;
-Request request(puzzle);  
+Coms coms;
 
 long previousMillis = 0; 
 
@@ -16,26 +14,24 @@ int blinkTime = 1000;
 void setup()
 {
     Serial.begin(115200);
-    WiFi.onEvent(tcp.Event);
+    WiFi.onEvent(coms.Event);
     ETH.begin();
     delay(10);
-    request.loadPreferences(preferences);
-    
-    json.createStatus();  
+    coms.loadPreferences(preferences);    
+    coms.createStatus();  
 }
 
 void loop()
 {   
-    if(tcp.newMessage)
-    {
-        request.request = json.parseJson(tcp.messageRX);
-        request.handleRequest();
-        tcp.newMessage = false;
+    if(coms.newMessage)
+    {        
+        coms.handleRequest();
+        coms.newMessage = false;
     }
     
     unsigned long currentMillis = millis();
-    if(currentMillis - previousMillis > tcp.interval) {
+    if(currentMillis - previousMillis > coms.interval) {
         previousMillis = currentMillis; 
-        tcp.sendData(json.jsonTX);
+        coms.sendData(coms.jsonResponse);
     }
 }
