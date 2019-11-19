@@ -36,9 +36,9 @@ void Coms::Config_set()
 
     if (variableName == "blinkTime")
     {
-        puzzle->setBlinkTime(variableValue.toInt());
+        puzzle->SetBlinkTime(variableValue.toInt());
         Serial.print("blinkTime: ");
-        Serial.println(puzzle->getBlinkTime());        
+        Serial.println(puzzle->GetBlinkTime());        
     }
     else
     {
@@ -56,7 +56,7 @@ void Coms::Config_get()
     if (variableName == "blinkTime")
     {
         Serial.print("blinkTime: ");
-        Serial.println(puzzle->getBlinkTime());
+        Serial.println(puzzle->GetBlinkTime());
     }
     else
     {
@@ -103,16 +103,6 @@ void Coms::handleRequest()
         Serial.println("Unknown: RequestType");
     }
 }
-
-void Coms::loadPreferences(Preferences &preferences)  //"&" pass by reference (memory address), not by value (copy of memory).
-{
-    //Serial.print("Getting preferences variables: ");
-    preferences.begin("puzzle", false);
-    puzzle->setBlinkTime(preferences.getUInt("blinkTime", 0));
-    preferences.end();
-    //Serial.println(puzzle.getBlinkTime());
-}
-
 
 void Coms::createStatus()
 {
@@ -163,7 +153,6 @@ void Coms::Event(WiFiEvent_t event)
     {
     case SYSTEM_EVENT_ETH_START:
         Serial.println("ETH Started");
-        //set eth hostname here
         ETH.setHostname("esp32-ethernet");
         break;
     case SYSTEM_EVENT_ETH_CONNECTED:
@@ -181,15 +170,15 @@ void Coms::Event(WiFiEvent_t event)
         Serial.print(", ");
         Serial.print(ETH.linkSpeed());
         Serial.println("Mbps");
-        //TCP::eth_connected = true;
+        // Coms::eth_connected = true;
         break;
     case SYSTEM_EVENT_ETH_DISCONNECTED:
         Serial.println("ETH Disconnected");
-        //TCP::eth_connected = false;
+        // Coms::eth_connected = false;
         break;
     case SYSTEM_EVENT_ETH_STOP:
         Serial.println("ETH Stopped");
-        //TCP::eth_connected = false;
+        // Coms::eth_connected = false;
         break;
     default:
         break;

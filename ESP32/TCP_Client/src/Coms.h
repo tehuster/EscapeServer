@@ -1,6 +1,5 @@
 #include <ETH.h>
 #include <ArduinoJson.h>
-#include <Preferences.h>
 
 class Puzzle;
 
@@ -23,13 +22,12 @@ class Coms
             puzzle = p;
         }
         StaticJsonDocument<255> request;  
-        void loadPreferences(Preferences &_preferences);
         void handleRequest();
 
         long interval = 100;
         String messageRX;
         bool newMessage = false;
-        static bool eth_connected;
+        bool eth_connected = false;
         static void Event(WiFiEvent_t event);        
         void sendData(const char* d);
 

@@ -9,7 +9,7 @@ void Puzzle::BlinkLed()
     Serial.println("Turn led off");    
 }
 
-void Puzzle::setBlinkTime(int bTime)
+void Puzzle::SetBlinkTime(int bTime)
 {
     blinkTime = bTime;    
     preferences.begin("puzzle", false);
@@ -17,19 +17,17 @@ void Puzzle::setBlinkTime(int bTime)
     preferences.end();
 }
 
-void Puzzle::loadVariables()
+void Puzzle::LoadVariables(Preferences p)
 {
+    preferences = p;
     preferences.begin("puzzle", false);
     blinkTime = preferences.getUInt("blinkTime", 0);
+    Serial.println(blinkTime);
     preferences.end();
 }
 
-int Puzzle::getBlinkTime()
+int Puzzle::GetBlinkTime()
 {
     Serial.println(blinkTime);
     return blinkTime;
 }
-
-
-
-        

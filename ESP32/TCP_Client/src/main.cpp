@@ -11,7 +11,6 @@ Puzzle* p = &puzzle;
 Coms coms(p);
 
 long previousMillis = 0; 
-
 int blinkTime = 1000;
 
 void setup()
@@ -20,7 +19,7 @@ void setup()
     WiFi.onEvent(coms.Event);
     ETH.begin();
     delay(10);
-    coms.loadPreferences(preferences);    
+    puzzle.LoadVariables(preferences);
     coms.createStatus();  
 }
 

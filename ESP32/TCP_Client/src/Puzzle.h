@@ -3,15 +3,11 @@
 class Puzzle 
 {
     public:
-        Preferences preferences; 
+        void LoadVariables(Preferences p);
         void BlinkLed();
-        void setBlinkTime(int bTime);
-        int getBlinkTime();
-        Puzzle()
-        {
-            loadVariables();
-        }
+        void SetBlinkTime(int bTime);        
+        int GetBlinkTime();
     private:
-        int blinkTime; 
-        void loadVariables();
+        Preferences preferences; 
+        int blinkTime;         
 };
