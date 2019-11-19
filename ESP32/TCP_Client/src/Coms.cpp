@@ -1,4 +1,5 @@
 #include <Coms.h>
+#include <Puzzle.h>
 
 void Coms::Status()
 {
@@ -18,7 +19,7 @@ void Coms::Action()
 
     if (actionName == "BlinkLed")
     {
-        // puzzle.BlinkLed();
+        puzzle->BlinkLed();
     }
     else
     {
@@ -35,9 +36,9 @@ void Coms::Config_set()
 
     if (variableName == "blinkTime")
     {
-        // puzzle.setBlinkTime(variableValue.toInt());
+        puzzle->setBlinkTime(variableValue.toInt());
         Serial.print("blinkTime: ");
-        // Serial.println(puzzle.getBlinkTime());        
+        Serial.println(puzzle->getBlinkTime());        
     }
     else
     {
@@ -55,7 +56,7 @@ void Coms::Config_get()
     if (variableName == "blinkTime")
     {
         Serial.print("blinkTime: ");
-        // Serial.println(puzzle.getBlinkTime());
+        Serial.println(puzzle->getBlinkTime());
     }
     else
     {
@@ -107,7 +108,7 @@ void Coms::loadPreferences(Preferences &preferences)  //"&" pass by reference (m
 {
     //Serial.print("Getting preferences variables: ");
     preferences.begin("puzzle", false);
-    // puzzle->setBlinkTime(preferences.getUInt("blinkTime", 0));
+    puzzle->setBlinkTime(preferences.getUInt("blinkTime", 0));
     preferences.end();
     //Serial.println(puzzle.getBlinkTime());
 }
@@ -118,7 +119,7 @@ void Coms::createStatus()
     JsonObject status = Response.createNestedObject("status");
 
     status["name"] = "Client101";
-    status["requestType"] = 'data';
+    status["requestType"] = "data";
 
     serializeJson(Response, jsonResponse);
 }

@@ -1,11 +1,14 @@
 #include <Arduino.h>
 #include <Preferences.h>
 #include <Coms.h>
+#include <Puzzle.h>
 
 bool connected = false;
 
 Preferences preferences;
-Coms coms;
+Puzzle puzzle;
+Puzzle* p = &puzzle;
+Coms coms(p);
 
 long previousMillis = 0; 
 

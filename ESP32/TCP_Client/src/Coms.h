@@ -17,8 +17,11 @@ class Coms
         void Config_get();
 
     public:
-        // Puzzle puzzle;
-
+        Puzzle* puzzle;
+        Coms(Puzzle* p)
+        {
+            puzzle = p;
+        }
         StaticJsonDocument<255> request;  
         void loadPreferences(Preferences &_preferences);
         void handleRequest();

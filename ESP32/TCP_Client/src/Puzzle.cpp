@@ -17,6 +17,13 @@ void Puzzle::setBlinkTime(int bTime)
     preferences.end();
 }
 
+void Puzzle::loadVariables()
+{
+    preferences.begin("puzzle", false);
+    blinkTime = preferences.getUInt("blinkTime", 0);
+    preferences.end();
+}
+
 int Puzzle::getBlinkTime()
 {
     Serial.println(blinkTime);
