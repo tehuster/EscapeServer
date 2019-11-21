@@ -1,13 +1,15 @@
 #include <Arduino.h>
 #include <PubSubClient.h>
 #include <ETH.h>
-// #include <Puzzle.h>
+#include <Puzzle.h>
 
 const char *mqtt_server = "192.168.1.208";
 String clientId = "Client101";
 
 WiFiClient espClient;
 PubSubClient client(espClient);
+Preferences preferences;
+Puzzle puzzle;
 
 void WiFiEvent(WiFiEvent_t event);
 void testClient(const char *host, uint16_t port);
@@ -16,10 +18,13 @@ void printIncomingMessage(char *_topic, byte *payload, unsigned int length);
 void connect();
 void server();
 
-void HandleData(byte *payload);
-void HandleAction(byte *payload);
-void HandleGet(byte *payload);
-void HandleSet(byte *payload);
+String parsePayload(byte *payload, unsigned int length);
+String getValue(String data, char separator, int index);
+
+void HandleData(String payload);
+void HandleAction(String payload);
+void HandleGet(String payload);
+void HandleSet(String payload);
 
 static bool eth_connected = false;
 long lastMsg = 0;
@@ -36,6 +41,8 @@ void setup()
   ETH.begin();
   client.setServer(mqtt_server, 1234);
   client.setCallback(callback);
+
+  puzzle.LoadVariables(preferences);
 }
 
 void loop()
@@ -43,24 +50,85 @@ void loop()
     server();
 }
 
-void HandleData(byte *payload)
+void HandleData(String payload)
 {
     Serial.println("Data requested...");
+    // String name = getValue(payload, '/', 0);
+    // String value = getValue(payload, '/', 1);
+    // Serial.println(name);  
+    // Serial.println(value);   
 }
 
-void HandleAction(byte *payload)
+void HandleAction(String payload)
 {
     Serial.println("Action requested...");
+    String name = getValue(payload, '/', 0);
+    String value = getValue(payload, '/', 1);
+
+    if(name = "BlinkLed")
+    {
+        puzzle.BlinkLed();
+    }else
+    {
+        Serial.print("Requested unknown action: ");
+        Serial.println(name);
+    }
 }
 
-void HandleGet(byte *payload)
+void HandleGet(String payload)
 {
     Serial.println("Get requested...");
+    String name = getValue(payload, '/', 0);
+    String value = getValue(payload, '/', 1);
+    if(name = "blinkTime")
+    {
+        puzzle.GetBlinkTime();
+    }else
+    {
+        Serial.print("Requested unknown get: ");
+        Serial.println(name);
+    }   
 }
 
-void HandleSet(byte *payload)
+void HandleSet(String payload)
+{   
+    Serial.println("Set requested...");   
+    String name = getValue(payload, '/', 0);
+    String value = getValue(payload, '/', 1);
+    if(name = "blinkTime")
+    {
+        puzzle.SetBlinkTime(value.toInt());
+    }else
+    {
+        Serial.print("Requested unknown set: ");
+        Serial.println(name);
+    }         
+}
+
+String parsePayload(byte *payload, unsigned int length)
 {
-    Serial.println("Set requested...");
+   String msg; 
+   for (size_t i = 0; i < length; i++)
+   {
+      msg += (char)payload[i];
+   }   
+   return msg;
+}
+
+String getValue(String data, char separator, int index)
+{
+    int found = 0;
+    int strIndex[] = { 0, -1 };
+    int maxIndex = data.length() - 1;
+
+    for (int i = 0; i <= maxIndex && found <= index; i++) {
+        if (data.charAt(i) == separator || i == maxIndex) {
+            found++;
+            strIndex[0] = strIndex[1] + 1;
+            strIndex[1] = (i == maxIndex) ? i+1 : i;
+        }
+    }
+    return found > index ? data.substring(strIndex[0], strIndex[1]) : "";
 }
 
 ///////////////////// MQTT ///////////////////
@@ -94,19 +162,19 @@ void callback(char *_topic, byte *payload, unsigned int length)
 
     if (topic == "Client101/Data")
     {
-        HandleData(payload);
+        HandleData(parsePayload(payload, length));
     }
     else if (topic == "Client101/Action")
     { 
-        HandleAction(payload);
+        HandleAction(parsePayload(payload, length));
     }
     else if (topic == "Client101/Get")
     {
-        HandleGet(payload);
+        HandleGet(parsePayload(payload, length));
     }
     else if (topic == "Client101/Set")
     {
-        HandleSet(payload);
+        HandleSet(parsePayload(payload, length));
     }
 
     digitalWrite(2, LOW); // Turn the LED off by making the voltage HIGH
