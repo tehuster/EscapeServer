@@ -1,73 +1,77 @@
 #include <Arduino.h>
-#include <PubSubClient.h>
 #include <ETH.h>
+#include <MQTT.h>
 #include <Puzzle.h>
 
-const char *mqtt_server = "192.168.1.208";
-String clientId = "Client101";
-
-WiFiClient espClient;
-PubSubClient client(espClient);
+WiFiClient ethernetConnection;
+MQTTClient mqtt;
 Preferences preferences;
 Puzzle puzzle;
 
-void WiFiEvent(WiFiEvent_t event);
-void testClient(const char *host, uint16_t port);
-void callback(char *topic, byte *payload, unsigned int length);
-void printIncomingMessage(char *_topic, byte *payload, unsigned int length);
-void connect();
-void server();
-
-String parsePayload(byte *payload, unsigned int length);
-String getValue(String data, char separator, int index);
+const char *mqtt_server = "192.168.1.208";
+String clientId = "Client101";
+String subscribers[4] = {"Data", "Action", "Get", "Set"};
 
 void HandleData(String payload);
 void HandleAction(String payload);
 void HandleGet(String payload);
 void HandleSet(String payload);
+String GetValue(String data, char separator, int index);
 
+void MessageReceived(String &topic, String &payload);
+void Connect();
+void InitMQTT();
+void WiFiEvent(WiFiEvent_t event);
 static bool eth_connected = false;
-long lastMsg = 0;
-char msg[50];
-int value = 0;
 
 void setup()
 {
+  Serial.begin(115200);
   pinMode(2, OUTPUT);
   pinMode(34, INPUT);
-
-  Serial.begin(115200);
-  WiFi.onEvent(WiFiEvent);
-  ETH.begin();
-  client.setServer(mqtt_server, 1234);
-  client.setCallback(callback);
-
+  InitMQTT();
   puzzle.LoadVariables(preferences);
 }
 
 void loop()
 {
-    server();
+  if (eth_connected)
+  {
+    if (!mqtt.connected())
+    {
+      Connect();
+    }
+    else
+    {
+      mqtt.loop();
+    }
+  }
+  int buttonPress = digitalRead(34);  
+  if(buttonPress)
+  {
+      mqtt.publish("Client101/Event", "Button is pressed!", true, 1);
+      delay(1000);
+  }
 }
+
+///////////////////// TOPICS ///////////////////
 
 void HandleData(String payload)
 {
     Serial.println("Data requested...");
-    // String name = getValue(payload, '/', 0);
-    // String value = getValue(payload, '/', 1);
-    // Serial.println(name);  
-    // Serial.println(value);   
+    mqtt.publish("Client101/Response/Data", "Data", true, 1);
 }
 
 void HandleAction(String payload)
 {
     Serial.println("Action requested...");
-    String name = getValue(payload, '/', 0);
-    String value = getValue(payload, '/', 1);
+    String name = GetValue(payload, '/', 0);
+    String value = GetValue(payload, '/', 1);
 
     if(name = "BlinkLed")
     {
         puzzle.BlinkLed();
+        mqtt.publish("Client101/Response/Action", "BlinkLed", true, 1);
     }else
     {
         Serial.print("Requested unknown action: ");
@@ -78,11 +82,12 @@ void HandleAction(String payload)
 void HandleGet(String payload)
 {
     Serial.println("Get requested...");
-    String name = getValue(payload, '/', 0);
-    String value = getValue(payload, '/', 1);
+    String name = GetValue(payload, '/', 0);
+    String value = GetValue(payload, '/', 1);
     if(name = "blinkTime")
     {
-        puzzle.GetBlinkTime();
+        int blinkTime = puzzle.GetBlinkTime();
+        mqtt.publish("Client101/Response/Get", String(blinkTime), true, 1);
     }else
     {
         Serial.print("Requested unknown get: ");
@@ -93,11 +98,12 @@ void HandleGet(String payload)
 void HandleSet(String payload)
 {   
     Serial.println("Set requested...");   
-    String name = getValue(payload, '/', 0);
-    String value = getValue(payload, '/', 1);
+    String name = GetValue(payload, '/', 0);
+    String value = GetValue(payload, '/', 1);
     if(name = "blinkTime")
     {
         puzzle.SetBlinkTime(value.toInt());
+        mqtt.publish("Client101/Response/Set", value, true, 1);
     }else
     {
         Serial.print("Requested unknown set: ");
@@ -105,17 +111,9 @@ void HandleSet(String payload)
     }         
 }
 
-String parsePayload(byte *payload, unsigned int length)
-{
-   String msg; 
-   for (size_t i = 0; i < length; i++)
-   {
-      msg += (char)payload[i];
-   }   
-   return msg;
-}
+///////////////////// UTILITY ///////////////////
 
-String getValue(String data, char separator, int index)
+String GetValue(String data, char separator, int index)
 {
     int found = 0;
     int strIndex[] = { 0, -1 };
@@ -133,107 +131,71 @@ String getValue(String data, char separator, int index)
 
 ///////////////////// MQTT ///////////////////
 
-void server()
+void MessageReceived(String &topic, String &payload)
 {
-    if (eth_connected)
-    {
-        if (!client.connected())
-        {
-          connect();
-        }
-        client.loop();
+  Serial.println("incoming: " + topic + " - " + payload);
 
-        int buttonPress = digitalRead(34);  
-        if(buttonPress)
-        {
-            client.publish("Client101/Event", "ButtonPressed");
-            delay(1000);
-        }
-    }
-}
-
-void callback(char *_topic, byte *payload, unsigned int length)
-{
-    printIncomingMessage(_topic, payload, length);
-
-    String topic = _topic;
-
-    digitalWrite(2, HIGH); // Turn the LED on (Note that LOW is the voltage level   
+  digitalWrite(2, HIGH); // Turn the LED on (Note that LOW is the voltage level   
 
     if (topic == "Client101/Data")
     {
-        HandleData(parsePayload(payload, length));
+        HandleData(payload);
     }
     else if (topic == "Client101/Action")
     { 
-        HandleAction(parsePayload(payload, length));
+        HandleAction(payload);
     }
     else if (topic == "Client101/Get")
     {
-        HandleGet(parsePayload(payload, length));
+        HandleGet(payload);
     }
     else if (topic == "Client101/Set")
     {
-        HandleSet(parsePayload(payload, length));
+        HandleSet(payload);
     }
 
     digitalWrite(2, LOW); // Turn the LED off by making the voltage HIGH
 }
 
-void printIncomingMessage(char *_topic, byte *payload, unsigned int length)
+void Connect()
 {
-    Serial.print("Message arrived [");
-    Serial.print(_topic);
-    Serial.print("] ");
-    for (int i = 0; i < length; i++)
-    {
-        Serial.print((char)payload[i]);
-    }
-    Serial.println();  
-}
-
-///////////////////// SETUP ///////////////////
-void setupSubcriptions() //TODO get subrscribers out of array at top.
-{
-  String subscribers [4] = { "Data", "Action", "Get", "Set"};
-  for (size_t i = 0; i < 4; i++)
-  {
-    String subName = clientId;
-    subName += "/";
-    subName += subscribers[i];
-    Serial.print("Subscribing to [");
-    Serial.print(subName);
-    Serial.println("]");
-    client.subscribe(subName.c_str());
-  }  
-}
-
-void connect()
-{
-  // Loop until we're reconnected
-  while (!client.connected())
+  while (!mqtt.connected())
   {
     Serial.print("Attempting MQTT connection...");
-    // Create a random client ID
-    // clientId += String(random(0xffff), HEX);
-    // Attempt to connect
-    if (client.connect(clientId.c_str()))
+    if (mqtt.connect(clientId.c_str()))
     {
-      Serial.println("connected");
-      // Once connected, publish an announcement...
-      client.publish("Client101/Action/BlinkLed", "Connected");
-      // ... and resubscribe
-      setupSubcriptions();
+      Serial.println("Connected with MQTT broker");
+      mqtt.publish("Client101/Event", "Connected", true, 1);
+
+      for (size_t i = 0; i < 4; i++)
+      {
+        String subName = clientId;
+        subName += "/";
+        subName += subscribers[i];
+        Serial.print("Subscribing to [");
+        Serial.print(subName);
+        Serial.println("]");
+        mqtt.subscribe(subName.c_str());
+      }
     }
     else
     {
-      Serial.print("failed to connect=");
-      Serial.print(client.state());
-      Serial.println(" try again in 5 seconds");
-      // Wait 5 seconds before retrying
-      delay(5000);
+      Serial.print("Failed to connect to broker");
+      Serial.println(" trying again in 2 seconds");
+      delay(2000);
     }
   }
+}
+
+void InitMQTT()
+{
+  WiFi.onEvent(WiFiEvent);
+  ETH.begin();
+
+  mqtt.begin(mqtt_server, ethernetConnection);
+  mqtt.setWill("Client101/Error", "Device disconnected", true, 2);
+  mqtt.setOptions(5, true, 777);
+  mqtt.onMessage(MessageReceived);
 }
 
 void WiFiEvent(WiFiEvent_t event)
@@ -242,8 +204,7 @@ void WiFiEvent(WiFiEvent_t event)
   {
   case SYSTEM_EVENT_ETH_START:
     Serial.println("ETH Started");
-    //set eth hostname here
-    ETH.setHostname("esp32-ethernet");
+    ETH.setHostname(clientId.c_str());
     break;
   case SYSTEM_EVENT_ETH_CONNECTED:
     Serial.println("ETH Connected");
@@ -273,27 +234,4 @@ void WiFiEvent(WiFiEvent_t event)
   default:
     break;
   }
-}
-
-void testClient(const char *host, uint16_t port)
-{
-  Serial.print("\nconnecting to ");
-  Serial.println(host);
-
-  WiFiClient client;
-  if (!client.connect(host, port))
-  {
-    Serial.println("connection failed");
-    return;
-  }
-  client.printf("GET / HTTP/1.1\r\nHost: %s\r\n\r\n", host);
-  while (client.connected() && !client.available())
-    ;
-  while (client.available())
-  {
-    Serial.write(client.read());
-  }
-
-  Serial.println("closing connection\n");
-  client.stop();
 }
