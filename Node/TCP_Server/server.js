@@ -1,5 +1,5 @@
 //const Database = require('./Database')
-const Hints = () => {};//new Database.Hints() Sequelize this.
+const Hints = () => { };//new Database.Hints() Sequelize this.
 
 //THIS COULD AND SHOULD BE CLEANER...
 const Sequelize = require('sequelize')
@@ -10,7 +10,7 @@ const Configs = require('./database/models/configs')(Sequelize, sqlite)
 const Triggers = require('./database/models/triggers')(Sequelize, sqlite)
 const Models = {
    Devices,
-   Actions, 
+   Actions,
    Configs,
    Triggers
 }
@@ -26,7 +26,7 @@ Triggers.associate(Models)
 ///////////////////////// MQTT
 const MQTT = require('./MQTT')
 const mqtt = new MQTT()
- 
+
 ///////////////////////// WEBCLIENT
 const WebClient = require('./WebClient')
 const webClient = new WebClient(Devices, Hints, Triggers)
@@ -36,7 +36,17 @@ const SocketHandler = require('./SocketHandler')
 const socketHandler = new SocketHandler(webClient.server)
 
 socketHandler.on('request', (data) => {
-   mqtt.sendMessage(data.requestName, data.requestType, data.actionName, data.actionParameter);
+   switch (data.command) {
+      case 'manual':
+         mqtt.sendMessage(data.deviceName, data.requestType, data.actionName, data.actionParameter);
+         break;
+      case 'action':
+         mqtt.sendMessage(data.deviceName, 'Action', data.actionName, data.actionParameter);
+         break;
+      default:
+         console.log('Unknown request command received...')
+         break;
+   }
 })
 
 ///////////////////////// DEVICES
@@ -61,7 +71,7 @@ socketHandler.on('devices', (data) => {
          break;
       case 'addAction':
          console.log(data.device_id);
-         
+
          Actions.create({
             DeviceId: data.device_id,
             action_name: data.action_name,
@@ -92,14 +102,14 @@ socketHandler.on('triggers', (data) => {
          Triggers.create({
             trigger_name: data.name,
             iDevice: data.iDevice,
-            iAction: data.iAction, 
-            oDevice: data.oDevice, 
+            iAction: data.iAction,
+            oDevice: data.oDevice,
             oAction: data.oAction
          }).then(() => {
             //responseHandler.loadDevices(Devices.findAll())
             socketHandler.io.emit('webclient', { type: 'refresh' })
          });
-         break;     
+         break;
       default:
          console.log('Unknown trigger command received...')
          break;

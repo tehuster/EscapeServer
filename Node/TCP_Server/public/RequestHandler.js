@@ -7,7 +7,8 @@ function SendRequest() {
     let actionParameter = document.getElementById('actionParameter').value;
     socket.emit('server', {
                             type: 'request', 
-                            requestName: requestName, 
+                            command: 'manual', 
+                            deviceName: deviceName, 
                             requestType: requestType, 
                             actionName:actionName, 
                             actionParameter:actionParameter

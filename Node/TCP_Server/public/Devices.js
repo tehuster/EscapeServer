@@ -55,32 +55,40 @@ function AddConfig(id)
     console.log(`Adding Config: ${config_name}`); 
 }
 
-function RequestAction(action_id)
+function RequestAction(device_name, action_name, id)  //Add paramaters
 {
-    console.log(action_id)
+    let parameter = null;
+    if(document.getElementById(`parameter_${id}`) != undefined)
+    {
+        parameter = document.getElementById(`parameter_${id}`).value; 
+    }
+    
+    console.log(`Requesting: ${action_name} @ ${device_name} : ${parameter}`)
     socket.emit('server', {
         type: 'request', 
         command: 'action', 
-        action_id: action_id
+        deviceName: device_name,
+        actionName: action_name,
+        actionParameter: parameter
     });     
 }
 
-function GETConfig(config_id)
+function GETConfig(config_name)
 {
-    console.log(config_id)
-    socket.emit('server', {
-        type: 'request', 
-        command: 'config_get', 
-        config_id: config_id
-    });     
+    console.log(config_name)
+    // socket.emit('server', {
+    //     type: 'request', 
+    //     command: 'config_get', 
+    //     config_name: config_name
+    // });     
 }
 
-function SETConfig(config_id)
+function SETConfig(config_name)
 {
-    console.log(config_id)
-    socket.emit('server', {
-        type: 'request', 
-        command: 'config_set', 
-        config_id: config_id
-    });     
+    console.log(config_name)
+    // socket.emit('server', {
+    //     type: 'request', 
+    //     command: 'config_set', 
+    //     config_name: config_name
+    // });     
 }
