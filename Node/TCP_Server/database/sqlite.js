@@ -7,5 +7,6 @@ module.exports = new Sequalize('Devices', 'username', 'password', {
         min: 0,
         idle: 10000
     },
-    storage: './database/database.db'
+    storage: './database/database.db',
+    logging: false
 });

@@ -1,0 +1,7 @@
+Topic:
+    DEVICENAME/TOPICTYPE
+    *Client101/SET
+
+Payload:
+    NAME/VALUE
+    *blinkTime/777

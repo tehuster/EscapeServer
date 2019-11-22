@@ -18,6 +18,7 @@ void HandleGet(String payload);
 void HandleSet(String payload);
 String GetValue(String data, char separator, int index);
 
+void MQTT_Update();
 void MessageReceived(String &topic, String &payload);
 void Connect();
 void InitMQTT();
@@ -35,6 +36,93 @@ void setup()
 
 void loop()
 {
+    MQTT_Update();
+}
+
+///////////////////// TOPICS ///////////////////
+
+void HandleData(String payload)
+{
+  Serial.println("Data requested...");
+  mqtt.publish("Client101/Response/Data", "Data", true, 1);
+}
+
+void HandleAction(String payload)
+{
+  Serial.println("Action requested...");
+  String name = GetValue(payload, '/', 0);
+  String value = GetValue(payload, '/', 1);
+
+  if (name = "BlinkLed")
+  {
+    puzzle.BlinkLed();
+    mqtt.publish("Client101/Response/Action", "BlinkLed", true, 1);
+  }
+  else
+  {
+    Serial.print("Requested unknown action: ");
+    Serial.println(name);
+  }
+}
+
+void HandleGet(String payload)
+{
+  Serial.println("Get requested...");
+  String name = GetValue(payload, '/', 0);
+  String value = GetValue(payload, '/', 1);
+  if (name = "blinkTime")
+  {
+    int blinkTime = puzzle.GetBlinkTime();
+    mqtt.publish("Client101/Response/Get", String(blinkTime), true, 1);
+  }
+  else
+  {
+    Serial.print("Requested unknown get: ");
+    Serial.println(name);
+  }
+}
+
+void HandleSet(String payload)
+{
+  Serial.println("Set requested...");
+  String name = GetValue(payload, '/', 0);
+  String value = GetValue(payload, '/', 1);
+  if (name = "blinkTime")
+  {
+    puzzle.SetBlinkTime(value.toInt());
+    mqtt.publish("Client101/Response/Set", value, true, 1);
+  }
+  else
+  {
+    Serial.print("Requested unknown set: ");
+    Serial.println(name);
+  }
+}
+
+///////////////////// UTILITY ///////////////////
+
+String GetValue(String data, char separator, int index)
+{
+  int found = 0;
+  int strIndex[] = {0, -1};
+  int maxIndex = data.length() - 1;
+
+  for (int i = 0; i <= maxIndex && found <= index; i++)
+  {
+    if (data.charAt(i) == separator || i == maxIndex)
+    {
+      found++;
+      strIndex[0] = strIndex[1] + 1;
+      strIndex[1] = (i == maxIndex) ? i + 1 : i;
+    }
+  }
+  return found > index ? data.substring(strIndex[0], strIndex[1]) : "";
+}
+
+///////////////////// MQTT ///////////////////
+
+void MQTT_Update()
+{
   if (eth_connected)
   {
     if (!mqtt.connected())
@@ -46,115 +134,38 @@ void loop()
       mqtt.loop();
     }
   }
-  int buttonPress = digitalRead(34);  
-  if(buttonPress)
+  int buttonPress = digitalRead(34);
+  if (buttonPress)
   {
-      mqtt.publish("Client101/Event", "Button is pressed!", true, 1);
-      delay(1000);
+    mqtt.publish("Client101/Event", "Button is pressed!", true, 1);
+    delay(1000);
   }
 }
-
-///////////////////// TOPICS ///////////////////
-
-void HandleData(String payload)
-{
-    Serial.println("Data requested...");
-    mqtt.publish("Client101/Response/Data", "Data", true, 1);
-}
-
-void HandleAction(String payload)
-{
-    Serial.println("Action requested...");
-    String name = GetValue(payload, '/', 0);
-    String value = GetValue(payload, '/', 1);
-
-    if(name = "BlinkLed")
-    {
-        puzzle.BlinkLed();
-        mqtt.publish("Client101/Response/Action", "BlinkLed", true, 1);
-    }else
-    {
-        Serial.print("Requested unknown action: ");
-        Serial.println(name);
-    }
-}
-
-void HandleGet(String payload)
-{
-    Serial.println("Get requested...");
-    String name = GetValue(payload, '/', 0);
-    String value = GetValue(payload, '/', 1);
-    if(name = "blinkTime")
-    {
-        int blinkTime = puzzle.GetBlinkTime();
-        mqtt.publish("Client101/Response/Get", String(blinkTime), true, 1);
-    }else
-    {
-        Serial.print("Requested unknown get: ");
-        Serial.println(name);
-    }   
-}
-
-void HandleSet(String payload)
-{   
-    Serial.println("Set requested...");   
-    String name = GetValue(payload, '/', 0);
-    String value = GetValue(payload, '/', 1);
-    if(name = "blinkTime")
-    {
-        puzzle.SetBlinkTime(value.toInt());
-        mqtt.publish("Client101/Response/Set", value, true, 1);
-    }else
-    {
-        Serial.print("Requested unknown set: ");
-        Serial.println(name);
-    }         
-}
-
-///////////////////// UTILITY ///////////////////
-
-String GetValue(String data, char separator, int index)
-{
-    int found = 0;
-    int strIndex[] = { 0, -1 };
-    int maxIndex = data.length() - 1;
-
-    for (int i = 0; i <= maxIndex && found <= index; i++) {
-        if (data.charAt(i) == separator || i == maxIndex) {
-            found++;
-            strIndex[0] = strIndex[1] + 1;
-            strIndex[1] = (i == maxIndex) ? i+1 : i;
-        }
-    }
-    return found > index ? data.substring(strIndex[0], strIndex[1]) : "";
-}
-
-///////////////////// MQTT ///////////////////
 
 void MessageReceived(String &topic, String &payload)
 {
   Serial.println("incoming: " + topic + " - " + payload);
 
-  digitalWrite(2, HIGH); // Turn the LED on (Note that LOW is the voltage level   
+  digitalWrite(2, HIGH); // Turn the LED on (Note that LOW is the voltage level
 
-    if (topic == "Client101/Data")
-    {
-        HandleData(payload);
-    }
-    else if (topic == "Client101/Action")
-    { 
-        HandleAction(payload);
-    }
-    else if (topic == "Client101/Get")
-    {
-        HandleGet(payload);
-    }
-    else if (topic == "Client101/Set")
-    {
-        HandleSet(payload);
-    }
+  if (topic == "Client101/Data")
+  {
+    HandleData(payload);
+  }
+  else if (topic == "Client101/Action")
+  {
+    HandleAction(payload);
+  }
+  else if (topic == "Client101/Get")
+  {
+    HandleGet(payload);
+  }
+  else if (topic == "Client101/Set")
+  {
+    HandleSet(payload);
+  }
 
-    digitalWrite(2, LOW); // Turn the LED off by making the voltage HIGH
+  digitalWrite(2, LOW); // Turn the LED off by making the voltage HIGH
 }
 
 void Connect()

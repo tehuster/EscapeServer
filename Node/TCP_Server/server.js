@@ -1,11 +1,5 @@
-const RequestHandler = require('./RequestHandler')
-const requestHandler = new RequestHandler()
-
-const ResponseHandler = require('./ResponseHandler')
-const responseHandler = new ResponseHandler()
-
 //const Database = require('./Database')
-const Hints = () => {};//new Database.Hints()
+const Hints = () => {};//new Database.Hints() Sequelize this.
 
 //THIS COULD AND SHOULD BE CLEANER...
 const Sequelize = require('sequelize')
@@ -25,55 +19,13 @@ Actions.associate(Models)
 Configs.associate(Models)
 Triggers.associate(Models)
 
-// Triggers.create({
-//    trigger_name: 'test',
-//    input_device: 1,
-//    input_action: 1,       
-//    output_device: 2,
-//    output_action: 1,
-//    delay_time: 10
-// }).then(() => {
-//    responseHandler.loadDevices(Devices.findAll())
-//    socketHandler.io.emit('webclient', { type: 'refresh' })
-// });
+// const ResponseHandler = require('./ResponseHandler')
+// const responseHandler = new ResponseHandler()
+// responseHandler.loadDevices(Devices.findAll())
 
-// Triggers.findAll({
-//    // include: ['input_device','output_device']
-// })
-// .then((devices) => {     
-//    devices.forEach(element => {
-//       console.log(element.device_name)
-//       element.dataValues.actions.forEach(action => {
-//          console.log("   " + action.action_name)
-//       })
-//       element.configs.forEach(config => {
-//          console.log("      " + config.config_name)
-//       })
-//    })
-// })
-// .catch((err) => {
-//    console.log("Error while find user : ", err)
-// })
-
-// Devices.findAll({
-//    include: ['actions','configs']
-// })
-// .then((devices) => {     
-//    devices.forEach(element => {
-//       console.log(element.device_name)
-//       element.dataValues.actions.forEach(action => {
-//          console.log("   " + action.action_name)
-//       })
-//       element.configs.forEach(config => {
-//          console.log("      " + config.config_name)
-//       })
-//    })
-// })
-// .catch((err) => {
-//    console.log("Error while find user : ", err)
-// })
-
-responseHandler.loadDevices(Devices.findAll())
+///////////////////////// MQTT
+const MQTT = require('./MQTT')
+const mqtt = new MQTT()
  
 ///////////////////////// WEBCLIENT
 const WebClient = require('./WebClient')
@@ -84,9 +36,7 @@ const SocketHandler = require('./SocketHandler')
 const socketHandler = new SocketHandler(webClient.server)
 
 socketHandler.on('request', (data) => {
-   console.log('Handle request event!')
-   requestHandler.addRequest(data.requestName, data.requestType, data.actionName, data.actionParameter);
-   console.log(requestHandler.requests)
+   mqtt.sendMessage(data.requestName, data.requestType, data.actionName, data.actionParameter);
 })
 
 ///////////////////////// DEVICES
@@ -178,10 +128,6 @@ socketHandler.on('midi', (data) => {
       console.log(requestHandler.requests)
    }
 })
-
-///////////////////////// TCP  
-const TCP = require('./TCP')
-const tcp = new TCP(8080, '192.168.1.249', requestHandler, responseHandler)
 
 ///////////////////////
 // setInterval(PollDeviceResponses, 1000);
