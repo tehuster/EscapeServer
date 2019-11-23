@@ -58,7 +58,7 @@ socketHandler.on('devices', (data) => {
             device_name: data.name,
             device_description: data.description
          }).then(() => {
-            responseHandler.loadDevices(Devices.findAll())
+            //responseHandler.loadDevices(Devices.findAll())
             socketHandler.io.emit('webclient', { type: 'refresh' })
          });
          break;
@@ -75,7 +75,8 @@ socketHandler.on('devices', (data) => {
          Actions.create({
             DeviceId: data.device_id,
             action_name: data.action_name,
-            action_parameter_type: data.action_parameter
+            action_parameter_type: data.action_parameter,
+            public: data.actionPublic
          }).then(() => {
             socketHandler.io.emit('webclient', { type: 'refresh' })
          });
@@ -84,7 +85,8 @@ socketHandler.on('devices', (data) => {
          Configs.create({
             DeviceId: data.device_id,
             config_name: data.config_name,
-            config_type: 'string'
+            config_type: 'string',
+            public: data.config_public            
          }).then(() => {
             socketHandler.io.emit('webclient', { type: 'refresh' })
          });

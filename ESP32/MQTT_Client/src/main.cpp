@@ -53,7 +53,7 @@ void HandleAction(String payload)
   String name = GetValue(payload, '/', 0);
   String value = GetValue(payload, '/', 1);
 
-  if (name = "BlinkLed")
+  if (name == "BlinkLed")
   {
     puzzle.BlinkLed();
     mqtt.publish("Client101/Response/Action", "BlinkLed", true, 1);
@@ -62,6 +62,7 @@ void HandleAction(String payload)
   {
     Serial.print("Requested unknown action: ");
     Serial.println(name);
+    mqtt.publish("Client101/Response/Action", "Unknown Action", true, 1);
   }
 }
 
@@ -70,7 +71,7 @@ void HandleGet(String payload)
   Serial.println("Get requested...");
   String name = GetValue(payload, '/', 0);
   String value = GetValue(payload, '/', 1);
-  if (name = "blinkTime")
+  if (name == "blinkTime")
   {
     int blinkTime = puzzle.GetBlinkTime();
     mqtt.publish("Client101/Response/Get", String(blinkTime), true, 1);
@@ -79,6 +80,7 @@ void HandleGet(String payload)
   {
     Serial.print("Requested unknown get: ");
     Serial.println(name);
+    mqtt.publish("Client101/Response/Get", "Unknown Get", true, 1);
   }
 }
 
@@ -87,7 +89,7 @@ void HandleSet(String payload)
   Serial.println("Set requested...");
   String name = GetValue(payload, '/', 0);
   String value = GetValue(payload, '/', 1);
-  if (name = "blinkTime")
+  if (name == "blinkTime")
   {
     puzzle.SetBlinkTime(value.toInt());
     mqtt.publish("Client101/Response/Set", value, true, 1);
@@ -96,6 +98,7 @@ void HandleSet(String payload)
   {
     Serial.print("Requested unknown set: ");
     Serial.println(name);
+    mqtt.publish("Client101/Response/Set", "Unknown Set", true, 1);
   }
 }
 

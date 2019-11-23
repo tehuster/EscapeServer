@@ -51,10 +51,14 @@ html
               p(class="control")
                 input(id=`action_parameter_${device.id}` class="input is-primary" type="text" placeholder="Parameter")
               p(class="control")
+                input(id=`action_public_${device.id}` class="checkbox is-primary" type="checkbox")
+              p(class="control")
                 a(class="button is-primary" onClick=`AddAction(${device.id})`) Add
             div(class="configContainer box field has-addons has-addons-centered")
               p(class="control")
                 input(id=`config_name_${device.id}` class="input is-primary" type="text" placeholder="Config name")
+              p(class="control")
+                input(id=`config_public_${device.id}` class="checkbox is-primary" type="checkbox")
               p(class="control")
                 a(class="button is-primary" onClick=`AddConfig(${device.id})`) Add
       div(class="bottomContainer")

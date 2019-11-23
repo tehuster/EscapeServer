@@ -14,6 +14,10 @@ module.exports = (Sequelize, db) => {
         action_parameter_type: {
             type: Sequelize.STRING,
             allowNull: true
+        },
+        public: {
+            type: Sequelize.BOOLEAN,
+            allowNull: false
         }
     })
 

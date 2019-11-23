@@ -1,10 +1,14 @@
 console.log("RequestHandler init..");
 
 function SendRequest() {    
-    let requestName = document.getElementById('requestName').value;
+    let deviceName = document.getElementById('deviceName').value;
     let requestType = document.getElementById('requestType').value;
     let actionName = document.getElementById('actionName').value;
     let actionParameter = document.getElementById('actionParameter').value;
+    if(actionParameter == "")
+    {
+      actionParameter = null;
+    }
     socket.emit('server', {
                             type: 'request', 
                             command: 'manual', 
@@ -13,5 +17,5 @@ function SendRequest() {
                             actionName:actionName, 
                             actionParameter:actionParameter
                           });
-    console.log(`Requesting: ${requestType} @ ${requestName}`);    
+    console.log(`Requesting: ${requestType} @ ${deviceName}`);    
 }
