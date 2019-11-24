@@ -53,7 +53,12 @@ void HandleAction(String payload)
   String name = GetValue(payload, '/', 0);
   String value = GetValue(payload, '/', 1);
 
-  if (name == "BlinkLed")
+  if(name == "Reset")
+  {
+    puzzle.Reset();
+    mqtt.publish("Client101/Response/Action", "Reset", true, 1);
+  }
+  else if(name == "BlinkLed")
   {
     puzzle.BlinkLed();
     mqtt.publish("Client101/Response/Action", "BlinkLed", true, 1);

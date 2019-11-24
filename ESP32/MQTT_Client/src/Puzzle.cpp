@@ -1,6 +1,11 @@
 #include <Arduino.h>
 #include <Puzzle.h>
 
+void Puzzle::Reset()
+{
+    Serial.println("Resetting puzzle");
+}
+
 void Puzzle::BlinkLed()
 {
     Serial.println("Turn led on..");
