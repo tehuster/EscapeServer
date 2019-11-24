@@ -11,7 +11,7 @@ void Puzzle::Loop()
     {
         leds[i] = CRGB::White;
         FastLED.show();
-        delay(10);
+        delay(100);
         leds[i] = CRGB::Black;
         FastLED.show();
     }

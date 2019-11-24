@@ -23,6 +23,7 @@ class Puzzle
         void BlinkLed();
         void SetBlinkTime(int bTime);        
         int GetBlinkTime();
+        
     private:
         CRGB leds[NUM_LEDS];
         uint8_t gHue = 0;
