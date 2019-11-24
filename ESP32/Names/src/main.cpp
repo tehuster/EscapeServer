@@ -9,7 +9,7 @@ Preferences preferences;
 Puzzle puzzle;
 
 const char *mqtt_server = "192.168.1.208";
-String clientId = "Client101";
+String clientId = "Names";
 String subscribers[4] = {"Data", "Action", "Get", "Set"};
 
 void HandleData(String payload);
@@ -31,12 +31,13 @@ void setup()
   pinMode(2, OUTPUT);
   pinMode(34, INPUT);
   InitMQTT();
-  puzzle.LoadVariables(preferences);
+  puzzle.LoadPuzzle(preferences);
 }
 
 void loop()
 {
-    MQTT_Update();
+    // MQTT_Update();
+    puzzle.Loop();    
 }
 
 ///////////////////// TOPICS ///////////////////
@@ -44,7 +45,7 @@ void loop()
 void HandleData(String payload)
 {
   Serial.println("Data requested...");
-  mqtt.publish("Client101/Response/Data", "Data", true, 1);
+  mqtt.publish(clientId + "/Response/Data", "Data", true, 1);
 }
 
 void HandleAction(String payload)
@@ -56,18 +57,18 @@ void HandleAction(String payload)
   if(name == "Reset")
   {
     puzzle.Reset();
-    mqtt.publish("Client101/Response/Action", "Reset", true, 1);
+    mqtt.publish(clientId + "/Response/Action", "Reset", true, 1);
   }
   else if(name == "BlinkLed")
   {
     puzzle.BlinkLed();
-    mqtt.publish("Client101/Response/Action", "BlinkLed", true, 1);
+    mqtt.publish(clientId + "/Response/Action", "BlinkLed", true, 1);
   }
   else
   {
     Serial.print("Requested unknown action: ");
     Serial.println(name);
-    mqtt.publish("Client101/Response/Action", "Unknown Action", true, 1);
+    mqtt.publish(clientId + "/Response/Action", "Unknown Action", true, 1);
   }
 }
 
@@ -79,13 +80,13 @@ void HandleGet(String payload)
   if (name == "blinkTime")
   {
     int blinkTime = puzzle.GetBlinkTime();
-    mqtt.publish("Client101/Response/Get", String(blinkTime), true, 1);
+    mqtt.publish(clientId + "/Response/Get", String(blinkTime), true, 1);
   }
   else
   {
     Serial.print("Requested unknown get: ");
     Serial.println(name);
-    mqtt.publish("Client101/Response/Get", "Unknown Get", true, 1);
+    mqtt.publish(clientId + "/Response/Get", "Unknown Get", true, 1);
   }
 }
 
@@ -97,13 +98,13 @@ void HandleSet(String payload)
   if (name == "blinkTime")
   {
     puzzle.SetBlinkTime(value.toInt());
-    mqtt.publish("Client101/Response/Set", value, true, 1);
+    mqtt.publish(clientId + "/Response/Set", value, true, 1);
   }
   else
   {
     Serial.print("Requested unknown set: ");
     Serial.println(name);
-    mqtt.publish("Client101/Response/Set", "Unknown Set", true, 1);
+    mqtt.publish(clientId + "/Response/Set", "Unknown Set", true, 1);
   }
 }
 
@@ -145,7 +146,7 @@ void MQTT_Update()
   int buttonPress = digitalRead(34);
   if (buttonPress)
   {
-    mqtt.publish("Client101/Event", "Button is pressed!", true, 1);
+    mqtt.publish(clientId + "/Event", "Button is pressed!", true, 1);
     delay(1000);
   }
 }
@@ -156,19 +157,19 @@ void MessageReceived(String &topic, String &payload)
 
   digitalWrite(2, HIGH); // Turn the LED on (Note that LOW is the voltage level
 
-  if (topic == "Client101/Data")
+  if (topic == clientId + "/Data")
   {
     HandleData(payload);
   }
-  else if (topic == "Client101/Action")
+  else if (topic == clientId + "/Action")
   {
     HandleAction(payload);
   }
-  else if (topic == "Client101/Get")
+  else if (topic == clientId + "/Get")
   {
     HandleGet(payload);
   }
-  else if (topic == "Client101/Set")
+  else if (topic == clientId + "/Set")
   {
     HandleSet(payload);
   }
@@ -184,7 +185,7 @@ void Connect()
     if (mqtt.connect(clientId.c_str()))
     {
       Serial.println("Connected with MQTT broker");
-      mqtt.publish("Client101/Event", "Connected", true, 1);
+      mqtt.publish(clientId + "/Event", "Connected", true, 1);
 
       for (size_t i = 0; i < 4; i++)
       {
@@ -212,7 +213,8 @@ void InitMQTT()
   ETH.begin();
 
   mqtt.begin(mqtt_server, ethernetConnection);
-  mqtt.setWill("Client101/Error", "Device disconnected", true, 2);
+  String willTopic = clientId + "/Error";
+  mqtt.setWill(willTopic.c_str(), "Device disconnected", true, 2);  //<-----------------
   mqtt.setOptions(5, true, 777);
   mqtt.onMessage(MessageReceived);
 }
