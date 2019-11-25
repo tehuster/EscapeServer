@@ -25,9 +25,21 @@ void InitMQTT();
 void WiFiEvent(WiFiEvent_t event);
 static bool eth_connected = false;
 
+TaskHandle_t TaskA;
+void Task1(void * parameter);
+
 void setup()
 {
   Serial.begin(115200);
+  xTaskCreatePinnedToCore(
+   Task1,                  /* pvTaskCode */
+   "Workload1",            /* pcName */
+   1000,                   /* usStackDepth */
+   NULL,                   /* pvParameters */
+   1,                      /* uxPriority */
+   &TaskA,                 /* pxCreatedTask */
+   0);                     /* xCoreID */
+  
   pinMode(2, OUTPUT);
   pinMode(34, INPUT);
   InitMQTT();
@@ -37,7 +49,14 @@ void setup()
 void loop()
 {
     MQTT_Update();
-    puzzle.Loop();    
+    // puzzle.Loop();    
+}
+
+void Task1(void * parameter)
+{
+  for (;;) {
+      puzzle.Loop();
+  }
 }
 
 ///////////////////// TOPICS ///////////////////

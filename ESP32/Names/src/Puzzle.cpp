@@ -3,19 +3,16 @@
 
 void Puzzle::Loop()
 {
-    // fill_rainbow( leds, NUM_LEDS, gHue, 7);
-    // FastLED.delay(1000/60);
-    // FastLED.show();   
-    // EVERY_N_MILLISECONDS( 20 ) { gHue++; }
     for (int i = 0; i < ledAmount; i++)
     {
-        leds[i] = CRGB::White;
+        leds[i] = CRGB::Green;
         FastLED.show();
-        delay(100);
+        delay(10);
         leds[i] = CRGB::Black;
         FastLED.show();
-        Serial.println(i);
+        // Serial.println(i);
     }
+    // Serial.println(xPortGetCoreID());
 }
 
 void Puzzle::Reset()

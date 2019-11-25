@@ -1,4 +1,5 @@
 #include <Preferences.h>
+#define FAST_LED_REFRESH_CORE 1
 #include <FastLED.h>
 
 //6,  0  - 5
@@ -6,6 +7,7 @@
 //13, 14 - 26
 //14, 27 - 40
 //18, 41 - 58
+
 #define DATA_PIN    4
 #define LED_TYPE    WS2811
 #define COLOR_ORDER GRB
