@@ -37,7 +37,7 @@ void setup()
 void loop()
 {
     MQTT_Update();
-    //puzzle.Loop();    
+    puzzle.Loop();    
 }
 
 ///////////////////// TOPICS ///////////////////

@@ -14,6 +14,7 @@ void Puzzle::Loop()
         delay(100);
         leds[i] = CRGB::Black;
         FastLED.show();
+        Serial.println(i);
     }
 }
 
