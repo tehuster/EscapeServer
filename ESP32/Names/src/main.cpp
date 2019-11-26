@@ -25,39 +25,39 @@ void InitMQTT();
 void WiFiEvent(WiFiEvent_t event);
 static bool eth_connected = false;
 
-TaskHandle_t TaskA;
-void Task1(void * parameter);
+// TaskHandle_t TaskA;
+// void Task1(void * parameter);
 
 void setup()
 {
   Serial.begin(115200);
-  xTaskCreatePinnedToCore(
-   Task1,                  /* pvTaskCode */
-   "Workload1",            /* pcName */
-   1000,                   /* usStackDepth */
-   NULL,                   /* pvParameters */
-   1,                      /* uxPriority */
-   &TaskA,                 /* pxCreatedTask */
-   0);                     /* xCoreID */
+  // xTaskCreatePinnedToCore(
+  //  Task1,                  /* pvTaskCode */
+  //  "Workload1",            /* pcName */
+  //  1000,                   /* usStackDepth */
+  //  NULL,                   /* pvParameters */
+  //  1,                      /* uxPriority */
+  //  &TaskA,                 /* pxCreatedTask */
+  //  0);                     /* xCoreID */
   
   pinMode(2, OUTPUT);
-  pinMode(34, INPUT);
-  InitMQTT();
+  pinMode(34, INPUT);  
+  InitMQTT();  
   puzzle.LoadPuzzle(preferences);
 }
 
 void loop()
 {
-    MQTT_Update();
-    // puzzle.Loop();    
+    // MQTT_Update();
+    puzzle.Loop();    
 }
 
-void Task1(void * parameter)
-{
-  for (;;) {
-      puzzle.Loop();
-  }
-}
+// void Task1(void * parameter)
+// {
+//   for (;;) {
+//       puzzle.Loop();
+//   }
+// }
 
 ///////////////////// TOPICS ///////////////////
 
@@ -80,8 +80,8 @@ void HandleAction(String payload)
   }
   else if(name == "BlinkLed")
   {
-    puzzle.BlinkLed();
-    mqtt.publish(clientId + "/Response/Action", "BlinkLed", true, 1);
+    // puzzle.BlinkLed();
+    // mqtt.publish(clientId + "/Response/Action", "BlinkLed", true, 1);
   }
   else
   {
@@ -98,8 +98,8 @@ void HandleGet(String payload)
   String value = GetValue(payload, '/', 1);
   if (name == "blinkTime")
   {
-    int blinkTime = puzzle.GetBlinkTime();
-    mqtt.publish(clientId + "/Response/Get", String(blinkTime), true, 1);
+    // int blinkTime = puzzle.GetBlinkTime();
+    // mqtt.publish(clientId + "/Response/Get", String(blinkTime), true, 1);
   }
   else
   {
@@ -116,8 +116,8 @@ void HandleSet(String payload)
   String value = GetValue(payload, '/', 1);
   if (name == "blinkTime")
   {
-    puzzle.SetBlinkTime(value.toInt());
-    mqtt.publish(clientId + "/Response/Set", value, true, 1);
+    // puzzle.SetBlinkTime(value.toInt());
+    // mqtt.publish(clientId + "/Response/Set", value, true, 1);
   }
   else
   {
@@ -229,7 +229,7 @@ void Connect()
 void InitMQTT()
 {
   WiFi.onEvent(WiFiEvent);
-  ETH.begin();
+  // ETH.begin();
 
   mqtt.begin(mqtt_server, ethernetConnection);
   String willTopic = clientId + "/Error";
