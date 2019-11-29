@@ -42,13 +42,13 @@ void setup()
   
   pinMode(2, OUTPUT);
   pinMode(34, INPUT);  
-  InitMQTT();  
+  InitMQTT(); 
   puzzle.LoadPuzzle(preferences);
 }
 
 void loop()
 {
-    // MQTT_Update();
+    MQTT_Update();
     puzzle.Loop();    
 }
 
@@ -229,7 +229,7 @@ void Connect()
 void InitMQTT()
 {
   WiFi.onEvent(WiFiEvent);
-  // ETH.begin();
+  ETH.begin();
 
   mqtt.begin(mqtt_server, ethernetConnection);
   String willTopic = clientId + "/Error";

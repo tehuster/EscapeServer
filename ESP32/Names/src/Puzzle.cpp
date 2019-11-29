@@ -1,23 +1,45 @@
 #include <Arduino.h>
 #include <Puzzle.h>
 
+
+unsigned long previousMillis = 0;        // will store last time LED was updated
+const long interval = 25;           // interval at which to blink (milliseconds)
+int counter = 0;
 void Puzzle::Loop()
 {
-    ShowName(Tiny, true);
-    delay(2500);
-    TurnOffLeds();
-    ShowName(Small, true);
-    delay(2500);
-    TurnOffLeds();
-    ShowName(Medium, true);
-    delay(2500);
-    TurnOffLeds();
-    ShowName(Big, true);
-    delay(2500);
-    TurnOffLeds();
-    ShowName(Huge, true);
-    delay(2500);    
-    TurnOffLeds();
+    unsigned long currentMillis = millis();
+    if (currentMillis - previousMillis >= interval) {
+        // save the last time you blinked the LED
+        previousMillis = currentMillis;
+        // set the LED with the ledState of the variable:
+        leds[counter] = CRGB::White;
+        FastLED.show();
+        leds[counter] = CRGB::Black;
+        FastLED.show();
+
+         counter ++;
+        if(counter >= NUM_LEDS)
+        {
+            counter = 0;
+        }
+    }
+    
+   
+    // ShowName(Tiny, false);
+    // delay(2500);
+    // TurnOffLeds();
+    // ShowName(Small, true);
+    // delay(2500);
+    // TurnOffLeds();
+    // ShowName(Medium, true);
+    // delay(2500);
+    // TurnOffLeds();
+    // ShowName(Big, true);
+    // delay(2500);
+    // TurnOffLeds();
+    // ShowName(Huge, true);
+    // delay(2500);    
+    // TurnOffLeds();
 }
 
 void Puzzle::Reset()
