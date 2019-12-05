@@ -25,9 +25,6 @@ void InitMQTT();
 void WiFiEvent(WiFiEvent_t event);
 static bool eth_connected = false;
 
-// TaskHandle_t TaskA;
-// void Task1(void * parameter);
-
 void setup()
 {
   Serial.begin(115200);
@@ -53,38 +50,40 @@ void HandleData(String payload)
   mqtt.publish(clientId + "/Response/Data", "Data", true, 1);
 }
 
-void HandleAction(String payload)
+void HandleAction(String payload)    //SET MESSAGE THEN PUBLISH AFTER BIG IF/ELSE. Cleaner...
 {
   Serial.println("Action requested...");
   String name = GetValue(payload, '/', 0);
   String value = GetValue(payload, '/', 1);
+  String response;
 
   if(name == "Reset")
   {
     puzzle.Reset();
-    mqtt.publish(clientId + "/Response/Action", "Reset", true, 1);
+    response = "Reset";
   }
   else if(name == "PlaySong")
   {
     puzzle.PlaySong(value.toInt());
-    mqtt.publish(clientId + "/Response/Action", "PlaySong", true, 1);
+    response = "PlaySong: " + value;
   }
   else if(name == "SetVolume")
   {
     puzzle.SetVolume(value.toInt());
-    mqtt.publish(clientId + "/Response/Action", "Setting Volume", true, 1);
+    response = "SetVolume: " + value;
   }
   else if(name == "CheckStatus")
   {
     int status = puzzle.CheckStatus();
-    mqtt.publish(clientId + "/Response/Action", "Status/" + String(status), true, 1);
+    response = "Status/" + String(status);
   }
   else
   {
     Serial.print("Requested unknown action: ");
     Serial.println(name);
-    mqtt.publish(clientId + "/Response/Action", "Unknown Action", true, 1);
+    response = "Unknown Action";    
   }
+  mqtt.publish(clientId + "/Response/Action", response, true, 1);
 }
 
 void HandleGet(String payload)

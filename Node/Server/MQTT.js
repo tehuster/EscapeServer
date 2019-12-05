@@ -27,7 +27,7 @@ class MQTT extends EventEmitter
         })
         
         this.broker.on('published', (packet)=>{
-            console.log(`[${packet.topic.toString()}] : ${packet.payload.toString()}`);    
+            console.log(`Received [${packet.topic.toString()}] : ${packet.payload.toString()}`);    
         })
     }
 
