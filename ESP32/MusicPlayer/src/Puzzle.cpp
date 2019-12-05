@@ -51,6 +51,7 @@ void Puzzle::InitAudio()
   }
 
   Serial.println(F("DFPlayer Mini online."));  
+  audio.setTimeOut(500); 
   audio.volume(20);  
   audio.play(2);  
 }

@@ -31,14 +31,6 @@ static bool eth_connected = false;
 void setup()
 {
   Serial.begin(115200);
-  // xTaskCreatePinnedToCore(
-  //  Task1,                  /* pvTaskCode */
-  //  "Workload1",            /* pcName */
-  //  1000,                   /* usStackDepth */
-  //  NULL,                   /* pvParameters */
-  //  1,                      /* uxPriority */
-  //  &TaskA,                 /* pxCreatedTask */
-  //  0);                     /* xCoreID */
   
   pinMode(2, OUTPUT);
   pinMode(34, INPUT);  
@@ -52,13 +44,6 @@ void loop()
     MQTT_Update();
     puzzle.Loop();    
 }
-
-// void Task1(void * parameter)
-// {
-//   for (;;) {
-//       puzzle.Loop();
-//   }
-// }
 
 ///////////////////// TOPICS ///////////////////
 
