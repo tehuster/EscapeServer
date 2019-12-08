@@ -1,9 +1,8 @@
 #include <Arduino.h>
 #include <Puzzle.h>
 
-
 unsigned long previousMillis = 0;        // will store last time LED was updated
-const long interval = 25;           // interval at which to blink (milliseconds)
+const long interval = 10;           // interval at which to blink (milliseconds)
 int counter = 0;
 void Puzzle::Loop()
 {
@@ -12,10 +11,10 @@ void Puzzle::Loop()
         // save the last time you blinked the LED
         previousMillis = currentMillis;
         // set the LED with the ledState of the variable:
-        leds[counter] = CRGB::White;
-        FastLED.show();
-        leds[counter] = CRGB::Black;
-        FastLED.show();
+        SetLed(counter, 64, 0, 0);
+        ShowLeds();
+        SetLed(counter, 0, 0, 0);
+        ShowLeds();
 
          counter ++;
         if(counter >= NUM_LEDS)
@@ -57,8 +56,20 @@ void Puzzle::LoadPuzzle(Preferences p)
     // Serial.println(blinkTime);
     preferences.end();
 
-    FastLED.addLeds<WS2811, 4, RGB>(leds, ledAmount);
-    FastLED.setBrightness(BRIGHTNESS);
+    pinMode(13, OUTPUT);
+    digitalWrite(13, HIGH);
+
+    pinMode(32, OUTPUT);
+    digitalWrite(32, HIGH); 
+
+    pinMode(34, INPUT);
+
+    //10 (SS), 11 (MOSI), 12 (MISO), 13 (SCK)
+    //32     , 15       , 16         14
+    SPI.begin(14, 16, 15, 32);
+    SPI.setClockDivider(SPI_CLOCK_DIV32);
+  
+    // FastLED.setBrightness(BRIGHTNESS); TODO: Create setBrightness for SPI LED Slave
     TurnOffLeds();
 }
 
@@ -66,9 +77,9 @@ void Puzzle::TurnOffLeds()
 {
     for (int i = 0; i < ledAmount; i++)
     {
-        leds[i] = CRGB::Black;
+        SetLed(i, 0, 0, 0);
     }
-    FastLED.show();
+    ShowLeds();
 }
 
 void Puzzle::ShowName(Name name, bool writeName)
@@ -92,9 +103,9 @@ void Puzzle::WriteName(int start, int length, int speed)
 {
     for (int i = start; i < start + length; i++)
     {
-        leds[i] = color;
-        FastLED.delay(speed);
-        FastLED.show();
+        SetLed(i, 64, 0, 0);
+        delay(speed);
+        ShowLeds();
     }   
 }
 
@@ -104,9 +115,9 @@ void Puzzle::FlowName(int start, int length, int speed)
     {
         for (int b = 0; b < 200; b++)
         {
-            leds[i].green = b;
-            FastLED.delay(speed);   
-            FastLED.show();
+            SetLed(i, 0, b, 0);
+            delay(speed);
+            ShowLeds();
         }   
     }   
 }
@@ -115,7 +126,29 @@ void Puzzle::StampName(int start, int length)
 {
     for (int i = start; i < start + length; i++)
     {
-        leds[i] = color;        
+        SetLed(i, 64, 0, 0);       
     } 
-    FastLED.show();
+    ShowLeds();
 }   
+
+void Puzzle::SetLed(int ledIndex, int r, int g, int b)
+{
+    digitalWrite(32, LOW); // enable Slave Select
+    SPI.transfer(SETLED); 
+    SPI.transfer(ledIndex);    
+    SPI.transfer(r);    
+    SPI.transfer(g); 
+    SPI.transfer(b); 
+    SPI.transfer('\n');   
+    digitalWrite(32, HIGH); // disable Slave Select
+    delay(1);               // Wait for Ledstrip, do we need this?
+}
+
+void Puzzle::ShowLeds()
+{
+    digitalWrite(32, LOW); // enable Slave Select
+    SPI.transfer(SHOWLEDS); 
+    SPI.transfer('\n');   
+    digitalWrite(32, HIGH); // disable Slave Select
+    delay(1);               // Wait for Ledstrip, do we need this?
+}

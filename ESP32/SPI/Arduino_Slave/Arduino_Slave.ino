@@ -39,11 +39,6 @@ void processRequest()
    int value_r  = buff[2];
    int value_g  = buff[3];
    int value_b  = buff[4];
-//
-//   Serial.print("Type: ");
-//   Serial.println(type);
-//   Serial.print("ledIndex: ");
-//   Serial.println(ledIndex);
    
    switch(type)
    {
@@ -55,8 +50,6 @@ void processRequest()
       case SHOWLEDS: //Show
         FastLED.show();
         break;
-//      default:
-//        Serial.println("Unknown Type");
    }
 }
 

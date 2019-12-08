@@ -1,6 +1,5 @@
 #include <Arduino.h>
 #include <SPI.h>
-uint8_t val;
 
 #define SETLED 0
 #define SHOWLEDS 1
@@ -11,18 +10,18 @@ void ShowLeds();
 void setup()
 {
     pinMode(13, OUTPUT);
-    pinMode(13, HIGH);
+    digitalWrite(13, HIGH);
 
     pinMode(32, OUTPUT);
-    pinMode(34, INPUT);
-    Serial.begin(115200);   //set baud rate to 115200 for usart
     digitalWrite(32, HIGH); // disable Slave Select
+
+    pinMode(34, INPUT);
+    Serial.begin(115200);   //set baud rate to 115200 for usart    
 
     //10 (SS), 11 (MOSI), 12 (MISO), 13 (SCK)
     //32     , 15       , 16         14
     SPI.begin(14, 16, 15, 32);
     SPI.setClockDivider(SPI_CLOCK_DIV32);
-    Serial.println("Enter characters to transfer");
 }
 
 void loop()

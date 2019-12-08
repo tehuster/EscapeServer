@@ -1,7 +1,5 @@
 #include <Preferences.h>
-// #define FASTLED_RMT_BUILTIN_DRIVER false
-// #define FASTLED_ESP32_I2S true
-#include <FastLED.h>
+#include <SPI.h>
 
 //6,  0  - 5
 //8,  6  - 13
@@ -9,11 +7,11 @@
 //14, 27 - 40
 //18, 41 - 58
 
-#define DATA_PIN 4
-#define LED_TYPE WS2811
-#define COLOR_ORDER RGB
-#define NUM_LEDS 59
-#define BRIGHTNESS 200
+#define SETLED 0
+#define SHOWLEDS 1
+
+#define NUM_LEDS 10
+#define BRIGHTNESS 200  //TODO: Brightness action for slave
 
 enum Name
 {
@@ -37,15 +35,16 @@ public:
 
 private:
     Preferences preferences;
-
-    CRGB leds[NUM_LEDS];
+    
     const int ledAmount = NUM_LEDS;
     const int nameLedAmount[5] = {6, 8, 13, 14, 18};
     const int nameLedBegin[5] = {0, 6, 14, 27, 41}; //Do we need this? It's current nameLedAmount + the previous ones?
 
     int writeSpeed = 10;
-    CRGB color = CRGB::Green;
     void WriteName(int start, int length, int speed);
     void FlowName(int start, int length, int speed);
     void StampName(int start, int length);
+
+    void SetLed(int ledIndex, int r, int g, int b);
+    void ShowLeds();
 };
