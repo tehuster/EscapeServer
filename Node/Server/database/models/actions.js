@@ -22,7 +22,8 @@ module.exports = (Sequelize, db) => {
     })
 
     Actions.associate = function(models) {
-        Actions.belongsTo(models.Devices)       
+        Actions.belongsTo(models.Devices)  
+        Actions.hasMany(models.Parameters, { as: 'parameters' })     
     }   
 
     Actions.sync({ force: false }).then(() => { })

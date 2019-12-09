@@ -8,16 +8,24 @@ const Devices = require('./database/models/devices')(Sequelize, sqlite)
 const Actions = require('./database/models/actions')(Sequelize, sqlite)
 const Configs = require('./database/models/configs')(Sequelize, sqlite)
 const Triggers = require('./database/models/triggers')(Sequelize, sqlite)
+const Parameters = require('./database/models/parameters')(Sequelize, sqlite)
+const Events = require('./database/models/events')(Sequelize, sqlite)
+
 const Models = {
    Devices,
    Actions,
    Configs,
-   Triggers
+   Triggers,
+   Parameters,
+   Events
 }
+
 Devices.associate(Models)
 Actions.associate(Models)
 Configs.associate(Models)
 Triggers.associate(Models)
+Parameters.associate(Models)
+Events.associate(Models)
 
 // const ResponseHandler = require('./ResponseHandler')
 // const responseHandler = new ResponseHandler()
@@ -26,6 +34,8 @@ Triggers.associate(Models)
 ///////////////////////// MQTT
 const MQTT = require('./MQTT')
 const mqtt = new MQTT()
+
+mqtt.triggers = Triggers;
 
 ///////////////////////// WEBCLIENT
 const WebClient = require('./WebClient')
@@ -91,6 +101,14 @@ socketHandler.on('devices', (data) => {
             socketHandler.io.emit('webclient', { type: 'refresh' })
          });
          break;
+      case 'addEvent':
+         Events.create({
+            DeviceId: data.device_id,
+            event_name: data.event_name       
+         }).then(() => {
+            socketHandler.io.emit('webclient', { type: 'refresh' })
+         });
+         break;
       default:
          console.log('Unknown hint command received...')
          break;
@@ -104,11 +122,20 @@ socketHandler.on('triggers', (data) => {
          Triggers.create({
             trigger_name: data.name,
             iDevice: data.iDevice,
-            iAction: data.iAction,
+            event: data.event,
             oDevice: data.oDevice,
-            oAction: data.oAction
+            action: data.action, 
+            parameter: data.parameter,
+            delay_time: data.delay_time
          }).then(() => {
             //responseHandler.loadDevices(Devices.findAll())
+            socketHandler.io.emit('webclient', { type: 'refresh' })
+         });
+         break;
+      case 'remove':
+         Triggers.destroy({
+            where: { id: data.id }
+         }).then(() => {
             socketHandler.io.emit('webclient', { type: 'refresh' })
          });
          break;

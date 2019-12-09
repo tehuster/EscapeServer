@@ -6,22 +6,22 @@ const long interval = 10;           // interval at which to blink (milliseconds)
 int counter = 0;
 void Puzzle::Loop()
 {
-    unsigned long currentMillis = millis();
-    if (currentMillis - previousMillis >= interval) {
-        // save the last time you blinked the LED
-        previousMillis = currentMillis;
-        // set the LED with the ledState of the variable:
-        SetLed(counter, 64, 0, 0);
-        ShowLeds();
-        SetLed(counter, 0, 0, 0);
-        ShowLeds();
+    // unsigned long currentMillis = millis();
+    // if (currentMillis - previousMillis >= interval) {
+    //     // save the last time you blinked the LED
+    //     previousMillis = currentMillis;
+    //     // set the LED with the ledState of the variable:
+    //     SetLed(counter, 64, 0, 0);
+    //     ShowLeds();
+    //     SetLed(counter, 0, 0, 0);
+    //     ShowLeds();
 
-         counter ++;
-        if(counter >= NUM_LEDS)
-        {
-            counter = 0;
-        }
-    }
+    //      counter ++;
+    //     if(counter >= NUM_LEDS)
+    //     {
+    //         counter = 0;
+    //     }
+    // }
     
    
     // ShowName(Tiny, false);

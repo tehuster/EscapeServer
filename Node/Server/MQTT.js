@@ -17,6 +17,8 @@ class MQTT extends EventEmitter
         
         this.setupBroker()
         this.setupPublisher()
+
+        this.triggers;
     }
 
     setupBroker()
@@ -27,8 +29,47 @@ class MQTT extends EventEmitter
         })
         
         this.broker.on('published', (packet)=>{
-            console.log(`Received [${packet.topic.toString()}] : ${packet.payload.toString()}`);    
+            console.log(`Received [${packet.topic.toString()}] : ${packet.payload.toString()}`); 
+            let topic = packet.topic.toString().split('/')
+            let payload = packet.payload.toString().split('/')
+                       
+            let device_name = topic[0];
+            let topic_type = topic[1];
+            let payload_0 = payload[0];
+            let payload_1 = payload[1];
+
+            console.log(`${device_name}  ${topic_type}  ${payload_0}  ${payload_1}`);
+            
+            switch (topic_type) {
+                case 'Event':
+                    this.EventHandler(device_name, payload_0, payload_1)
+                    break;
+                case 'Error':
+                    break;
+                case 'Response':
+                    break;
+                default:
+                   console.log(`Unknown topic type: ${topic_type}`)                   
+            }
+
         })
+    }
+
+    EventHandler(name, p0, p1)
+    {          
+        this.triggers.findAll({
+        })
+        .then((data) => {
+            data.forEach(trigger => {            
+                if(trigger.iDevice == name && trigger.event == p0)
+                {
+                    setTimeout(() => {
+                        this.sendMessage(trigger.oDevice, 'Action', trigger.action, trigger.parameter)
+                    }, trigger.delay_time * 1000);                
+                }
+            });      
+        });     
+          
     }
 
     setupPublisher()

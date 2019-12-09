@@ -4,23 +4,18 @@ module.exports = (Sequelize, db) => {
             type: Sequelize.STRING,
         },
         iDevice: {
-            type: Sequelize.INTEGER, 
-            references: {
-                model: 'Devices',
-                key: 'id'
-            }           
+            type: Sequelize.STRING,                    
         },
-        iAction: {
+        event: {
             type: Sequelize.STRING,           
         },       
         oDevice: {
-            type: Sequelize.INTEGER,   
-            references: {
-                model: 'Devices',
-                key: 'id'
-            }         
+            type: Sequelize.STRING,                
         },
-        oAction: {
+        action: {
+            type: Sequelize.STRING,  
+        },
+        parameter: {
             type: Sequelize.STRING,  
         },
         delay_time: {

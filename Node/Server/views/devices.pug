@@ -31,18 +31,24 @@ html
             p(id=`device_${device.id}`)=device.device_room
             p(id=`device_${device.id}`)=device.device_name
             p(id=`device_${device.id}`)=device.device_description
-            p Actions:
-              each action in device.actions   
-                  div(class="configContainer box field has-addons has-addons-centered")    
-                    p(class="control")            
-                      a(class="button is-primary" onClick=`RequestAction("${device.device_name}","${action.action_name}",${action.id})`)=action.action_name
-                    if action.action_parameter_type
-                      p(class="control")
-                        input(id=`parameter_${action.id}` class="input is-primary" type="text" placeholder="parameter")
-            p Configs:
-              each config in device.configs
-                  a(class="button is-primary" onClick=`GETConfig("${config.config_name}")`)=`GET ${config.config_name}`
-                  a(class="button is-primary" onClick=`SETConfig("${config.config_name}")`)=`SET ${config.config_name}`
+            div(class="actions")
+                p Actions:
+                  each action in device.actions   
+                    div(class="configContainer box field has-addons has-addons-centered")    
+                      p(class="control")            
+                        a(class="button is-primary" onClick=`RequestAction("${device.device_name}","${action.action_name}",${action.id})`)=action.action_name
+                      if action.action_parameter_type
+                        p(class="control")
+                          input(id=`parameter_${action.id}` class="input is-primary" type="text" placeholder="parameter")
+            div(class="configs")
+              p Configs:
+                each config in device.configs
+                    a(class="button is-primary" onClick=`GETConfig("${config.config_name}")`)=`GET ${config.config_name}`
+                    a(class="button is-primary" onClick=`SETConfig("${config.config_name}")`)=`SET ${config.config_name}`
+            div(class="events")
+               p Events:
+                each event in device.events
+                    a(class="button is-primary")=`Event: ${event.event_name}`
             p(class="control")
               a(class="button is-primary" onClick=`RemoveDevice(${device.id})`) Remove
             div(class="actionContainer box field has-addons has-addons-centered")
@@ -61,6 +67,11 @@ html
                 input(id=`config_public_${device.id}` class="checkbox is-primary" type="checkbox")
               p(class="control")
                 a(class="button is-primary" onClick=`AddConfig(${device.id})`) Add
+            div(class="eventContainer box field has-addons has-addons-centered")
+              p(class="control")
+                input(id=`event_name_${device.id}` class="input is-primary" type="text" placeholder="Event name")
+              p(class="control")
+                a(class="button is-primary" onClick=`AddEvent(${device.id})`) Add
       div(class="bottomContainer")
         div(class="field has-addons has-addons-centered")  
           p(class="control")

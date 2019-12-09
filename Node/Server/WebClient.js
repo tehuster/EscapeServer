@@ -29,7 +29,7 @@ class WebClient {
 
       app.get('/devices', (req, res) => {
          this.devices.findAll({
-            include: ['actions', 'configs']
+            include: ['actions', 'configs', 'events']
          })
             .then((data) => {
                res.render('devices', { devices: data })
@@ -40,7 +40,7 @@ class WebClient {
          let devices;
          let triggers;
          this.devices.findAll({
-            include: ['actions', 'configs']
+            include: ['actions', 'configs', 'events']
          })
             .then((device_data) => {
                devices = device_data;

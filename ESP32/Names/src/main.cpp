@@ -165,7 +165,7 @@ void MQTT_Update()
   int buttonPress = digitalRead(34);
   if (buttonPress)
   {
-    mqtt.publish(clientId + "/Event", "Button is pressed!", true, 1);
+    mqtt.publish(clientId + "/Event", "ButtonPressed", true, 1);
     delay(1000);
   }
 }

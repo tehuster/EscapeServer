@@ -30,10 +30,13 @@ html
             p(id=`trigger_${trigger.id}`)=trigger.trigger_name
             p Input:
                 p(id=`trigger_${trigger.id}`)=trigger.iDevice
-                p(id=`trigger_${trigger.id}`)=trigger.iAction
+                p(id=`trigger_${trigger.id}`)=trigger.event
             p Output:
                 p(id=`trigger_${trigger.id}`)=trigger.oDevice
-                p(id=`trigger_${trigger.id}`)=trigger.oAction          
+                p(id=`trigger_${trigger.id}`)=trigger.action  
+                p(id=`trigger_${trigger.id}`)=trigger.parameter     
+            p(class="control")
+                a(class="button is-primary" onClick=`RemoveTrigger(${trigger.id})`) Remove   
 
       div(class="bottomContainer")
         div(class="field has-addons has-addons-centered")  
@@ -43,24 +46,28 @@ html
                 span(class="select")
                     select(id="iDevice")
                         each device in devices
-                            option(value=`${device.id}`)= device.device_name
+                            option(value=`${device.device_name}`)= device.device_name
             p(class="control")
                 span(class="select")
-                    select(id="iAction")
+                    select(id="event")
                         each device in devices
-                            each action in device.actions
-                                option= action.action_name                           
+                            each event in device.events
+                                option= event.event_name                           
             p(class="control")
                 span(class="select")
                     select(id="oDevice")
                         each device in devices  
-                            option(value=`${device.id}`)= device.device_name                                  
+                            option(value=`${device.device_name}`)= device.device_name                                  
             p(class="control")
                 span(class="select")
-                    select(id="oAction")
+                    select(id="action")
                         each device in devices
                             each action in device.actions
                                 option= action.action_name
+            p(class="control")
+                input(id="parameter" class="input is-primary" type="text" placeholder="Parameter")  
+            p(class="control")
+                input(id="delay_time" class="input is-primary" type="number" placeholder="0" value=0)          
             p(class="control")
                 a(class="button is-primary" onClick="AddTrigger()") Add
 

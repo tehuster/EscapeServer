@@ -37,3 +37,15 @@
     width: 30%;
     margin: 16px;
 }
+
+.actions{
+    border: 1px red solid;
+}
+
+.configs{
+    border: 1px red solid;
+}
+
+.events{
+    border: 1px red solid;
+}

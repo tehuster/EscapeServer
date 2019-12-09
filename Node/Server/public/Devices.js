@@ -66,6 +66,18 @@ function AddConfig(id)
     console.log(`Adding Config: ${config_name}`); 
 }
 
+function AddEvent(id)
+{
+    let event_name = document.getElementById(`event_name_${id}`).value;
+    socket.emit('server', {
+        type: 'devices', 
+        command: 'addEvent', 
+        device_id: id,
+        event_name: event_name
+    }); 
+    console.log(`Adding Config: ${config_name}`); 
+}
+
 function RequestAction(device_name, action_name, id)  //Add paramaters
 {
     let parameter = null;
