@@ -54,6 +54,25 @@ class WebClient {
                   })
             })
       })
+
+      app.get('/api', (req, res) => {
+         let devices;
+         let triggers;
+         this.devices.findAll({
+            include: ['actions', 'configs', 'events']
+         })
+            .then((device_data) => {
+               devices = device_data;
+               this.triggers.findAll()
+                  .then((trigger_data) => {
+                     triggers = trigger_data;
+                     res.json({ 
+                        devices: devices, 
+                        triggers: triggers 
+                     })
+                  })
+            })
+      })
    }
 
    initServer() {
