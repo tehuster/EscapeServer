@@ -43,9 +43,6 @@ html(lang="en")
     .kt-grid.kt-grid--hor.kt-grid--root
       .kt-grid__item.kt-grid__item--fluid.kt-grid.kt-grid--ver.kt-page
         // begin:: Aside
-        //
-          Uncomment this to display the close button of the panel
-          <button class="kt-aside-close " id="kt_aside_close_btn"><i class="la la-close"></i></button>
         #kt_aside.kt-aside.kt-aside--fixed.kt-grid__item.kt-grid.kt-grid--desktop.kt-grid--hor-desktop
           // begin:: Aside TOP LOGO
           #kt_aside_brand.kt-aside__brand.kt-grid__item
@@ -220,7 +217,7 @@ html(lang="en")
             // begin:: Content
             .kt-container.kt-container--fluid.kt-grid__item.kt-grid__item--fluid
               // Begin::Dashboard 2
-              /////////////////// PUT CONTENT
+              block content
               // End::Dashboard 2
             // end:: Content
           // begin:: Footer
@@ -521,6 +518,7 @@ html(lang="en")
   	
     script(src="/socket.io/socket.io.js")
     script(defer src="Main.js")
+    block scripts
     //- script(defer src="webmidi.min.js")
     //- script(defer src="MidiManager.js")
     // end::Global Theme Bundle

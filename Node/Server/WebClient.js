@@ -1,11 +1,11 @@
- class WebClient {
+class WebClient {
    constructor(devices, hints, triggers) {
       const express = require("express")
       const path = require('path')
       const bodyParser = require('body-parser')
       const app = express()
-      const os = require( 'os' )
-      const networkInterfaces = os.networkInterfaces()       
+      const os = require('os')
+      const networkInterfaces = os.networkInterfaces()
 
       app.use(bodyParser.json())
       app.use(express.static(path.join(__dirname, '/node_modules/bulma/css')))
@@ -20,7 +20,7 @@
       this.devices = devices;
       this.triggers = triggers;
       this.hints = hints;
-      
+
    }
 
    initRoutes(app) {
@@ -53,9 +53,9 @@
                this.triggers.findAll()
                   .then((trigger_data) => {
                      triggers = trigger_data;
-                     res.render('triggers', { 
-                        devices: devices, 
-                        triggers: triggers 
+                     res.render('triggers', {
+                        devices: devices,
+                        triggers: triggers
                      })
                   })
             })
@@ -72,17 +72,31 @@
                this.triggers.findAll()
                   .then((trigger_data) => {
                      triggers = trigger_data;
-                     res.json({ 
-                        devices: devices, 
-                        triggers: triggers 
+                     res.json({
+                        devices: devices,
+                        triggers: triggers
                      })
                   })
             })
       })
       app.get('/test', (req, res) => {
-         res.render('template', {
-            server_ip : this.ip
+         let devices;
+         let triggers;
+         this.devices.findAll({
+            include: ['actions', 'configs', 'events']
          })
+            .then((device_data) => {
+               devices = device_data;
+               this.triggers.findAll()
+                  .then((trigger_data) => {
+                     triggers = trigger_data;
+                     res.render('layout', {
+                        devices: devices,
+                        triggers: triggers,
+                        server_ip: this.ip
+                     })
+                  })
+            })
       })
    }
 
