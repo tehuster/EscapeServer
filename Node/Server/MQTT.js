@@ -38,7 +38,7 @@ class MQTT extends EventEmitter
             let payload_0 = payload[0];
             let payload_1 = payload[1];
 
-            console.log(`${device_name}  ${topic_type}  ${payload_0}  ${payload_1}`);
+            // console.log(`${device_name}  ${topic_type}  ${payload_0}  ${payload_1}`);
             
             switch (topic_type) {
                 case 'Event':

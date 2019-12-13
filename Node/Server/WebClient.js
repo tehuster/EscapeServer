@@ -1,20 +1,26 @@
-class WebClient {
+ class WebClient {
    constructor(devices, hints, triggers) {
       const express = require("express")
       const path = require('path')
       const bodyParser = require('body-parser')
       const app = express()
+      const os = require( 'os' )
+      const networkInterfaces = os.networkInterfaces()       
+
       app.use(bodyParser.json())
       app.use(express.static(path.join(__dirname, '/node_modules/bulma/css')))
       app.use(express.static(path.join(__dirname, '/public')))
       app.use(express.static(path.join(__dirname, '/view')))
       app.set('view engine', 'pug')
+
+      this.ip = networkInterfaces.Ethernet[1].address;
       this.server = require('http').Server(app)
       this.initRoutes(app)
       this.initServer()
       this.devices = devices;
       this.triggers = triggers;
       this.hints = hints;
+      
    }
 
    initRoutes(app) {
@@ -74,13 +80,15 @@ class WebClient {
             })
       })
       app.get('/test', (req, res) => {
-         res.render('metronic')
+         res.render('template', {
+            server_ip : this.ip
+         })
       })
    }
 
    initServer() {
-      this.server.listen(3000, '127.0.0.1', 0, () => {
-         console.log('Webserver is listening on 3000')
+      this.server.listen(3000, this.ip, 0, () => {
+         console.log(`Webserver is listening on ${this.ip}`)
       });
    }
 }
