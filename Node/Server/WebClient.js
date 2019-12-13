@@ -73,6 +73,9 @@ class WebClient {
                   })
             })
       })
+      app.get('/test', (req, res) => {
+         res.render('metronic')
+      })
    }
 
    initServer() {

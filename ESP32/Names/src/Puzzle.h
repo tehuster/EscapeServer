@@ -1,16 +1,19 @@
 #include <Preferences.h>
 #include <SPI.h>
 
-//6,  0  - 5
-//8,  6  - 13
-//13, 14 - 26
-//14, 27 - 40
-//18, 41 - 58
+//54,  0  - 54
+//42,  55 - 97
+//47, 98 - 145
+//42, 146 - 188
+//39, 189 - 228
+//45    229 - 274
+
+
 
 #define SETLED 0
 #define SHOWLEDS 1
 
-#define NUM_LEDS 10
+#define NUM_LEDS 274
 #define BRIGHTNESS 200  //TODO: Brightness action for slave
 
 enum Name
@@ -19,7 +22,8 @@ enum Name
     Small = 1,
     Medium = 2,
     Big = 3,
-    Huge = 4
+    Huge = 4,
+    Enourmous = 5
 };
 
 class Puzzle
@@ -35,10 +39,17 @@ public:
 
 private:
     Preferences preferences;
+
+    //54,  0  - 54
+//42,  55 - 97
+//47, 98 - 145
+//42, 146 - 188
+//39, 189 - 228
+//45    229 - 274
     
     const int ledAmount = NUM_LEDS;
-    const int nameLedAmount[5] = {6, 8, 13, 14, 18};
-    const int nameLedBegin[5] = {0, 6, 14, 27, 41}; //Do we need this? It's current nameLedAmount + the previous ones?
+    const int nameLedAmount[6] = {54, 42, 47, 42, 39, 45};
+    const int nameLedBegin[6] = {0, 55, 98, 146, 189, 229}; //Do we need this? It's current nameLedAmount + the previous ones?
 
     int writeSpeed = 10;
     void WriteName(int start, int length, int speed);

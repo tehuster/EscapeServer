@@ -229,7 +229,7 @@ void Connect()
 void InitMQTT()
 {
   WiFi.onEvent(WiFiEvent);
-  ETH.begin();
+  // ETH.begin();
 
   mqtt.begin(mqtt_server, ethernetConnection);
   String willTopic = clientId + "/Error";

@@ -24,21 +24,23 @@ void Puzzle::Loop()
     // }
     
    
-    // ShowName(Tiny, false);
-    // delay(2500);
-    // TurnOffLeds();
-    // ShowName(Small, true);
-    // delay(2500);
-    // TurnOffLeds();
-    // ShowName(Medium, true);
-    // delay(2500);
-    // TurnOffLeds();
-    // ShowName(Big, true);
-    // delay(2500);
-    // TurnOffLeds();
-    // ShowName(Huge, true);
-    // delay(2500);    
-    // TurnOffLeds();
+    ShowName(Tiny, false);
+    delay(2500);
+    TurnOffLeds();
+    ShowName(Small, true);
+    delay(2500);
+    TurnOffLeds();
+    ShowName(Medium, true);
+    delay(2500);
+    TurnOffLeds();
+    ShowName(Big, true);
+    delay(2500);
+    TurnOffLeds();
+    ShowName(Huge, true);
+    delay(2500);    
+    ShowName(Enourmous, true);
+    delay(2500);    
+    TurnOffLeds();
 }
 
 void Puzzle::Reset()
