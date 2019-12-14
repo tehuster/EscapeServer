@@ -47,7 +47,7 @@ html(lang="en")
           // begin:: Aside TOP LOGO
           #kt_aside_brand.kt-aside__brand.kt-grid__item
             .kt-aside__brand-logo
-              a(href="index.html")
+              a(href="dashboard")
                 img(alt="Logo" src="assets/media/logos/logo-light.png")
             .kt-aside__brand-tools
               button#kt_aside_toggler.kt-aside__brand-aside-toggler
@@ -71,7 +71,7 @@ html(lang="en")
             #kt_aside_menu.kt-aside-menu(data-ktmenu-vertical="1" data-ktmenu-scroll="1" data-ktmenu-dropdown-timeout="500")
               ul.kt-menu__nav
                 li.kt-menu__item(aria-haspopup="true")
-                  a.kt-menu__link(href="index.html")
+                  a.kt-menu__link(href="dashboard")
                     span.kt-menu__link-icon
                       svg.kt-svg-icon(xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewbox="0 0 24 24" version="1.1")
                         g(stroke="none" stroke-width="1" fill="none" fill-rule="evenodd")
@@ -239,247 +239,58 @@ html(lang="en")
       .kt-quick-panel__nav
         ul.nav.nav-tabs.nav-tabs-line.nav-tabs-bold.nav-tabs-line-3x.nav-tabs-line-brand.kt-notification-item-padding-x(role="tablist")
           li.nav-item.active
-            a.nav-link.active(data-toggle="tab" href="#kt_quick_panel_tab_notifications" role="tab") Notifications
+            a.nav-link.active(data-toggle="tab" href="#kt_quick_panel_tab_notifications" role="tab") All
           li.nav-item
-            a.nav-link(data-toggle="tab" href="#kt_quick_panel_tab_logs" role="tab") Audit Logs
+            a.nav-link(data-toggle="tab" href="#kt_quick_panel_tab_errors" role="tab") Errors
           li.nav-item
             a.nav-link(data-toggle="tab" href="#kt_quick_panel_tab_settings" role="tab") Settings
       .kt-quick-panel__content
         .tab-content
           #kt_quick_panel_tab_notifications.tab-pane.fade.show.kt-scroll.active(role="tabpanel")
-            .kt-notification
-              a.kt-notification__item(href="#")
-                .kt-notification__item-icon
-                  i.flaticon2-line-chart.kt-font-success
-                .kt-notification__item-details
-                  .kt-notification__item-title
-                    | New order has been received
-                  .kt-notification__item-time
-                    | 2 hrs ago
-              a.kt-notification__item(href="#")
-                .kt-notification__item-icon
-                  i.flaticon2-box-1.kt-font-brand
-                .kt-notification__item-details
-                  .kt-notification__item-title
-                    | New customer is registered
-                  .kt-notification__item-time
-                    | 3 hrs ago
-              a.kt-notification__item(href="#")
-                .kt-notification__item-icon
-                  i.flaticon2-chart2.kt-font-danger
-                .kt-notification__item-details
-                  .kt-notification__item-title
-                    | Application has been approved
-                  .kt-notification__item-time
-                    | 3 hrs ago
-              a.kt-notification__item(href="#")
-                .kt-notification__item-icon
-                  i.flaticon2-image-file.kt-font-warning
-                .kt-notification__item-details
-                  .kt-notification__item-title
-                    | New file has been uploaded
-                  .kt-notification__item-time
-                    | 5 hrs ago
-              a.kt-notification__item(href="#")
-                .kt-notification__item-icon
-                  i.flaticon2-drop.kt-font-info
-                .kt-notification__item-details
-                  .kt-notification__item-title
-                    | New user feedback received
-                  .kt-notification__item-time
-                    | 8 hrs ago
-              a.kt-notification__item(href="#")
-                .kt-notification__item-icon
-                  i.flaticon2-pie-chart-2.kt-font-success
-                .kt-notification__item-details
-                  .kt-notification__item-title
-                    | System reboot has been successfully completed
-                  .kt-notification__item-time
-                    | 12 hrs ago
-              a.kt-notification__item(href="#")
-                .kt-notification__item-icon
-                  i.flaticon2-favourite.kt-font-danger
-                .kt-notification__item-details
-                  .kt-notification__item-title
-                    | New order has been placed
-                  .kt-notification__item-time
-                    | 15 hrs ago
-              a.kt-notification__item.kt-notification__item--read(href="#")
-                .kt-notification__item-icon
-                  i.flaticon2-safe.kt-font-primary
-                .kt-notification__item-details
-                  .kt-notification__item-title
-                    | Company meeting canceled
-                  .kt-notification__item-time
-                    | 19 hrs ago
-              a.kt-notification__item(href="#")
-                .kt-notification__item-icon
-                  i.flaticon2-psd.kt-font-success
-                .kt-notification__item-details
-                  .kt-notification__item-title
-                    | New report has been received
-                  .kt-notification__item-time
-                    | 23 hrs ago
-              a.kt-notification__item(href="#")
-                .kt-notification__item-icon
-                  i.flaticon-download-1.kt-font-danger
-                .kt-notification__item-details
-                  .kt-notification__item-title
-                    | Finance report has been generated
-                  .kt-notification__item-time
-                    | 25 hrs ago
-              a.kt-notification__item(href="#")
-                .kt-notification__item-icon
-                  i.flaticon-security.kt-font-warning
-                .kt-notification__item-details
-                  .kt-notification__item-title
-                    | New customer comment recieved
-                  .kt-notification__item-time
-                    | 2 days ago
-              a.kt-notification__item(href="#")
-                .kt-notification__item-icon
-                  i.flaticon2-pie-chart.kt-font-warning
-                .kt-notification__item-details
-                  .kt-notification__item-title
-                    | New customer is registered
-                  .kt-notification__item-time
-                    | 3 days ago
-          #kt_quick_panel_tab_logs.tab-pane.fade.kt-scroll(role="tabpanel")
-            .kt-notification-v2
-              a.kt-notification-v2__item(href="#")
-                .kt-notification-v2__item-icon
-                  i.flaticon-bell.kt-font-brand
-                .kt-notification-v2__itek-wrapper
-                  .kt-notification-v2__item-title
-                    | 5 new user generated report
-                  .kt-notification-v2__item-desc
-                    | Reports based on sales
-              a.kt-notification-v2__item(href="#")
-                .kt-notification-v2__item-icon
-                  i.flaticon2-box.kt-font-danger
-                .kt-notification-v2__itek-wrapper
-                  .kt-notification-v2__item-title
-                    | 2 new items submited
-                  .kt-notification-v2__item-desc
-                    | by Grog John
-              a.kt-notification-v2__item(href="#")
-                .kt-notification-v2__item-icon
-                  i.flaticon-psd.kt-font-brand
-                .kt-notification-v2__itek-wrapper
-                  .kt-notification-v2__item-title
-                    | 79 PSD files generated
-                  .kt-notification-v2__item-desc
-                    | Reports based on sales
-              a.kt-notification-v2__item(href="#")
-                .kt-notification-v2__item-icon
-                  i.flaticon2-supermarket.kt-font-warning
-                .kt-notification-v2__itek-wrapper
-                  .kt-notification-v2__item-title
-                    | $2900 worth producucts sold
-                  .kt-notification-v2__item-desc
-                    | Total 234 items
-              a.kt-notification-v2__item(href="#")
-                .kt-notification-v2__item-icon
-                  i.flaticon-paper-plane-1.kt-font-success
-                .kt-notification-v2__itek-wrapper
-                  .kt-notification-v2__item-title
-                    | 4.5h-avarage response time
-                  .kt-notification-v2__item-desc
-                    | Fostest is Barry
-              a.kt-notification-v2__item(href="#")
-                .kt-notification-v2__item-icon
-                  i.flaticon2-information.kt-font-danger
-                .kt-notification-v2__itek-wrapper
-                  .kt-notification-v2__item-title
-                    | Database server is down
-                  .kt-notification-v2__item-desc
-                    | 10 mins ago
-              a.kt-notification-v2__item(href="#")
-                .kt-notification-v2__item-icon
-                  i.flaticon2-mail-1.kt-font-brand
-                .kt-notification-v2__itek-wrapper
-                  .kt-notification-v2__item-title
-                    | System report has been generated
-                  .kt-notification-v2__item-desc
-                    | Fostest is Barry
-              a.kt-notification-v2__item(href="#")
-                .kt-notification-v2__item-icon
-                  i.flaticon2-hangouts-logo.kt-font-warning
-                .kt-notification-v2__itek-wrapper
-                  .kt-notification-v2__item-title
-                    | 4.5h-avarage response time
-                  .kt-notification-v2__item-desc
-                    | Fostest is Barry
+            .kt-portlet
+              .kt-portlet__body
+                .kt-list-timeline
+                    .kt-list-timeline__items
+                        each notification in notifications                          
+                            .kt-list-timeline__item
+                                span.kt-list-timeline__badge(class=`kt-list-timeline__badge--${notification.notification_color}`)
+                                span.kt-list-timeline__text
+                                    | #{notification.topic_name}                               
+                                span.kt-list-timeline__text     
+                                    | #{notification.payload_0}  
+                                if notification.payload_1                                            
+                                  span.kt-list-timeline__text 
+                                      | #{notification.payload_1}
+                                span.kt-list-timeline__text 
+                                    span=moment(notification.createdAt).fromNow() 
+          #kt_quick_panel_tab_errors.tab-pane.fade.show.kt-scroll.active(role="tabpanel")
+            .kt-portlet
+              .kt-portlet__body
+                .kt-list-timeline
+                    .kt-list-timeline__items
+                        each notification in notifications
+                          if notification.topic_type == 'Error'
+                            .kt-list-timeline__item
+                                span.kt-list-timeline__badge(class=`kt-list-timeline__badge--${notification.notification_color}`)
+                                span.kt-list-timeline__text
+                                    | #{notification.topic_name}                               
+                                span.kt-list-timeline__text     
+                                    | #{notification.payload_0}  
+                                if notification.payload_1                                            
+                                  span.kt-list-timeline__text 
+                                      | #{notification.payload_1}
+                                span.kt-list-timeline__text 
+                                    span=moment(notification.createdAt).fromNow()                             
           #kt_quick_panel_tab_settings.tab-pane.kt-quick-panel__content-padding-x.fade.kt-scroll(role="tabpanel")
             form.kt-form
-              .kt-heading.kt-heading--sm.kt-heading--space-sm Customer Care
+              .kt-heading.kt-heading--sm.kt-heading--space-sm Notifications
               .form-group.form-group-xs.row
                 label.col-8.col-form-label Enable Notifications:
                 .col-4.kt-align-right
                   span.kt-switch.kt-switch--success.kt-switch--sm
                     label
                       input(type="checkbox" checked="checked" name="quick_panel_notifications_1")
-                      span
-              .form-group.form-group-xs.row
-                label.col-8.col-form-label Enable Case Tracking:
-                .col-4.kt-align-right
-                  span.kt-switch.kt-switch--success.kt-switch--sm
-                    label
-                      input(type="checkbox" name="quick_panel_notifications_2")
-                      span
-              .form-group.form-group-last.form-group-xs.row
-                label.col-8.col-form-label Support Portal:
-                .col-4.kt-align-right
-                  span.kt-switch.kt-switch--success.kt-switch--sm
-                    label
-                      input(type="checkbox" checked="checked" name="quick_panel_notifications_2")
-                      span
-              .kt-separator.kt-separator--space-md.kt-separator--border-dashed
-              .kt-heading.kt-heading--sm.kt-heading--space-sm Reports
-              .form-group.form-group-xs.row
-                label.col-8.col-form-label Generate Reports:
-                .col-4.kt-align-right
-                  span.kt-switch.kt-switch--sm.kt-switch--danger
-                    label
-                      input(type="checkbox" checked="checked" name="quick_panel_notifications_3")
-                      span
-              .form-group.form-group-xs.row
-                label.col-8.col-form-label Enable Report Export:
-                .col-4.kt-align-right
-                  span.kt-switch.kt-switch--sm.kt-switch--danger
-                    label
-                      input(type="checkbox" name="quick_panel_notifications_3")
-                      span
-              .form-group.form-group-last.form-group-xs.row
-                label.col-8.col-form-label Allow Data Collection:
-                .col-4.kt-align-right
-                  span.kt-switch.kt-switch--sm.kt-switch--danger
-                    label
-                      input(type="checkbox" checked="checked" name="quick_panel_notifications_4")
-                      span
-              .kt-separator.kt-separator--space-md.kt-separator--border-dashed
-              .kt-heading.kt-heading--sm.kt-heading--space-sm Memebers
-              .form-group.form-group-xs.row
-                label.col-8.col-form-label Enable Member singup:
-                .col-4.kt-align-right
-                  span.kt-switch.kt-switch--sm.kt-switch--brand
-                    label
-                      input(type="checkbox" checked="checked" name="quick_panel_notifications_5")
-                      span
-              .form-group.form-group-xs.row
-                label.col-8.col-form-label Allow User Feedbacks:
-                .col-4.kt-align-right
-                  span.kt-switch.kt-switch--sm.kt-switch--brand
-                    label
-                      input(type="checkbox" name="quick_panel_notifications_5")
-                      span
-              .form-group.form-group-last.form-group-xs.row
-                label.col-8.col-form-label Enable Customer Portal:
-                .col-4.kt-align-right
-                  span.kt-switch.kt-switch--sm.kt-switch--brand
-                    label
-                      input(type="checkbox" checked="checked" name="quick_panel_notifications_6")
-                      span
+                      span             
     // end::Quick Panel
     // begin::Scrolltop
     #kt_scrolltop.kt-scrolltop

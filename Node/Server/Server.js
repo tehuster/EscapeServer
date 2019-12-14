@@ -10,6 +10,7 @@ const Configs = require('./database/models/configs')(Sequelize, sqlite)
 const Triggers = require('./database/models/triggers')(Sequelize, sqlite)
 const Parameters = require('./database/models/parameters')(Sequelize, sqlite)
 const Events = require('./database/models/events')(Sequelize, sqlite)
+const Notifications = require('./database/models/notifications')(Sequelize, sqlite)
 
 const Models = {
    Devices,
@@ -17,7 +18,8 @@ const Models = {
    Configs,
    Triggers,
    Parameters,
-   Events
+   Events,
+   Notifications
 }
 
 Devices.associate(Models)
@@ -26,6 +28,11 @@ Configs.associate(Models)
 Triggers.associate(Models)
 Parameters.associate(Models)
 Events.associate(Models)
+
+// Notifications.destroy({
+//    where: {},
+//    truncate: true
+//  })
 
 // const ResponseHandler = require('./ResponseHandler')
 // const responseHandler = new ResponseHandler()
@@ -39,7 +46,7 @@ mqtt.triggers = Triggers;
 
 ///////////////////////// WEBCLIENT
 const WebClient = require('./WebClient')
-const webClient = new WebClient(Devices, Hints, Triggers)
+const webClient = new WebClient(Devices, Hints, Triggers, Notifications)
 
 ///////////////////////// SOCKET
 const SocketHandler = require('./SocketHandler')
@@ -63,12 +70,45 @@ socketHandler.on('request', (data) => {
 })
 
 ///////////////////////// MQTT
-mqtt.on('event', (data) => {
-   socketHandler.io.emit('webclient', { type: 'event', event: data })
+mqtt.on('notification', (data) => {
+   let notification_color;
+   let saveNotification = false;
+   switch (data.topic_type) {
+      case 'Event':
+         socketHandler.io.emit('webclient', { type: 'event', event: data }) 
+         notification_color = 'success';            
+         saveNotification = true;           
+         break;
+      case 'Error':
+         socketHandler.io.emit('webclient', { type: 'error', event: data })
+         notification_color = 'danger';         
+         saveNotification = true;
+         break;
+      case 'Response':
+         socketHandler.io.emit('webclient', { type: 'response', event: data })
+         notification_color = 'info';
+         saveNotification = true;
+         break;
+      default:
+         console.log(`Unknown topic type: ${data.topic_type}`)                   
+   }
+   if(saveNotification)
+   {
+      Notifications.create({
+         topic_name: data.device_name,
+         topic_type: data.topic_type,
+         payload_0:  data.payload_0,
+         payload_1:  data.payload_1,
+         notification_color: notification_color
+      }).then(() => {
+         //responseHandler.loadDevices(Devices.findAll())
+         //socketHandler.io.emit('webclient', { type: 'refresh' })
+      });
+   }   
 })
 
 mqtt.on('error', (data) => {
-   socketHandler.io.emit('webclient', { type: 'error', event: data })
+   
 })
 
 ///////////////////////// DEVICES
@@ -184,11 +224,11 @@ socketHandler.on('hints', (data) => {
 ///////////////////////// MIDI
 socketHandler.on('midi', (data) => {
    if (data == 0) {
-      requestHandler.clearAllRequests()
+      // requestHandler.clearAllRequests()
    } else {
-      requestHandler.addRequest(data * 10, 'data')
-      console.log('Added request to queue. Current queue: ')
-      console.log(requestHandler.requests)
+      // requestHandler.addRequest(data * 10, 'data')
+      // console.log('Added request to queue. Current queue: ')
+      // console.log(requestHandler.requests)
    }
 })
 

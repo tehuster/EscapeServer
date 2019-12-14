@@ -1,93 +1,195 @@
-html
-  head        
-    meta(charset='utf-8')
-    meta(http-equiv='X-UA-Compatible', content='IE=edge')
-    meta(name='viewport', content='width=device-width, initial-scale=1')
+extends layout.pug
 
-    title=EscapeServer
+block title
+    | Devices
 
-    script(src="/socket.io/socket.io.js")
-    script(defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js")
+block subheader
+    .kt-subheader__toolbar
+        .kt-subheader__wrapper
+            button.btn.btn-success.btn-sm(type="button" data-toggle="modal" data-target="#modalAddDevice") Add Device
 
-    script(defer src="Main.js")
+block scripts 
     script(defer src="Devices.js")
-    //- script(defer src="RequestHandler.js")    
-    //- script(defer src="webmidi.min.js")
-    //- script(defer src="MidiManager.js")
 
+block content
+    .kt-container.kt-container--fluid.kt-grid__item.kt-grid__item--fluid
+        .row
+            .col-xl-6
+                each device in devices
+                    // begin::Portlet
+                    .kt-portlet.kt-portlet--tabs
+                        .kt-portlet__head
+                            .kt-portlet__head-label
+                                h3.kt-portlet__head-title
+                                    | #{device.device_name}
+                            .kt-portlet__head-toolbar
+                                ul.nav.nav-tabs.nav-tabs-bold.nav-tabs-line.nav-tabs-line-right.nav-tabs-line-brand(role="tablist")
+                                    li.nav-item
+                                        a.nav-link(data-toggle="tab" href=`#kt_portlet_tab_${device.id}_1` role="tab" aria-selected="true")
+                                            | Description
+                                    li.nav-item
+                                        a.nav-link(data-toggle="tab" href=`#kt_portlet_tab_${device.id}_2` role="tab" aria-selected="false")
+                                            | Events
+                                    li.nav-item
+                                        a.nav-link.active(data-toggle="tab" href=`#kt_portlet_tab_${device.id}_3` role="tab" aria-selected="false")
+                                            | Actions
+                                    li.nav-item
+                                        a.nav-link(data-toggle="tab" href=`#kt_portlet_tab_${device.id}_4` role="tab" aria-selected="false")
+                                            | Settings
+                        .kt-portlet__body
+                            .tab-content
+                                // begin::Device Description
+                                div(id=`kt_portlet_tab_${device.id}_1`).tab-pane          
+                                    | #{device.device_description}
+                                // begin::Device Events    
+                                div(id=`kt_portlet_tab_${device.id}_2`).tab-pane
+                                    .kt-list-timeline
+                                        .kt-list-timeline__items
+                                            each event in device.events
+                                                .kt-list-timeline__item
+                                                    span.kt-list-timeline__badge.kt-list-timeline__badge--info
+                                                    span.kt-list-timeline__text
+                                                        | #{event.event_name}                                                            
+                                                    span.kt-list-timeline__time 
+                                                        button.btn.btn-outline-hover-warning.btn-icon(type="button" onClick=`SimulateEvent("${device.device_name}", "${event.event_name}")`)
+                                                            i.fa.fa-bolt
+                                                    span.kt-list-timeline__time 
+                                                        button.btn.btn-outline-hover-danger.btn-icon(type="button" onClick=`RemoveEvent(${event.id})`)
+                                                            i.fa.fa-trash                                  
+                                    .kt-section
+                                        span.kt-section__info
+                                            | 
+                                        .kt-section__content
+                                            span.kt-space-30
+                                            button.btn.btn-success(type="button" data-toggle="modal" data-target="#modalAddEvent") Add Event
+                                // begin::Device Actions    
+                                div(id=`kt_portlet_tab_${device.id}_3`).tab-pane.active
+                                    .kt-list-timeline
+                                        .kt-list-timeline__items
+                                            each action in device.actions
+                                                .kt-list-timeline__item
+                                                    span.kt-list-timeline__badge.kt-list-timeline__badge--info
+                                                    span.kt-list-timeline__text
+                                                        | #{action.action_name}
+                                                    if action.action_parameter_type != 'null'
+                                                        span.kt-list-timeline__text
+                                                            input.form-control(id=`parameter_${action.id}` type='text' placeholder=`${action.action_parameter_type}`)                                                                                 
+                                                    span.kt-list-timeline__time 
+                                                        button.btn.btn-outline-hover-warning.btn-icon(type="button" onClick=`ExecuteAction("${device.device_name}","${action.action_name}",${action.id})`)
+                                                            i.fa.fa-bolt
+                                                    span.kt-list-timeline__time 
+                                                        button.btn.btn-outline-hover-danger.btn-icon(type="button" onClick=`RemoveAction(${action.id})`)
+                                                            i.fa.fa-trash                                  
+                                    .kt-section
+                                        .kt-section__content
+                                            span.kt-space-30
+                                            button.btn.btn-success(type="button" data-toggle="modal" data-target="#modalAddAction") Add Action
+                                // begin::Device Settings            
+                                div(id=`kt_portlet_tab_${device.id}_4`).tab-pane
+                                    .kt-list-timeline
+                                        .kt-list-timeline__items
+                                            each config in device.configs
+                                                .kt-list-timeline__item
+                                                    span.kt-list-timeline__badge.kt-list-timeline__badge--info
+                                                    span.kt-list-timeline__text
+                                                        | #{config.config_name}                                                                                       
+                                                    span.kt-list-timeline__time 
+                                                        | 5 sec. 
+                                                    a.kt-list-timeline__time.kt-list-timeline__icon.kt-font-danger(onClick=``) 
+                                                        | remove
+                                    span.kt-space-30
+                                    button.btn.btn-success(type="submit") Add Config
+                                    button.btn.btn-danger(type="submit" onClick=`RemoveDevice(${device.id})`) Remove Device
+                    // end::Portlet
 
-    //- script(defer src="webmidi.min.js")
-    //- script(defer src="midiHandler.js")          
+    // begin::Modal ADD Event
+    #modalAddEvent.modal.fade(tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" style="display: none;" aria-modal="true")
+        .modal-dialog(role="document")
+            .modal-content
+                .modal-header
+                    h5#exampleModalLabel.modal-title New Event
+                    button.close(type="button" data-dismiss="modal" aria-label="Close")
+                        span(aria-hidden="true") ×
+                .modal-body
+                    form
+                        .form-group
+                            label.form-control-label(for="recipient-name") Device: (CHECK THE DEVICE)
+                            select#device_id_event.form-control
+                                each device in devices
+                                    option(value=`${device.id}`)= device.device_name    
+                        .form-group
+                            label.form-control-label() Name:
+                            input#event_name.form-control(type="text")                        
+                .modal-footer
+                    button.btn.btn-secondary(type="button" data-dismiss="modal") Close
+                    button#kt_blockui_4_2.btn.btn-primary(type="button" onclick="AddEvent()" data-dismiss="modal") Add action
+    // end::Portlet
 
-    link(rel='stylesheet', href='bulma.css', type='text/css')
-    link(rel='stylesheet', href='css/devices.css', type='text/css')
+    // begin::Modal ADD Action
+    #modalAddAction.modal.fade(tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" style="display: none;" aria-modal="true")
+        .modal-dialog(role="document")
+            .modal-content
+                .modal-header
+                    h5#exampleModalLabel.modal-title New Action
+                    button.close(type="button" data-dismiss="modal" aria-label="Close")
+                        span(aria-hidden="true") ×
+                .modal-body
+                    form
+                        .form-group
+                            label.form-control-label(for="recipient-name") Device: (CHECK THE DEVICE)
+                            select#device_id.form-control
+                                each device in devices
+                                    option(value=`${device.id}`)= device.device_name    
+                        .form-group
+                            label.form-control-label() Name:
+                            input#action_name.form-control(type="text")
+                        .form-group
+                            label.form-control-label(for="message-text") Parameter:
+                            select#action_parameter.form-control
+                                option(value="null")
+                                    | Null
+                                option(value="int")
+                                    | Number
+                                option(value="string")
+                                    | Text   
+                        .form-group
+                            label.form-control-label(for="message-text") Availability:
+                            select#action_public.form-control
+                                option(value="public")
+                                    | Public
+                                option(value="private")
+                                    | Private
+                                option(value="dashboard")
+                                    | Dashboard  
+                .modal-footer
+                    button.btn.btn-secondary(type="button" data-dismiss="modal") Close
+                    button#kt_blockui_4_2.btn.btn-primary(type="button" onclick="AddAction()" data-dismiss="modal") Add action
+    // end::Portlet
 
-  body 
-    div(class="mainContainer")
-      div(class="topContainer")
-      div(class="centerContainer")
-        each device in devices
-          div(class="deviceContainer")            
-            p(id=`device_${device.id}`)=device.device_room
-            p(id=`device_${device.id}`)=device.device_name
-            p(id=`device_${device.id}`)=device.device_description
-            div(class="actions")
-                p Actions:
-                  each action in device.actions   
-                    div(class="configContainer box field has-addons has-addons-centered")    
-                      p(class="control")            
-                        a(class="button is-primary" onClick=`RequestAction("${device.device_name}","${action.action_name}",${action.id})`)=action.action_name
-                      if action.action_parameter_type
-                        p(class="control")
-                          input(id=`parameter_${action.id}` class="input is-primary" type="text" placeholder="parameter")
-            div(class="configs")
-              p Configs:
-                each config in device.configs
-                    a(class="button is-primary" onClick=`GETConfig("${config.config_name}")`)=`GET ${config.config_name}`
-                    a(class="button is-primary" onClick=`SETConfig("${config.config_name}")`)=`SET ${config.config_name}`
-            div(class="events")
-               p Events:
-                each event in device.events
-                    a(class="button is-primary")=`Event: ${event.event_name}`
-            p(class="control")
-              a(class="button is-primary" onClick=`RemoveDevice(${device.id})`) Remove
-            div(class="actionContainer box field has-addons has-addons-centered")
-              p(class="control")
-                input(id=`action_name_${device.id}` class="input is-primary" type="text" placeholder="Action name")
-              p(class="control")
-                input(id=`action_parameter_${device.id}` class="input is-primary" type="text" placeholder="Parameter")
-              p(class="control")
-                input(id=`action_public_${device.id}` class="checkbox is-primary" type="checkbox")
-              p(class="control")
-                a(class="button is-primary" onClick=`AddAction(${device.id})`) Add
-            div(class="configContainer box field has-addons has-addons-centered")
-              p(class="control")
-                input(id=`config_name_${device.id}` class="input is-primary" type="text" placeholder="Config name")
-              p(class="control")
-                input(id=`config_public_${device.id}` class="checkbox is-primary" type="checkbox")
-              p(class="control")
-                a(class="button is-primary" onClick=`AddConfig(${device.id})`) Add
-            div(class="eventContainer box field has-addons has-addons-centered")
-              p(class="control")
-                input(id=`event_name_${device.id}` class="input is-primary" type="text" placeholder="Event name")
-              p(class="control")
-                a(class="button is-primary" onClick=`AddEvent(${device.id})`) Add
-      div(class="bottomContainer")
-        div(class="field has-addons has-addons-centered")  
-          p(class="control")
-            span(class="select")
-              select(id="room")
-                option Cake
-                option Jan               
-          p(class="control")
-            input(id="name" class="input is-primary" type="text" placeholder="Name")           
-          p(class="control")
-            input(id="description" class="input is-primary" type="text" placeholder="Description")
-          p(class="control")
-            //- input(id="config" class="input is-primary" type="text" placeholder="Config")
-          p(class="control")
-            //- input(id="actions" class="input is-primary" type="text" placeholder="Action")                
-          p(class="control")
-            a(class="button is-primary" onClick="AddDevice()") Add
-
-        
+    // begin::Modal ADD Device
+    #modalAddDevice.modal.fade(tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" style="display: none;" aria-modal="true")
+        .modal-dialog(role="document")
+            .modal-content
+                .modal-header
+                    h5#exampleModalLabel.modal-title New Device
+                    button.close(type="button" data-dismiss="modal" aria-label="Close")
+                        span(aria-hidden="true") ×
+                .modal-body
+                    form
+                        .form-group
+                            label.form-control-label(for="recipient-name") Room: 
+                            select#device_room.form-control
+                                option(value="jan")
+                                    | St.Jan
+                                option(value="cake")
+                                    | BoscheBollen
+                        .form-group
+                            label.form-control-label() Name:
+                            input#device_name.form-control(type="text")
+                        .form-group
+                            label.form-control-label() Description:
+                            textarea#device_description.form-control(rows="6")                     
+                .modal-footer
+                    button.btn.btn-secondary(type="button" data-dismiss="modal") Close
+                    button#kt_blockui_4_2.btn.btn-primary(type="button" onclick="AddDevice()" data-dismiss="modal") Add Device
+    // end::Portlet

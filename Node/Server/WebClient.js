@@ -1,5 +1,5 @@
 class WebClient {
-   constructor(devices, hints, triggers) {
+   constructor(devices, hints, triggers, notifications) {
       const express = require("express")
       const path = require('path')
       const bodyParser = require('body-parser')
@@ -7,6 +7,7 @@ class WebClient {
       const os = require('os')
       const networkInterfaces = os.networkInterfaces()
 
+      app.locals.moment = require('moment');
       app.use(bodyParser.json())
       app.use(express.static(path.join(__dirname, '/node_modules/bulma/css')))
       app.use(express.static(path.join(__dirname, '/public')))
@@ -19,13 +20,34 @@ class WebClient {
       this.initServer()
       this.devices = devices;
       this.triggers = triggers;
+      this.notifications = notifications;
       this.hints = hints;
 
    }
 
    initRoutes(app) {
       app.get('/', (req, res) => {
-         res.render('index')
+         this.getAllData()
+         .then((data) =>{            
+            res.render('layout', {
+               devices: data[0],
+               triggers: data[1],
+               notifications: data[2],
+               server_ip: this.ip
+            })
+         })
+      })
+
+      app.get('/dashboard', (req, res) => {
+         this.getAllData()
+         .then((data) =>{            
+            res.render('layout', {
+               devices: data[0],
+               triggers: data[1],
+               notifications: data[2],
+               server_ip: this.ip
+            })
+         })
       })
 
       app.get('/hints', (req, res) => {
@@ -34,40 +56,27 @@ class WebClient {
       })
 
       app.get('/devices', (req, res) => {
-         this.devices.findAll({
-            include: ['actions', 'configs', 'events']
+         this.getAllData()
+         .then((data) =>{            
+            res.render('devices', {
+               devices: data[0],
+               triggers: data[1],
+               notifications: data[2],
+               server_ip: this.ip
+            })
          })
-            .then((data) => {
-               res.render('devicess', { devices: data })
-            });
-      })
-
-      app.get('/devicess', (req, res) => {
-         this.devices.findAll({
-            include: ['actions', 'configs', 'events']
-         })
-            .then((data) => {
-               res.render('devices', { devices: data })
-            });
       })
 
       app.get('/triggers', (req, res) => {
-         let devices;
-         let triggers;
-         this.devices.findAll({
-            include: ['actions', 'configs', 'events']
-         })
-            .then((device_data) => {
-               devices = device_data;
-               this.triggers.findAll()
-                  .then((trigger_data) => {
-                     triggers = trigger_data;
-                     res.render('triggers', {
-                        devices: devices,
-                        triggers: triggers
-                     })
-                  })
+         this.getAllData()
+         .then((data) =>{            
+            res.render('triggers', {
+               devices: data[0],
+               triggers: data[1],
+               notifications: data[2],
+               server_ip: this.ip
             })
+         })
       })
 
       app.get('/api', (req, res) => {
@@ -89,25 +98,36 @@ class WebClient {
             })
       })
       app.get('/test', (req, res) => {
-         let devices;
-         let triggers;
-         this.devices.findAll({
-            include: ['actions', 'configs', 'events']
-         })
-            .then((device_data) => {
-               devices = device_data;
-               this.triggers.findAll()
-                  .then((trigger_data) => {
-                     triggers = trigger_data;
-                     res.render('layout', {
-                        devices: devices,
-                        triggers: triggers,
-                        server_ip: this.ip
-                     })
-                  })
+         this.getAllData()
+         .then((data) =>{            
+            res.render('layout', {
+               devices: data[0],
+               triggers: data[1],
+               notifications: data[2],
+               server_ip: this.ip
             })
+         })
       })
    }
+
+   async getAllData() {
+      return await Promise.all(
+         [
+            this.devices.findAll({
+               include: ['actions', 'configs', 'events']
+            }),
+            this.triggers.findAll(),
+            this.notifications.findAll({
+               order: [
+                  ['createdAt', 'DESC']
+
+               ],
+               limit: 100
+            })
+         ]
+      )
+   }
+      
 
    initServer() {
       this.server.listen(3000, this.ip, 0, () => {
