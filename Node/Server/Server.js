@@ -62,6 +62,15 @@ socketHandler.on('request', (data) => {
    }
 })
 
+///////////////////////// MQTT
+mqtt.on('event', (data) => {
+   socketHandler.io.emit('webclient', { type: 'event', event: data })
+})
+
+mqtt.on('error', (data) => {
+   socketHandler.io.emit('webclient', { type: 'error', event: data })
+})
+
 ///////////////////////// DEVICES
 socketHandler.on('devices', (data) => {
    switch (data.command) {

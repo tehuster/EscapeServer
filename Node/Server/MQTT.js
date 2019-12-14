@@ -43,8 +43,18 @@ class MQTT extends EventEmitter
             switch (topic_type) {
                 case 'Event':
                     this.EventHandler(device_name, payload_0, payload_1)
+                    this.emit('event', {
+                        device_name, 
+                        payload_0, 
+                        payload_1
+                    })
                     break;
                 case 'Error':
+                    this.emit('error', {
+                        device_name, 
+                        payload_0, 
+                        payload_1
+                    })
                     break;
                 case 'Response':
                     break;

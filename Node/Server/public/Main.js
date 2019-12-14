@@ -13,8 +13,57 @@ socket.on('webclient', function (data) {
         case 'refresh':
             location.reload();
             break;
+        case 'event':
+                Notify_Event(data);
+            break;
+        case 'error':
+                Notify_Error(data);
+            break;
+        default:
+            console.log(`Unknown server type message: ${data.type}`)            
     }
 });
+
+function Notify_Error(data)
+{
+    $.notify({
+        // options
+        message: `${data.event.device_name}: ${data.event.payload_0}` 
+    },{
+        // settings
+        type: 'danger',
+        placement: {
+            from: "top",
+            align: "center"
+        },
+        timer: 0,
+        animate: {
+            enter: 'animated fadeInDown',
+            exit: 'animated fadeOut'
+        },
+    });
+}
+
+function Notify_Event(data)
+{
+    $.notify({
+        // options
+        message: `${data.event.device_name}: ${data.event.payload_0}` 
+    },{
+        // settings
+        type: 'success',
+        placement: {
+            from: "top",
+            align: "center"
+        },
+        animate: {
+            enter: 'animated fadeInDown',
+            exit: 'animated fadeOut'
+        },
+    });
+}
+
+/////////////////////////////////////////////////
 
 var devices;
 var triggers;
