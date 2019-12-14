@@ -60,6 +60,7 @@ block content
                                         span.kt-section__info
                                             | 
                                         .kt-section__content
+                                            span.kt-space-30
                                             button.btn.btn-success(type="button" data-toggle="modal" data-target="#modalAddEvent") Add Event
                                 // begin::Device Actions    
                                 div(id=`kt_portlet_tab_${device.id}_3`).tab-pane.active
@@ -74,18 +75,17 @@ block content
                                                         span.kt-list-timeline__text
                                                             input.form-control(id=`parameter_${action.id}` type='text' placeholder=`${action.action_parameter_type}`)                                                                                 
                                                     span.kt-list-timeline__time 
-                                                        button.btn.btn-outline-hover-warning.btn-icon(type="button" onClick=`RequestAction("${device.device_name}","${action.action_name}",${action.id})`)
+                                                        button.btn.btn-outline-hover-warning.btn-icon(type="button" onClick=`ExecuteAction("${device.device_name}","${action.action_name}",${action.id})`)
                                                             i.fa.fa-bolt
                                                     span.kt-list-timeline__time 
                                                         button.btn.btn-outline-hover-danger.btn-icon(type="button" onClick=`RemoveAction(${action.id})`)
                                                             i.fa.fa-trash                                  
                                     .kt-section
-                                        span.kt-section__info
-                                            | 
                                         .kt-section__content
+                                            span.kt-space-30
                                             button.btn.btn-success(type="button" data-toggle="modal" data-target="#modalAddAction") Add Action
                                 // begin::Device Settings            
-                                div(id=`kt_portlet_tab_${device.id}_3`).tab-pane
+                                div(id=`kt_portlet_tab_${device.id}_4`).tab-pane
                                     .kt-list-timeline
                                         .kt-list-timeline__items
                                             each config in device.configs
@@ -97,6 +97,7 @@ block content
                                                         | 5 sec. 
                                                     a.kt-list-timeline__time.kt-list-timeline__icon.kt-font-danger(onClick=``) 
                                                         | remove
+                                    span.kt-space-30
                                     button.btn.btn-success(type="submit") Add Config
                                     button.btn.btn-danger(type="submit" onClick=`RemoveDevice(${device.id})`) Remove Device
                     // end::Portlet

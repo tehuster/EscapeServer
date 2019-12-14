@@ -54,7 +54,7 @@ socketHandler.on('request', (data) => {
          mqtt.sendMessage(data.deviceName, 'Action', data.actionName, data.actionParameter);
          break;
       case 'event':
-         mqtt.sendMessage(data.deviceName, 'Event', data.actionName, null);
+         mqtt.sendMessage(data.deviceName, 'Event', data.eventName, null);
          break;
       default:
          console.log('Unknown request command received...')

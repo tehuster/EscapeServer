@@ -60,7 +60,7 @@ function RemoveAction(id)
     });
 }
 
-function RequestAction(device_name, action_name, id)  //Add paramaters
+function ExecuteAction(device_name, action_name, id)  //Add paramaters
 {
     let parameter = null;
     if(document.getElementById(`parameter_${id}`) != undefined)
@@ -110,7 +110,7 @@ function SimulateEvent(device_name, event_name)
         type: 'request', 
         command: 'event', 
         deviceName: device_name,
-        actionName: event_name
+        eventName: event_name
     });    
 }
 

@@ -24,6 +24,8 @@ socket.on('webclient', function (data) {
     }
 });
 
+/////////////////////////////////////////////////
+
 function Notify_Error(data)
 {
     $.notify({
@@ -61,6 +63,40 @@ function Notify_Event(data)
             exit: 'animated fadeOut'
         },
     });
+}
+
+/////////////////////////////////////////////////
+
+function ExecuteQuickAction()
+{ 
+    let device_name = document.getElementById(`quick_action_device`).value; 
+    let action_name = document.getElementById(`quick_action`).value; 
+    let parameter   = document.getElementById(`quick_parameter`).value;
+
+    console.log(`Executing Quick Action: ${device_name} : ${action_name}`);
+
+    socket.emit('server', {
+        type: 'request', 
+        command: 'action', 
+        deviceName: device_name,
+        actionName: action_name,
+        actionParameter: parameter
+    });   
+}
+
+function SimulateQuickEvent()
+{
+    let device_name = document.getElementById(`quick_event_device`).value; 
+    let event_name = document.getElementById(`quick_event`).value;        
+
+    console.log(`Simulate event: ${event_name}`);    
+
+    socket.emit('server', {
+        type: 'request', 
+        command: 'event', 
+        deviceName: device_name,
+        eventName: event_name
+    });   
 }
 
 /////////////////////////////////////////////////
