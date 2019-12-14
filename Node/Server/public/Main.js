@@ -16,6 +16,9 @@ socket.on('webclient', function (data) {
         case 'event':
                 Notify_Event(data);
             break;
+        case 'response':
+                Notify_Response(data);
+            break;
         case 'error':
                 Notify_Error(data);
             break;
@@ -58,6 +61,26 @@ function Notify_Event(data)
             from: "top",
             align: "center"
         },
+        animate: {
+            enter: 'animated fadeInDown',
+            exit: 'animated fadeOut'
+        },
+    });
+}
+
+function Notify_Response(data)
+{
+    $.notify({
+        // options
+        message: `${data.event.device_name}: ${data.event.payload_0}` 
+    },{
+        // settings
+        type: 'info',
+        placement: {
+            from: "top",
+            align: "center"
+        },
+        timer: 2500,
         animate: {
             enter: 'animated fadeInDown',
             exit: 'animated fadeOut'
