@@ -55,7 +55,7 @@ block content
                                     .form-group.row
                                         label.col-lg-3.col-form-label Input device:
                                         .col-lg-6
-                                            select#iDevice.form-control
+                                            select#iDevice.form-control(onchange=`PopulateDropDown("iDevice", "event", "event")` placeholder="Select device")
                                                 each device in devices
                                                     option(value=`${device.device_name}`)= device.device_name                                             
                                     .form-group.row
@@ -68,7 +68,7 @@ block content
                                     .form-group.row
                                         label.col-lg-3.col-form-label Output Device:
                                         .col-lg-6
-                                            select#oDevice.form-control
+                                            select#oDevice.form-control(onchange=`PopulateDropDown("oDevice", "action", "action")` placeholder="Select device")
                                                 each device in devices
                                                     option(value=`${device.device_name}`)= device.device_name       
                                     .form-group.row
