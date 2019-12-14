@@ -53,6 +53,9 @@ socketHandler.on('request', (data) => {
       case 'action':
          mqtt.sendMessage(data.deviceName, 'Action', data.actionName, data.actionParameter);
          break;
+      case 'event':
+         mqtt.sendMessage(data.deviceName, 'Event', data.actionName, null);
+         break;
       default:
          console.log('Unknown request command received...')
          break;
@@ -80,13 +83,18 @@ socketHandler.on('devices', (data) => {
          });
          break;
       case 'addAction':
-         console.log(data.device_id);
-
          Actions.create({
             DeviceId: data.device_id,
             action_name: data.action_name,
             action_parameter_type: data.action_parameter,
-            public: data.actionPublic
+            action_public: data.action_public
+         }).then(() => {
+            socketHandler.io.emit('webclient', { type: 'refresh' })
+         });
+         break;
+      case 'removeAction':
+         Actions.destroy({
+            where: { id: data.id }
          }).then(() => {
             socketHandler.io.emit('webclient', { type: 'refresh' })
          });
@@ -109,8 +117,15 @@ socketHandler.on('devices', (data) => {
             socketHandler.io.emit('webclient', { type: 'refresh' })
          });
          break;
+      case 'removeEvent':
+         Events.destroy({
+            where: { id: data.id }
+         }).then(() => {
+            socketHandler.io.emit('webclient', { type: 'refresh' })
+         });
+         break;
       default:
-         console.log('Unknown hint command received...')
+         console.log('Unknown device command received...')
          break;
    }
 })

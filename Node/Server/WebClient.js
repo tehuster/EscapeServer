@@ -38,6 +38,15 @@ class WebClient {
             include: ['actions', 'configs', 'events']
          })
             .then((data) => {
+               res.render('devicess', { devices: data })
+            });
+      })
+
+      app.get('/devicess', (req, res) => {
+         this.devices.findAll({
+            include: ['actions', 'configs', 'events']
+         })
+            .then((data) => {
                res.render('devices', { devices: data })
             });
       })

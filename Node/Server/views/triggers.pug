@@ -1,5 +1,8 @@
 extends layout.pug
 
+block title
+    | Triggers
+
 block scripts 
     script(defer src="Triggers.js")
 
@@ -30,7 +33,9 @@ block content
                                             span.kt-badge.kt-badge--info.kt-badge--inline #{trigger.action} (#{trigger.parameter})
                                             |  @ #{trigger.oDevice}                                              
                                         span.kt-list-timeline__time #{trigger.delay_time} sec. 
-                                        a.kt-list-timeline__time.kt-list-timeline__icon.kt-font-danger(onClick=`RemoveTrigger(${trigger.id})`) remove
+                                        span.kt-list-timeline__time
+                                            button.btn.btn-outline-hover-danger.btn-icon(type="button" onClick=`RemoveTrigger(${trigger.id})`)
+                                                i.fa.fa-trash
                                        
                         // end::Timeline 1
                         .kt-separator.kt-separator--space-lg.kt-separator--border-dashed            
@@ -55,7 +60,7 @@ block content
                                     .form-group.row
                                         label.col-lg-3.col-form-label Input device:
                                         .col-lg-6
-                                            select#iDevice.form-control(onchange=`PopulateDropDown("iDevice", "event", "event")` placeholder="Select device")
+                                            select#iDevice.form-control(onclick=`PopulateDropDown("iDevice", "event", "event")`)
                                                 each device in devices
                                                     option(value=`${device.device_name}`)= device.device_name                                             
                                     .form-group.row
@@ -68,7 +73,7 @@ block content
                                     .form-group.row
                                         label.col-lg-3.col-form-label Output Device:
                                         .col-lg-6
-                                            select#oDevice.form-control(onchange=`PopulateDropDown("oDevice", "action", "action")` placeholder="Select device")
+                                            select#oDevice.form-control(onclick=`PopulateDropDown("oDevice", "action", "action")` placeholder="Select device")
                                                 each device in devices
                                                     option(value=`${device.device_name}`)= device.device_name       
                                     .form-group.row

@@ -1,10 +1,11 @@
 // A lot of duplicate code, this can be cleaner
 
+////////////////////////////////////// DEVICES
 function AddDevice()
 {
-    let room = document.getElementById('room').value;
-    let name = document.getElementById('name').value;
-    let description = document.getElementById('description').value;
+    let room = document.getElementById('device_room').value;
+    let name = document.getElementById('device_name').value;
+    let description = document.getElementById('device_description').value;
     // let config = document.getElementById('config').value;
     // let actions = document.getElementById('actions').value;
     
@@ -21,8 +22,7 @@ function AddDevice()
 }
 
 function RemoveDevice(id)
-{
-    
+{    
     console.log(`Removing device: ${id}`);    
     socket.emit('server', {
         type: 'devices', 
@@ -31,51 +31,33 @@ function RemoveDevice(id)
     });
 }
 
-function AddAction(id)
+////////////////////////////////////// ACTIONS
+function AddAction()
 {
-    let action_name = document.getElementById(`action_name_${id}`).value; 
-    let action_parameter = document.getElementById(`action_parameter_${id}`).value;
-    if(action_parameter == "")
-    {
-        action_paramter = null;
-    }
-    let action_public = document.getElementById(`action_public_${id}`).value;
+    let device_id = document.getElementById(`device_id`).value; 
+    let action_name = document.getElementById(`action_name`).value; 
+    let action_parameter = document.getElementById(`action_parameter`).value;
+    let action_public = document.getElementById(`action_public`).value;   
 
     socket.emit('server', {
         type: 'devices', 
         command: 'addAction', 
-        device_id: id,
+        device_id: device_id,
         action_name: action_name, 
         action_parameter: action_parameter,        
-        actionPublic: action_public 
+        action_public: action_public 
     }); 
     console.log(`Adding Action: ${action_name}`); 
 }
 
-function AddConfig(id)
+function RemoveAction(id)
 {
-    let config_name = document.getElementById(`config_name_${id}`).value;
-    let config_public = document.getElementById(`config_public_${id}`).value;
+    console.log(`Removing action: ${id}`);    
     socket.emit('server', {
         type: 'devices', 
-        command: 'addConfig', 
-        device_id: id,
-        config_name: config_name,
-        config_public: config_public 
-    }); 
-    console.log(`Adding Config: ${config_name}`); 
-}
-
-function AddEvent(id)
-{
-    let event_name = document.getElementById(`event_name_${id}`).value;
-    socket.emit('server', {
-        type: 'devices', 
-        command: 'addEvent', 
-        device_id: id,
-        event_name: event_name
-    }); 
-    console.log(`Adding Config: ${config_name}`); 
+        command: 'removeAction', 
+        id: id, 
+    });
 }
 
 function RequestAction(device_name, action_name, id)  //Add paramaters
@@ -94,6 +76,57 @@ function RequestAction(device_name, action_name, id)  //Add paramaters
         actionName: action_name,
         actionParameter: parameter
     });     
+}
+
+
+////////////////////////////////////// EVENTS
+function AddEvent(id)
+{
+    let device_id = document.getElementById(`device_id_event`).value; 
+    let event_name = document.getElementById(`event_name`).value;
+    socket.emit('server', {
+        type: 'devices', 
+        command: 'addEvent', 
+        device_id: device_id,
+        event_name: event_name
+    }); 
+    console.log(`Adding Event: ${event_name}`); 
+}
+
+function RemoveEvent(id)
+{
+    console.log(`Removing event: ${id}`);    
+    socket.emit('server', {
+        type: 'devices', 
+        command: 'removeEvent', 
+        id: id, 
+    });
+}
+
+function SimulateEvent(device_name, event_name)
+{
+    console.log(`Simulate event: ${event_name}`);    
+    socket.emit('server', {
+        type: 'request', 
+        command: 'event', 
+        deviceName: device_name,
+        actionName: event_name
+    });    
+}
+
+////////////////////////////////////// CONFIGS
+function AddConfig(id)
+{
+    let config_name = document.getElementById(`config_name_${id}`).value;
+    let config_public = document.getElementById(`config_public_${id}`).value;
+    socket.emit('server', {
+        type: 'devices', 
+        command: 'addConfig', 
+        device_id: id,
+        config_name: config_name,
+        config_public: config_public 
+    }); 
+    console.log(`Adding Config: ${config_name}`); 
 }
 
 function GETConfig(config_name)

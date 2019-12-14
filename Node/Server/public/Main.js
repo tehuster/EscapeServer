@@ -38,3 +38,29 @@ fetch('./api')
         console.log('Fetch Error :-S', err);
     });
 
+function PopulateDropDown(iMenu, oMenu, type)
+{   
+    let inputMenu = document.getElementById(iMenu);
+    let deviceName = inputMenu[inputMenu.selectedIndex].value;    
+    let device = devices.find(d => d.device_name == deviceName);
+    let outputMenu = document.getElementById(oMenu);
+    outputMenu.options.length = 0;
+
+    if(type == "action")
+    {
+        console.log(device);
+        
+        device.actions.forEach(action => {
+            let option = document.createElement("option");
+            option.text = action.action_name;
+            outputMenu.append(option)
+        });
+    }else if(type == "event")
+    {        
+        device.events.forEach(event => {
+            let option = document.createElement("option");
+            option.text = event.event_name;
+            outputMenu.append(option)
+        });
+    }
+}
