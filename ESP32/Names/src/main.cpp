@@ -78,10 +78,16 @@ void HandleAction(String payload)
     puzzle.Reset();
     mqtt.publish(clientId + "/Response/Action", "Reset", true, 1);
   }
-  else if(name == "BlinkLed")
+  else if(name == "ShowName")
   {
-    // puzzle.BlinkLed();
-    // mqtt.publish(clientId + "/Response/Action", "BlinkLed", true, 1);
+    puzzle.ShowName(value.toInt());
+    String response = "Showing name: " + value;
+    mqtt.publish(clientId + "/Response/Action", response, true, 1);
+  }
+  else if(name == "TurnOffLeds")
+  {
+    puzzle.TurnOffLeds();
+    mqtt.publish(clientId + "/Response/Action", "Turning off LEDS", true, 1);
   }
   else
   {
@@ -229,7 +235,7 @@ void Connect()
 void InitMQTT()
 {
   WiFi.onEvent(WiFiEvent);
-  // ETH.begin();
+  ETH.begin();
 
   mqtt.begin(mqtt_server, ethernetConnection);
   String willTopic = clientId + "/Error";

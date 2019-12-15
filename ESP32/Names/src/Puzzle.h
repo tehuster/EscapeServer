@@ -34,18 +34,18 @@ public:
     void Loop();
 
     void TurnOffLeds();
-    void ShowName(Name name, bool writeName);
+    void ShowName(int name);
     void Hint();
 
 private:
     Preferences preferences;
 
     //54,  0  - 54
-//42,  55 - 97
-//47, 98 - 145
-//42, 146 - 188
-//39, 189 - 228
-//45    229 - 274
+    //42,  55 - 97
+    //47, 98 - 145
+    //42, 146 - 188
+    //39, 189 - 228
+    //45    229 - 274
     
     const int ledAmount = NUM_LEDS;
     const int nameLedAmount[6] = {54, 42, 47, 42, 39, 45};

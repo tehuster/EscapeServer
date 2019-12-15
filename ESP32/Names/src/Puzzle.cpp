@@ -1,9 +1,13 @@
 #include <Arduino.h>
 #include <Puzzle.h>
 
+#define TURNOFFLEDS 0 
+#define SHOWNAME    1
+#define HINT        2
+
 unsigned long previousMillis = 0;        // will store last time LED was updated
-const long interval = 10;           // interval at which to blink (milliseconds)
-int counter = 0;
+const long interval = 1000;           // interval at which to blink (milliseconds)
+
 void Puzzle::Loop()
 {
     // unsigned long currentMillis = millis();
@@ -11,36 +15,27 @@ void Puzzle::Loop()
     //     // save the last time you blinked the LED
     //     previousMillis = currentMillis;
     //     // set the LED with the ledState of the variable:
-    //     SetLed(counter, 64, 0, 0);
-    //     ShowLeds();
-    //     SetLed(counter, 0, 0, 0);
-    //     ShowLeds();
-
-    //      counter ++;
-    //     if(counter >= NUM_LEDS)
-    //     {
-    //         counter = 0;
-    //     }
+    //     ShowName(2);
     // }
     
    
-    ShowName(Tiny, false);
-    delay(2500);
-    TurnOffLeds();
-    ShowName(Small, true);
-    delay(2500);
-    TurnOffLeds();
-    ShowName(Medium, true);
-    delay(2500);
-    TurnOffLeds();
-    ShowName(Big, true);
-    delay(2500);
-    TurnOffLeds();
-    ShowName(Huge, true);
-    delay(2500);    
-    ShowName(Enourmous, true);
-    delay(2500);    
-    TurnOffLeds();
+    // ShowName(Tiny, false);
+    // delay(2500);
+    // TurnOffLeds();
+    // ShowName(Small, true);
+    // delay(2500);
+    // TurnOffLeds();
+    // ShowName(Medium, true);
+    // delay(2500);
+    // TurnOffLeds();
+    // ShowName(Big, true);
+    // delay(2500);
+    // TurnOffLeds();
+    // ShowName(Huge, true);
+    // delay(2500);    
+    // ShowName(Enourmous, true);
+    // delay(2500);    
+    // TurnOffLeds();
 }
 
 void Puzzle::Reset()
@@ -58,6 +53,7 @@ void Puzzle::LoadPuzzle(Preferences p)
     // Serial.println(blinkTime);
     preferences.end();
 
+    //TURN OF CHIPSELECT FOR IO EXPANDER
     pinMode(13, OUTPUT);
     digitalWrite(13, HIGH);
 
@@ -72,28 +68,24 @@ void Puzzle::LoadPuzzle(Preferences p)
     SPI.setClockDivider(SPI_CLOCK_DIV32);
   
     // FastLED.setBrightness(BRIGHTNESS); TODO: Create setBrightness for SPI LED Slave
-    TurnOffLeds();
+    // TurnOffLeds();
 }
 
 void Puzzle::TurnOffLeds()
 {
-    for (int i = 0; i < ledAmount; i++)
-    {
-        SetLed(i, 0, 0, 0);
-    }
-    ShowLeds();
+    digitalWrite(32, LOW); // enable Slave Select
+    SPI.transfer(TURNOFFLEDS);       
+    SPI.transfer('\n');   
+    digitalWrite(32, HIGH); // disable Slave Select   
 }
 
-void Puzzle::ShowName(Name name, bool writeName)
+void Puzzle::ShowName(int name)
 {
-    if(writeName)
-    {
-        FlowName(nameLedBegin[name], nameLedAmount[name], writeSpeed);
-    }else
-    {
-        StampName(nameLedBegin[name], nameLedAmount[name]);
-    }
-    
+    digitalWrite(32, LOW); // enable Slave Select
+    SPI.transfer(SHOWNAME); 
+    SPI.transfer(name);       
+    SPI.transfer('\n');   
+    digitalWrite(32, HIGH); // disable Slave Select   
 }
 
 void Puzzle::Hint()
