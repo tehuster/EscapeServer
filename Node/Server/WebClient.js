@@ -22,14 +22,13 @@ class WebClient {
       this.triggers = triggers;
       this.notifications = notifications;
       this.hints = hints;
-
    }
 
    initRoutes(app) {
       app.get('/', (req, res) => {
          this.getAllData()
          .then((data) =>{            
-            res.render('layout', {
+            res.render('dashboard', {
                devices: data[0],
                triggers: data[1],
                notifications: data[2],
@@ -41,7 +40,7 @@ class WebClient {
       app.get('/dashboard', (req, res) => {
          this.getAllData()
          .then((data) =>{            
-            res.render('layout', {
+            res.render('dashboard', {
                devices: data[0],
                triggers: data[1],
                notifications: data[2],
@@ -97,7 +96,8 @@ class WebClient {
                   })
             })
       })
-      app.get('/test', (req, res) => {
+
+      app.get('/layout', (req, res) => {
          this.getAllData()
          .then((data) =>{            
             res.render('layout', {
@@ -120,14 +120,12 @@ class WebClient {
             this.notifications.findAll({
                order: [
                   ['createdAt', 'DESC']
-
                ],
                limit: 100
             })
          ]
       )
-   }
-      
+   }      
 
    initServer() {
       this.server.listen(3000, this.ip, 0, () => {
