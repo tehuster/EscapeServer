@@ -54,7 +54,7 @@ void HandleData(String payload)
   mqtt.publish(clientId + "/Response/Data", runTimeMsg, true, 1);
 }
 
-void HandleAction(String payload)    //SET MESSAGE THEN PUBLISH AFTER BIG IF/ELSE. Cleaner...
+void HandleAction(String payload)    
 {
   Serial.println("Action requested...");
   String name = GetValue(payload, '/', 0);
