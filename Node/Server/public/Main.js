@@ -22,6 +22,9 @@ socket.on('webclient', function (data) {
         case 'error':
                 Notify_Error(data);
             break;
+        case 'action':
+                Notify_Action(data);
+            break;
         default:
             console.log(`Unknown server type message: ${data.type}`)            
     }
@@ -80,7 +83,27 @@ function Notify_Response(data)
             from: "top",
             align: "center"
         },
-        timer: 2500,
+        timer: 1500,
+        animate: {
+            enter: 'animated fadeInDown',
+            exit: 'animated fadeOut'
+        },
+    });
+}
+
+function Notify_Action(data)
+{
+    $.notify({
+        // options
+        message: `${data.event.device_name}: ${data.event.payload_0}` 
+    },{
+        // settings
+        type: 'warning',
+        placement: {
+            from: "top",
+            align: "center"
+        },
+        timer: 1500,
         animate: {
             enter: 'animated fadeInDown',
             exit: 'animated fadeOut'

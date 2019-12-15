@@ -89,6 +89,11 @@ mqtt.on('notification', (data) => {
          notification_color = 'info';
          saveNotification = true;
          break;
+      case 'Action':
+         socketHandler.io.emit('webclient', { type: 'action', event: data })
+         notification_color = 'warning';
+         saveNotification = true;
+         break;
       default:
          console.log(`Unknown topic type: ${data.topic_type}`)                   
    }

@@ -258,11 +258,10 @@ html(lang="en")
                                     | #{notification.topic_name}                               
                                 span.kt-list-timeline__text     
                                     | #{notification.payload_0}  
-                                if notification.payload_1                                            
-                                  span.kt-list-timeline__text 
-                                      | #{notification.payload_1}
+                                    if notification.payload_1                                          
+                                        | #{notification.payload_1}
                                 span.kt-list-timeline__text 
-                                    span=moment(notification.createdAt).fromNow() 
+                                    span=moment(notification.createdAt).fromNow(true) 
           #kt_quick_panel_tab_errors.tab-pane.fade.show.kt-scroll.active(role="tabpanel")
             .kt-portlet
               .kt-portlet__body
@@ -285,12 +284,19 @@ html(lang="en")
             form.kt-form
               .kt-heading.kt-heading--sm.kt-heading--space-sm Notifications
               .form-group.form-group-xs.row
-                label.col-8.col-form-label Enable Notifications:
+                label.col-8.col-form-label Enable Responses:
+                .col-4.kt-align-right
+                  span.kt-switch.kt-switch--info.kt-switch--sm
+                    label
+                      input(type="checkbox" checked="checked" name="quick_panel_notifications_1")
+                      span 
+              .form-group.form-group-xs.row
+                label.col-8.col-form-label Enable Events:
                 .col-4.kt-align-right
                   span.kt-switch.kt-switch--success.kt-switch--sm
                     label
                       input(type="checkbox" checked="checked" name="quick_panel_notifications_1")
-                      span             
+                      span              
     // end::Quick Panel
     // begin::Scrolltop
     #kt_scrolltop.kt-scrolltop

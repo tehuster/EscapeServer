@@ -48,6 +48,8 @@ class MQTT extends EventEmitter
                     break;
                 case 'Response':
                     break;
+                case 'Action':
+                    break;
                 default:
                    console.log(`Unknown topic type: ${topic_type}`)                   
             }
