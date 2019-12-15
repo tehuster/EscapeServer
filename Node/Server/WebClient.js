@@ -108,6 +108,18 @@ class WebClient {
             })
          })
       })
+
+      app.get('/old', (req, res) => {
+         this.getAllData()
+         .then((data) =>{            
+            res.render('index', {
+               devices: data[0],
+               triggers: data[1],
+               notifications: data[2],
+               server_ip: this.ip
+            })
+         })
+      })
    }
 
    async getAllData() {

@@ -11,9 +11,9 @@ public:
     void Reset();
     void Loop();    
 
-    void PlaySong(byte num);
+    void PlayAudio(byte num);
     void SetVolume(int volume);   
-    int CheckStatus();    
+    String CheckStatus();    
 
 private:
     Preferences preferences;  

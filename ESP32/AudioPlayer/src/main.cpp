@@ -25,6 +25,8 @@ void InitMQTT();
 void WiFiEvent(WiFiEvent_t event);
 static bool eth_connected = false;
 
+unsigned long runTime = 0;
+
 void setup()
 {
   Serial.begin(115200);
@@ -37,7 +39,8 @@ void setup()
 }
 
 void loop()
-{
+{ 
+    runTime = millis();
     MQTT_Update();
     puzzle.Loop();    
 }
@@ -46,8 +49,9 @@ void loop()
 
 void HandleData(String payload)
 {
+  String runTimeMsg = String(runTime);
   Serial.println("Data requested...");
-  mqtt.publish(clientId + "/Response/Data", "Data", true, 1);
+  mqtt.publish(clientId + "/Response/Data", runTimeMsg, true, 1);
 }
 
 void HandleAction(String payload)    //SET MESSAGE THEN PUBLISH AFTER BIG IF/ELSE. Cleaner...
@@ -62,10 +66,11 @@ void HandleAction(String payload)    //SET MESSAGE THEN PUBLISH AFTER BIG IF/ELS
     puzzle.Reset();
     response = "Reset";
   }
-  else if(name == "PlaySong")
+  else if(name == "PlayAudio")
   {
-    puzzle.PlaySong(value.toInt());
-    response = "PlaySong: " + value;
+    puzzle.PlayAudio(value.toInt());
+    String status = puzzle.CheckStatus();
+    response = status;
   }
   else if(name == "SetVolume")
   {
@@ -74,8 +79,8 @@ void HandleAction(String payload)    //SET MESSAGE THEN PUBLISH AFTER BIG IF/ELS
   }
   else if(name == "CheckStatus")
   {
-    int status = puzzle.CheckStatus();
-    response = "Status/" + String(status);
+    String status = puzzle.CheckStatus();
+    response = status;
   }
   else
   {
