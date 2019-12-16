@@ -2,6 +2,7 @@
 #include <ETH.h>
 #include <MQTT.h>
 #include <Puzzle.h>
+#include <SPI.h>
 
 WiFiClient ethernetConnection;
 MQTTClient mqtt;

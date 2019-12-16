@@ -49,6 +49,7 @@ function Notify_Error(data)
             enter: 'animated fadeInDown',
             exit: 'animated fadeOut'
         },
+        newest_on_top: true,
     });
 }
 
@@ -64,10 +65,12 @@ function Notify_Event(data)
             from: "top",
             align: "center"
         },
+        timer: 2000,
         animate: {
             enter: 'animated fadeInDown',
             exit: 'animated fadeOut'
         },
+        newest_on_top: true,
     });
 }
 
@@ -83,11 +86,12 @@ function Notify_Response(data)
             from: "top",
             align: "center"
         },
-        timer: 1500,
+        timer: 2000,
         animate: {
             enter: 'animated fadeInDown',
             exit: 'animated fadeOut'
         },
+        newest_on_top: true,
     });
 }
 
@@ -103,11 +107,12 @@ function Notify_Action(data)
             from: "top",
             align: "center"
         },
-        timer: 1500,
+        timer: 2000,
         animate: {
             enter: 'animated fadeInDown',
             exit: 'animated fadeOut'
         },
+        newest_on_top: true,
     });
 }
 
