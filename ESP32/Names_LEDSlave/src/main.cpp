@@ -47,8 +47,15 @@ void setup() {
     TurnOffAllLeds();
 }
 
+unsigned long previousMillis = 0;        // will store last time LED was updated
+const long interval = 8;           // interval at which to blink (milliseconds)
+
 void loop() {
-     
+  // unsigned long currentMillis = millis();
+  // if (currentMillis - previousMillis >= interval) {      
+  //     previousMillis = currentMillis;
+
+  // }
   if (newMessage) {    
     ProcessMessage();
     indx = 0;    
@@ -88,7 +95,7 @@ void ProcessMessage()
 
 void ShowName(int name, int speed)
 {
-    for (int i = nameLedBegin[name]; i < nameLedBegin[name] + nameLedAmount[name]; i++)
+  for (int i = nameLedBegin[name]; i < nameLedBegin[name] + nameLedAmount[name]; i++)
     {
         for (int b = 0; b < BRIGHTNESS; b += speed)
         {
@@ -97,6 +104,19 @@ void ShowName(int name, int speed)
         }   
     }   
 }
+
+// void ShowName(int name, int speed) {
+//   static unsigned long lastUpdate = 0;
+//   static uint16_t currentLed = 0;
+ 
+//   unsigned long now = millis();
+//   if (now > lastUpdate+speed) {
+//     leds[currentLed].green = 10;
+//     FastLED.show(); 
+//     currentLed = currentLed > NUM_LEDS ? 0 : currentLed+1;
+//     lastUpdate = now;
+//   }
+// }
 
 void TurnOffAllLeds()
 {
