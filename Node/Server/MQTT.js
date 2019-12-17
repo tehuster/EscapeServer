@@ -9,7 +9,7 @@ class MQTT extends EventEmitter
         super()
         this.settings = {
             type: 'mqtt',
-            host: '192.168.1.208',
+            host: '192.168.1.94', //'192.168.1.94' NUC @ Home   '192.168.1.208' PC @ Home
             port: 1883
         }; 
         this.broker;
