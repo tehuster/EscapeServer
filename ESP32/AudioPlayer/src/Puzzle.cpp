@@ -17,7 +17,7 @@ void Puzzle::Reset()
 void Puzzle::LoadPuzzle(Preferences p)
 {
   delay(1000);
-  Serial2.begin(9600, SERIAL_8N1, 32, 33);
+  Serial2.begin(9600, SERIAL_8N1, 33, 32);
   delay(1000);
   preferences = p;
   preferences.begin("puzzle", false);

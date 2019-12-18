@@ -21,6 +21,7 @@ volatile boolean newMessage;
 #define BRIGHTNESS 128
 
 #define DATA_PIN A0
+#define READYREADY_PIN A1
 
 CRGB leds[NUM_LEDS];
 const int ledAmount = NUM_LEDS;
@@ -45,6 +46,8 @@ void setup() {
     newMessage = false;
     SPI.attachInterrupt(); 
     TurnOffAllLeds();
+    pinMode(READYREADY_PIN, OUTPUT); // have to send on master in so it set as output
+    digitalWrite(READYREADY_PIN, HIGH);
 }
 
 unsigned long previousMillis = 0;        // will store last time LED was updated
@@ -56,10 +59,12 @@ void loop() {
   //     previousMillis = currentMillis;
 
   // }
-  if (newMessage) {    
+  if (newMessage) {   
+    digitalWrite(READYREADY_PIN, LOW);
     ProcessMessage();
     indx = 0;    
-    newMessage = false;     
+    newMessage = false;    
+    digitalWrite(READYREADY_PIN, HIGH); 
   } 
 }
 

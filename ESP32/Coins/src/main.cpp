@@ -9,7 +9,7 @@ MQTTClient mqtt;
 Preferences preferences;
 Puzzle puzzle;
 
-const char *mqtt_server = "192.168.1.208";
+const char *mqtt_server = "192.168.1.94";
 String clientId = "Coins";
 String subscribers[4] = {"Data", "Action", "Get", "Set"};
 
@@ -66,22 +66,39 @@ void HandleAction(String payload)
   {
     puzzle.Reset();
     response = "Reset";
-  }
-  else if(name == "PlayAudio")
+  }else if(name == "Open")
   {
-    // puzzle.PlayAudio(value.toInt());
-    //String status = puzzle.CheckStatus();
-    //response = status;
-  }
-  else if(name == "SetVolume")
+    puzzle.Open();
+    response = "Open";
+  }else if(name == "Close")
   {
-    //puzzle.SetVolume(value.toInt());
-    response = "SetVolume: " + value;
-  }
-  else if(name == "CheckStatus")
+    puzzle.Close();
+    response = "Close";
+  }else if(name == "Toggle")
   {
-    //String status = puzzle.CheckStatus();
-    //response = status;
+    puzzle.Toggle();
+    response = "Toggle";
+  }else if(name == "SetOpenValue")
+  {
+    puzzle.SetOpenValue(value.toInt());
+    int value =  puzzle.GetOpenValue();
+    response = String(value);
+  }
+  else if(name == "SetClosedValue")
+  {
+    puzzle.SetClosedValue(value.toInt());
+    int value = puzzle.GetClosedValue();
+    response = String(value);
+  }
+  else if(name == "GetOpenValue")
+  {
+    int value =  puzzle.GetOpenValue();
+    response = String(value);
+  }
+  else if(name == "GetClosedValue")
+  {
+    int value = puzzle.GetClosedValue();
+    response = String(value);
   }
   else
   {
