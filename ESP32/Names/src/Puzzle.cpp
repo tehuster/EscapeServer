@@ -10,6 +10,11 @@ const long interval = 1000;           // interval at which to blink (millisecond
 
 void Puzzle::Loop()
 {
+    int value = digitalRead(33);
+    if(value == LOW)
+    {
+        Serial.println("Slave is busy!");
+    }
     // unsigned long currentMillis = millis();
     // if (currentMillis - previousMillis >= interval) {
     //     // save the last time you blinked the LED
@@ -61,6 +66,7 @@ void Puzzle::LoadPuzzle(Preferences p)
     digitalWrite(32, HIGH); 
 
     pinMode(34, INPUT);
+    pinMode(33, INPUT);
 
     //10 (SS), 11 (MOSI), 12 (MISO), 13 (SCK)
     //32     , 15       , 16         14
