@@ -1,6 +1,12 @@
 #include <Arduino.h>
 #include <Puzzle.h>
 
+unsigned long previousMillis = 0;        // will store last time LED was updated
+const long interval = 100;           // interval at which to blink (milliseconds)
+bool newTag = false;
+uint8_t counter = 0;
+uint8_t resetTime = 50;
+
 void Puzzle::Loop()
 {
   success = rfid->readPassiveTargetID(PN532_MIFARE_ISO14443A, uid, &uidLength, 30);
@@ -17,8 +23,24 @@ void Puzzle::Loop()
       Serial.println(rfidTag);
       mqtt->publish(clientId + "/Event", rfidTag, true, 1);
       Toggle();
+      newTag = true;
+      counter = 0;
     }
     old_rfidTag = rfidTag;    
+  }
+
+  unsigned long currentMillis = millis();
+  if (currentMillis - previousMillis >= interval) {      
+      previousMillis = currentMillis;
+      if(newTag)
+      {
+        counter ++;
+        if(counter > resetTime)
+        {
+          old_rfidTag = "";
+          newTag = false;
+        }
+      }
   }
 }
 
