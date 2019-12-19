@@ -25,20 +25,10 @@ void InitMQTT();
 void WiFiEvent(WiFiEvent_t event);
 static bool eth_connected = false;
 
-// TaskHandle_t TaskA;
-// void Task1(void * parameter);
 
 void setup()
 {
   Serial.begin(115200);
-  // xTaskCreatePinnedToCore(
-  //  Task1,                  /* pvTaskCode */
-  //  "Workload1",            /* pcName */
-  //  1000,                   /* usStackDepth */
-  //  NULL,                   /* pvParameters */
-  //  1,                      /* uxPriority */
-  //  &TaskA,                 /* pxCreatedTask */
-  //  0);                     /* xCoreID */
   
   pinMode(2, OUTPUT);
   pinMode(34, INPUT);  
@@ -51,13 +41,6 @@ void loop()
     MQTT_Update();
     puzzle.Loop();    
 }
-
-// void Task1(void * parameter)
-// {
-//   for (;;) {
-//       puzzle.Loop();
-//   }
-// }
 
 ///////////////////// TOPICS ///////////////////
 
@@ -89,8 +72,36 @@ void HandleAction(String payload)
     puzzle.TurnOffLeds();
     mqtt.publish(clientId + "/Response/Action", "Turning off LEDS", true, 1);
   }
-  else
+  else if(name == "Hint")
   {
+    puzzle.Hint(value.toInt());
+    String response = "Showing hint: " + value;
+    mqtt.publish(clientId + "/Response/Action", response, true, 1);
+  }
+  else if(name == "SetBrightness")
+  {
+    puzzle.SetBrightness(value.toInt());
+    String response = String(puzzle.GetBrightness());
+    mqtt.publish(clientId + "/Response/Action", response, true, 1);
+  }
+  else if(name == "SetWriteSpeed")
+  {
+    puzzle.SetWriteSpeed(value.toInt());
+    String response = String(puzzle.GetWriteSpeed());
+    mqtt.publish(clientId + "/Response/Action", response, true, 1);
+  }
+  else if(name == "GetBrightness")
+  {
+    String response = String(puzzle.GetBrightness());
+    mqtt.publish(clientId + "/Response/Action", response, true, 1);
+  }
+  else if(name == "GetWriteSpeed")
+  {
+    String response = String(puzzle.GetWriteSpeed());
+    mqtt.publish(clientId + "/Response/Action", response, true, 1);
+  }
+  else
+  {    
     Serial.print("Requested unknown action: ");
     Serial.println(name);
     mqtt.publish(clientId + "/Response/Action", "Unknown Action", true, 1);

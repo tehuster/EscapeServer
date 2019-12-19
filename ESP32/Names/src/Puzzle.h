@@ -6,25 +6,20 @@
 //47, 98 - 145
 //42, 146 - 188
 //39, 189 - 228
-//45    229 - 274
+//45  229 - 274
 
-
-
-#define SETLED 0
-#define SHOWLEDS 1
+#define TURNOFFLEDS 0 
+#define SHOWNAME    1
+#define HINT        2
+#define BRIGHTNESS  3
+#define COLOR_R     10
+#define COLOR_G     11
+#define COLOR_B     12
+#define WRITESPEED  13
+#define ENDMESSAGE 255
 
 #define NUM_LEDS 274
-#define BRIGHTNESS 200  //TODO: Brightness action for slave
-
-enum Name
-{
-    Tiny = 0,
-    Small = 1,
-    Medium = 2,
-    Big = 3,
-    Huge = 4,
-    Enourmous = 5
-};
+#define BRIGHTNESSVALUE 200  //TODO: Brightness action for slave
 
 class Puzzle
 {
@@ -32,30 +27,28 @@ public:
     void LoadPuzzle(Preferences p);
     void Reset();
     void Loop();
-
+    
     void TurnOffLeds();
-    void ShowName(int name);
-    void Hint();
+    void ShowName(uint8_t name);
+    void Hint(uint8_t type);
+    void SetBrightness(uint8_t bright);
+    void SetWriteSpeed(uint8_t speed);
+    uint8_t GetBrightness();
+    uint8_t GetWriteSpeed();
+    void SetColor_R(uint8_t value);
+    void SetColor_G(uint8_t value);
+    void SetColor_B(uint8_t value);
 
 private:
     Preferences preferences;
 
-    //54,  0  - 54
-    //42,  55 - 97
-    //47, 98 - 145
-    //42, 146 - 188
-    //39, 189 - 228
-    //45    229 - 274
-    
-    const int ledAmount = NUM_LEDS;
-    const int nameLedAmount[6] = {54, 42, 47, 42, 39, 45};
-    const int nameLedBegin[6] = {0, 55, 98, 146, 189, 229}; //Do we need this? It's current nameLedAmount + the previous ones?
+    uint8_t brightness;
+    uint8_t writeSpeed;
 
-    int writeSpeed = 10;
-    void WriteName(int start, int length, int speed);
-    void FlowName(int start, int length, int speed);
-    void StampName(int start, int length);
-
-    void SetLed(int ledIndex, int r, int g, int b);
-    void ShowLeds();
+    uint8_t bufferIndex = 0;
+    uint8_t rfidBuffer[64];
+    const uint8_t msgSize = 3;
+    void WriteBuffer(uint8_t cmd);
+    void SendBuffer();
+    void PrintBuffer();
 };

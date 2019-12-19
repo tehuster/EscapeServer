@@ -16,9 +16,15 @@ volatile boolean newMessage;
 #define TURNOFFLEDS 0 
 #define SHOWNAME    1
 #define HINT        2
+#define BRIGHTNESS  3
+#define COLOR_R     10
+#define COLOR_G     11
+#define COLOR_B     12
+#define WRITESPEED  13
+#define ENDMESSAGE 255
 
 #define NUM_LEDS 274
-#define BRIGHTNESS 128
+
 
 #define DATA_PIN A0
 #define READYREADY_PIN A1
@@ -27,18 +33,22 @@ CRGB leds[NUM_LEDS];
 const int ledAmount = NUM_LEDS;
 const int nameLedAmount[6] = {54, 42, 47, 42, 39, 45};
 const int nameLedBegin[6] = {0, 55, 98, 146, 189, 229}; //Do we need this? It's current nameLedAmount + the previous ones?
-const int writeSpeed = 10;
+int writeSpeed = 10;
+int brightness = 64;
 
 void ProcessMessage();
-void ShowName(int name, int speed);
+void ShowName(uint8_t name, uint8_t speed);
 void TurnOffAllLeds();
+void ShowHint(uint8_t type);
+void SetBrightness(uint8_t bright);
+void SetWriteSpeed(uint8_t speed);
 
 void setup() {
     Serial.begin (115200);
     Serial.println("Names: LED SLAVE..");
    	delay(2000);
     FastLED.addLeds<WS2811, DATA_PIN, RGB>(leds, NUM_LEDS);
-    FastLED.setBrightness(BRIGHTNESS);
+    FastLED.setBrightness(brightness);
     delay(1000);
     pinMode(MISO, OUTPUT); // have to send on master in so it set as output
     SPCR |= _BV(SPE); // turn on SPI in slave mode
@@ -54,11 +64,6 @@ unsigned long previousMillis = 0;        // will store last time LED was updated
 const long interval = 8;           // interval at which to blink (milliseconds)
 
 void loop() {
-  // unsigned long currentMillis = millis();
-  // if (currentMillis - previousMillis >= interval) {      
-  //     previousMillis = currentMillis;
-
-  // }
   if (newMessage) {   
     digitalWrite(READYREADY_PIN, LOW);
     ProcessMessage();
@@ -85,24 +90,48 @@ void ProcessMessage()
       TurnOffAllLeds();
       break;
     case SHOWNAME:
-      ShowName(value, 50);
-      FastLED.show();
+      ShowName(value, writeSpeed);
       break;
     case HINT:
-      leds[value] = CRGB::Green;
-      FastLED.show();
-      break;    
+      ShowHint(value);
+      break;  
+    case BRIGHTNESS:
+      SetBrightness(value);
+      break; 
+     case WRITESPEED:
+      SetWriteSpeed(value);
+      break;  
     default:
       Serial.println("Unknown Command: " + String(command));
       break;
     }
 }
 
-void ShowName(int name, int speed)
+void ShowHint(uint8_t type)
 {
+    Serial.println("Showing Hint");
+}
+
+void SetBrightness(uint8_t bright)
+{
+    Serial.println("Setting Brightness");
+    brightness = bright;
+    FastLED.setBrightness(brightness);
+    FastLED.show();
+}
+
+void SetWriteSpeed(uint8_t speed)
+{
+    Serial.println("Setting WriteSpeed");
+    writeSpeed = speed;
+}
+
+void ShowName(uint8_t name, uint8_t speed)
+{
+  Serial.println("Showing Name");
   for (int i = nameLedBegin[name]; i < nameLedBegin[name] + nameLedAmount[name]; i++)
     {
-        for (int b = 0; b < BRIGHTNESS; b += speed)
+        for (int b = 0; b < brightness; b += speed)
         {
             leds[i].green = b;
             FastLED.show();
@@ -110,21 +139,9 @@ void ShowName(int name, int speed)
     }   
 }
 
-// void ShowName(int name, int speed) {
-//   static unsigned long lastUpdate = 0;
-//   static uint16_t currentLed = 0;
- 
-//   unsigned long now = millis();
-//   if (now > lastUpdate+speed) {
-//     leds[currentLed].green = 10;
-//     FastLED.show(); 
-//     currentLed = currentLed > NUM_LEDS ? 0 : currentLed+1;
-//     lastUpdate = now;
-//   }
-// }
-
 void TurnOffAllLeds()
 {
+  Serial.println("TurnOffAllLeds");
   for(int i = 0; i < NUM_LEDS; i++) {       
       leds[i] = CRGB::Black;
   }  
@@ -135,7 +152,7 @@ ISR (SPI_STC_vect) {
   int c = SPDR; // read byte from SPI Data Register
   if (indx < sizeof buff) {
     buff [indx++] = c; 
-    if ( c == '\n') 
+    if ( c == ENDMESSAGE) 
         newMessage = true;
   }
 }
