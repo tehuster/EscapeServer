@@ -13,9 +13,9 @@ block scripts
 
 block content
     .kt-container.kt-container--fluid.kt-grid__item.kt-grid__item--fluid
-        .row
-            .col-xl-4
-                each device in devices
+        .row            
+            each device in devices
+                .col-xl-4
                     // begin::Portlet
                     .kt-portlet.kt-portlet--tabs
                         .kt-portlet__head
