@@ -1,8 +1,13 @@
 #include <Arduino.h>
 #include <Puzzle.h>
 
+#define SHORTKNOCK 0
+#define LONGKNOCK 1
+#define END 2
+
 unsigned long previousMillis = 0;        // will store last time LED was updated
-const long interval = 1;          // interval at which to blink (milliseconds)
+unsigned long currentMillis = 0;
+const long interval = 10;          // interval at which to blink (milliseconds)
 
 bool knocked = false;
 bool debounce = false;
@@ -17,19 +22,21 @@ int knockTarget[3][6] = {
   {SHORTKNOCK, SHORTKNOCK, SHORTKNOCK, END, END, END},
   {SHORTKNOCK, SHORTKNOCK, SHORTKNOCK, SHORTKNOCK, END, END},
   {SHORTKNOCK, SHORTKNOCK, SHORTKNOCK, SHORTKNOCK, SHORTKNOCK, END}
-}
+};
 
 int knockSequence[32];
 int knockIndex = 0;
 
-#define SHORTKNOCK 0
-#define LONGKNOCK 1
-#define END 2
 
 
 void Puzzle::Loop()
 {
     int knockValue = analogRead(4);
+
+    if(knockValue > 0)
+    {
+       Serial.println(knockValue);
+    }    
 
     if(knockValue > 1000  && debounce)
     {
@@ -50,6 +57,8 @@ void Puzzle::Loop()
         debounce = false;
     }
 
+
+    currentMillis = millis();
     if(currentMillis - previousMillis > interval)
     {
         counter ++;
@@ -57,7 +66,7 @@ void Puzzle::Loop()
         if(counter > longKnockTresshold)
         {
             Serial.println("TIMEOUT");
-            CheckTarget();
+            //CheckTarget();
             counter = 0;
             knockIndex = 0;            
         }
