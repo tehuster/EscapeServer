@@ -65,7 +65,9 @@ void HandleAction(String payload)
   {
     puzzle.ShowName(value.toInt());
     String response = "Showing name: " + value;
+    String progress = value + "/15";
     mqtt.publish(clientId + "/Response/Action", response, true, 1);
+    mqtt.publish(clientId + "/Progress", progress, true, 1);
   }
   else if(name == "TurnOffLeds")
   {

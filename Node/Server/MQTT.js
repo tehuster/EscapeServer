@@ -96,6 +96,7 @@ class MQTT extends EventEmitter
         };
           
         this.publisher.publish(`${deviceName}/${type}`, `${name}/${value}`, settings, () => {
+
             console.log(`Message send: ${deviceName}/${type}, ${name}/${value}`)   
         });
     }
