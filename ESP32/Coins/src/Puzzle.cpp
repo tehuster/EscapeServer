@@ -5,7 +5,7 @@ unsigned long previousMillis = 0;        // will store last time LED was updated
 const long interval = 100;           // interval at which to blink (milliseconds)
 bool newTag = false;
 uint8_t counter = 0;
-uint8_t resetTime = 50;
+uint8_t resetTime = 10;
 
 void Puzzle::Loop()
 {

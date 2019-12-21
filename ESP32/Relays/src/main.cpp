@@ -10,7 +10,7 @@ Preferences preferences;
 Puzzle puzzle;
 
 const char *mqtt_server = "192.168.2.76";
-String clientId = "Coins";
+String clientId = "Knocker";
 String subscribers[4] = {"Data", "Action", "Get", "Set"};
 
 void HandleData(String payload);
@@ -66,39 +66,26 @@ void HandleAction(String payload)
   {
     puzzle.Reset();
     response = "Reset";
-  }else if(name == "Open")
-  {
-    puzzle.Open();
-    response = "Open";
-  }else if(name == "Close")
-  {
-    puzzle.Close();
-    response = "Close";
-  }else if(name == "Toggle")
-  {
-    puzzle.Toggle();
-    response = "Toggle";
-  }else if(name == "SetOpenValue")
-  {
-    puzzle.SetOpenValue(value.toInt());
-    int value =  puzzle.GetOpenValue();
-    response = String(value);
   }
-  else if(name == "SetClosedValue")
+  else if(name == "TurnOnLight")
   {
-    puzzle.SetClosedValue(value.toInt());
-    int value = puzzle.GetClosedValue();
-    response = String(value);
+      puzzle.TurnOnLight(value.toInt());
   }
-  else if(name == "GetOpenValue")
+  else if(name == "TurnOffLight")
   {
-    int value =  puzzle.GetOpenValue();
-    response = String(value);
+      puzzle.TurnOffLight(value.toInt());
   }
-  else if(name == "GetClosedValue")
+  else if(name == "OpenDoor")
   {
-    int value = puzzle.GetClosedValue();
-    response = String(value);
+      puzzle.OpenDoor(value.toInt());
+  }
+  else if(name == "CloseDoor")
+  {
+      puzzle.CloseDoor(value.toInt());
+  }
+  else if(name == "KnockHint")
+  {
+      puzzle.KnockHint(value.toInt());
   }
   else
   {

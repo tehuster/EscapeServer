@@ -38,8 +38,8 @@ private:
     String clientId;   
     String old_rfidTag;
 
-    int open = 6000;
-    int closed = 3200;
+    int open = 3200;
+    int closed = 6000;
 
     uint8_t success;
     uint8_t uid[7] = { 0, 0, 0, 0, 0, 0, 0 };  // Buffer to store the returned UID    
