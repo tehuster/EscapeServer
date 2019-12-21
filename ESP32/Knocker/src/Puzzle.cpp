@@ -59,12 +59,16 @@ void Puzzle::Loop()
                 knockIndex++;
             }
         }
+        if(knockIndex > 31)
+        {
+            knockIndex = 31;
+        }
         counter = 0;
         debounce = false;
     }
 
     currentMillis = millis();
-    
+
     if (currentMillis - previousMillis > interval)
     {
         previousMillis = currentMillis;
@@ -77,12 +81,12 @@ void Puzzle::Loop()
                 if (CheckTarget())
                 {
                     phase++;
-                    Serial.print("Phase: ");
-                    Serial.print(phase);
-                    Serial.println(" completed!");
+                    String eventMessage = "Completed: " + String(phase);
+                    String progressMessage = String(phase) + "/33";
+                    mqtt->publish(clientId + "/Event", eventMessage, true, 1);
+                    mqtt->publish(clientId + "/Progress", progressMessage, true, 1);                       
                     if (phase > 2)
-                    {
-                        Serial.println("We're done here! Waiting for reset!");
+                    {                       
                         completed = true;
                     }
                 }
