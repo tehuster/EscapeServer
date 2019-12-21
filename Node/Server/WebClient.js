@@ -14,7 +14,7 @@ class WebClient {
       app.use(express.static(path.join(__dirname, '/view')))
       app.set('view engine', 'pug')
 
-      this.ip = networkInterfaces.Ethernet[1].address;
+      this.ip = '192.168.2.76'; //networkInterfaces.Ethernet[1].address;
       this.server = require('http').Server(app)
       this.initRoutes(app)
       this.initServer()

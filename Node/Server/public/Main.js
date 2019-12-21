@@ -25,6 +25,9 @@ socket.on('webclient', function (data) {
         case 'action':
                 Notify_Action(data);
             break;
+        case 'progress':
+            Notify_Action(data);
+            break;
         default:
             console.log(`Unknown server type message: ${data.type}`)            
     }

@@ -94,6 +94,11 @@ mqtt.on('notification', (data) => {
          notification_color = 'warning';
          saveNotification = true;
          break;
+      case 'Progress':
+         socketHandler.io.emit('webclient', { type: 'progress', event: data })
+         notification_color = 'brand';
+         saveNotification = true;
+         break;
       default:
          console.log(`Unknown topic type: ${data.topic_type}`)                   
    }

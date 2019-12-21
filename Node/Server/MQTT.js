@@ -9,7 +9,7 @@ class MQTT extends EventEmitter
         super()
         this.settings = {
             type: 'mqtt',
-            host: '192.168.1.208', //'192.168.1.94' NUC @ Home   '192.168.1.208' PC @ Home
+            host: '192.168.1.94', //'192.168.1.94' NUC @ Home   '192.168.1.208' PC @ Home
             port: 1883
         }; 
         this.broker;
@@ -89,19 +89,15 @@ class MQTT extends EventEmitter
     }
 
     sendMessage(deviceName, type, name, value)
-    {
-        let message = {
-            topic: `${deviceName}/${type}`,
-            payload: `${name}/${value}`, // or a Buffer
-            qos: 1, // 0, 1, or 2
+    {    
+        let settings = {           
+            qos: 2, // 0, 1, or 2
             retain: false // or true
         };
           
-        this.publisher.publish(message, function() {
+        this.publisher.publish(`${deviceName}/${type}`, `${name}/${value}`, settings, () => {
             console.log(`Message send: ${deviceName}/${type}, ${name}/${value}`)   
         });
-            
-        // this.publisher.publish(`${deviceName}/${type}`, `${name}/${value}`)
     }
 }
 
