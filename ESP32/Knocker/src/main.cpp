@@ -4,14 +4,20 @@
 #include <Puzzle.h>
 #include <SPI.h>
 
+const int IO_1_SS = 32;
+const int IO_2_SS = 13;
+
+MCP IO_1(0, IO_1_SS);            
+MCP IO_2(0, IO_2_SS); 
+
 WiFiClient ethernetConnection;
 MQTTClient mqtt;
 Preferences preferences;
 Puzzle puzzle;
 
-const char *mqtt_server = "192.168.2.76";
-String clientId = "Coins";
-String subscribers[4] = {"Data", "Action", "Get", "Set"};
+const char *mqtt_server = "192.168.1.94";
+String clientId = "Knocker";
+String subscribers[4] = {"Data", "Action", "Get", "Set"};           
 
 void HandleData(String payload);
 void HandleAction(String payload);
@@ -31,16 +37,51 @@ unsigned long runTime = 0;
 void setup()
 {
   Serial.begin(115200);
-  
-  pinMode(2, OUTPUT);
-  pinMode(34, INPUT);  
+  pinMode(IO_1_SS, OUTPUT);
+  digitalWrite(IO_1_SS, HIGH);
+
+  pinMode(IO_2_SS, OUTPUT);
+  digitalWrite(IO_2_SS, HIGH);
+   
+  IO_1.begin();
+  IO_2.begin();
+
+  for (int i = 1; i < 9; i++) {    
+    IO_1.pinMode(i, LOW);      // Use bit-write mode to Set all of the current pin on outputchip to be an output
+  }
+  for (int i = 9; i < 16; i++) {    // Since we are only workign with one bit at a time, use a loop to take action each pin (0-15)
+    IO_1.pinMode(i, HIGH);      // Use bit-write mode to set all of the current pin on inputchip to be inputs
+    IO_1.pullupMode(i, HIGH);   // Use bit-write mode to Turn on the internal pull-up resistor for the current pin
+    IO_1.inputInvert(i, LOW);  // Use bit-write mode to invert the input so that logic 0 is read as HIGH
+  }
+
+  for (int i = 1; i < 9; i++) {    
+    IO_2.pinMode(i, LOW);      // Use bit-write mode to Set all of the current pin on outputchip to be an output
+  }
+  for (int i = 9; i < 16; i++) {    // Since we are only workign with one bit at a time, use a loop to take action each pin (0-15)
+    IO_2.pinMode(i, HIGH);      // Use bit-write mode to set all of the current pin on inputchip to be inputs
+    IO_2.pullupMode(i, HIGH);   // Use bit-write mode to Turn on the internal pull-up resistor for the current pin
+    IO_2.inputInvert(i, LOW);  // Use bit-write mode to invert the input so that logic 0 is read as HIGH
+  }
+
+  pinMode(4, INPUT);
+
   InitMQTT(); 
-  puzzle.LoadPuzzle(preferences);  
+  puzzle.LoadIO(&IO_1, &IO_2);
   puzzle.LoadMQTT(&mqtt, clientId);  
+  puzzle.LoadPuzzle(preferences);  
 }
 
 void loop()
 { 
+    // for (int i = 1; i < 9; i++)
+    // {
+    //   IO_1.digitalWrite(i, HIGH);
+    //   delay(250);
+    //   IO_1.digitalWrite(i, LOW);
+    //   delay(250);
+    // }
+    
     runTime = millis();
     MQTT_Update();
     puzzle.Loop();    
@@ -66,39 +107,26 @@ void HandleAction(String payload)
   {
     puzzle.Reset();
     response = "Reset";
-  }else if(name == "Open")
-  {
-    puzzle.Open();
-    response = "Open";
-  }else if(name == "Close")
-  {
-    puzzle.Close();
-    response = "Close";
-  }else if(name == "Toggle")
-  {
-    puzzle.Toggle();
-    response = "Toggle";
-  }else if(name == "SetOpenValue")
-  {
-    puzzle.SetOpenValue(value.toInt());
-    int value =  puzzle.GetOpenValue();
-    response = String(value);
   }
-  else if(name == "SetClosedValue")
+  else if(name == "TurnOnLight")
   {
-    puzzle.SetClosedValue(value.toInt());
-    int value = puzzle.GetClosedValue();
-    response = String(value);
+      puzzle.TurnOnLight(value.toInt());
   }
-  else if(name == "GetOpenValue")
+  else if(name == "TurnOffLight")
   {
-    int value =  puzzle.GetOpenValue();
-    response = String(value);
+      puzzle.TurnOffLight(value.toInt());
   }
-  else if(name == "GetClosedValue")
+  else if(name == "OpenDoor")
   {
-    int value = puzzle.GetClosedValue();
-    response = String(value);
+      puzzle.OpenDoor(value.toInt());
+  }
+  else if(name == "CloseDoor")
+  {
+      puzzle.CloseDoor(value.toInt());
+  }
+  else if(name == "KnockHint")
+  {
+      puzzle.KnockHint(value.toInt());
   }
   else
   {
@@ -252,7 +280,7 @@ void InitMQTT()
   mqtt.begin(mqtt_server, ethernetConnection);
   String willTopic = clientId + "/Error";
   mqtt.setWill(willTopic.c_str(), "Device disconnected", true, 2);  //<-----------------
-  mqtt.setOptions(5, true, 777);
+  mqtt.setOptions(2, true, 777);
   mqtt.onMessage(MessageReceived);
 }
 
