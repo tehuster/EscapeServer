@@ -90,8 +90,18 @@ class MQTT extends EventEmitter
 
     sendMessage(deviceName, type, name, value)
     {
-        console.log(`Sending request: ${deviceName}/${type}, ${name}/${value}`)        
-        this.publisher.publish(`${deviceName}/${type}`, `${name}/${value}`)
+        let message = {
+            topic: `${deviceName}/${type}`,
+            payload: `${name}/${value}`, // or a Buffer
+            qos: 1, // 0, 1, or 2
+            retain: false // or true
+        };
+          
+        this.publisher.publish(message, function() {
+            console.log(`Message send: ${deviceName}/${type}, ${name}/${value}`)   
+        });
+            
+        // this.publisher.publish(`${deviceName}/${type}`, `${name}/${value}`)
     }
 }
 
