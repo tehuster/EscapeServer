@@ -47,4 +47,6 @@ class Puzzle
         String clientId;
         MCP *IO_1;
         MCP *IO_2;
+
+        bool CheckTarget();
 };
