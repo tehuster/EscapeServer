@@ -33,6 +33,7 @@ CRGB leds[NUM_LEDS];
 const int ledAmount = NUM_LEDS;
 const int nameLedAmount[6] = {54, 42, 47, 42, 39, 45};
 const int nameLedBegin[6] = {0, 55, 98, 146, 189, 229}; //Do we need this? It's current nameLedAmount + the previous ones?
+
 int writeSpeed = 10;
 int brightness = 64;
 
@@ -107,9 +108,29 @@ void ProcessMessage()
     }
 }
 
+#define LODEWEIJCK 0
+#define HENDRIK 1
+#define CATHARINA 2
+#define RUDOLF 3
+#define BERNARD 4
+#define CORNELIA 5
+#define JOHANNES 6
+
+#define MURDERER 7
+#define SYMBOLS 8
+
 void ShowHint(uint8_t type)
 {
-    Serial.println("Showing Hint");
+    if(type < MURDERER)
+    {
+
+    }else if(type == MURDERER)
+    {
+
+    }else if(type == SYMBOLS)
+    {
+      
+    }
 }
 
 void SetBrightness(uint8_t bright)
