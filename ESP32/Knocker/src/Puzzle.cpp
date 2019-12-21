@@ -32,6 +32,19 @@ int knockIndex = 0;
 
 void Puzzle::Loop()
 {
+    Knocker();
+
+    // // uint8_t sit_status_1 = IO_1->digitalRead(SIT_SENSOR_1);
+    // // uint8_t sit_status_2 = !IO_1->digitalRead(SIT_SENSOR_2);
+
+    // // Serial.print("1: ");
+    // // Serial.print(sit_status_1);
+    // // Serial.print(" 2: ");
+    // // Serial.println(sit_status_2);
+}
+
+void Puzzle::Knocker()
+{
     if (completed)
     {
         return;
@@ -100,14 +113,6 @@ void Puzzle::Loop()
             debounce = true;
         }
     }
-
-    // // uint8_t sit_status_1 = IO_1->digitalRead(SIT_SENSOR_1);
-    // // uint8_t sit_status_2 = !IO_1->digitalRead(SIT_SENSOR_2);
-
-    // // Serial.print("1: ");
-    // // Serial.print(sit_status_1);
-    // // Serial.print(" 2: ");
-    // // Serial.println(sit_status_2);
 }
 
 bool Puzzle::CheckTarget()
@@ -144,15 +149,26 @@ bool Puzzle::CheckTarget()
 
 void Puzzle::Reset()
 {
+    phase = 0;
+
     Serial.println("Resetting puzzle");
+    // IO_1->digitalWrite(DOOR_1, HIGH);
+    // IO_1->digitalWrite(DOOR_2, HIGH);
+    // IO_1->digitalWrite(KNOCKER, LOW);
+    // IO_1->digitalWrite(LIGHT_REBUS, LOW);
+    IO_2->digitalWrite(LIGHT_1, LOW);
+    IO_2->digitalWrite(LIGHT_2, LOW);
+    IO_2->digitalWrite(LIGHT_3, LOW);
+}
+
+void Puzzle::LoadIO(MCP *_IO_1, MCP *_IO_2)
+{
+    IO_1 = _IO_1;
+    IO_2 = _IO_2; 
 }
 
 void Puzzle::LoadPuzzle(Preferences p)
 {
-    delay(1000);
-    Serial2.begin(9600, SERIAL_8N1, 32, 33);
-    delay(1000);
-
     preferences = p;
     // preferences.begin("puzzle", false);
     // open = preferences.getUInt("open", 0);
@@ -161,36 +177,9 @@ void Puzzle::LoadPuzzle(Preferences p)
     // Serial.println(open);
     // Serial.print("Loaded [closed] : ");
     // Serial.println(closed);
-    // preferences.end();
+    // preferences.end();    
 
-    //TURN OF CHIPSELECT FOR IO EXPANDER
-    pinMode(IO_1_SS, OUTPUT);
-    digitalWrite(IO_1_SS, HIGH);
-
-    pinMode(IO_2_SS, OUTPUT);
-    digitalWrite(IO_2_SS, HIGH);
-
-    pinMode(34, INPUT);
-
-    IO_1 = new MCP(0, IO_2_SS);
-    IO_2 = new MCP(0, IO_1_SS);
-
-    IO_1->begin();
-    IO_1->pinMode(DOOR_1, OUTPUT);
-    IO_1->pinMode(DOOR_2, OUTPUT);
-    IO_1->pinMode(KNOCKER, OUTPUT);
-    IO_1->pinMode(LIGHT_REBUS, OUTPUT);
-
-    IO_1->pinMode(SIT_SENSOR_1, INPUT);
-    IO_1->pullupMode(SIT_SENSOR_1, HIGH);
-    IO_1->pinMode(SIT_SENSOR_2, INPUT);
-    IO_1->pullupMode(SIT_SENSOR_2, HIGH);
-
-    IO_2->begin();
-    IO_2->pinMode(LIGHT_1, OUTPUT);
-    IO_2->pinMode(LIGHT_2, OUTPUT);
-    IO_2->pinMode(LIGHT_3, OUTPUT);
-
+    
     pinMode(4, INPUT);
 }
 
@@ -204,7 +193,7 @@ void Puzzle::TurnOffLight(uint8_t lamp)
 {
     if (lamp == 4)
     {
-        IO_1->digitalWrite(lamp, LOW);
+        // IO_1->digitalWrite(lamp, LOW);
     }
     else if (lamp < 4)
     {
@@ -215,23 +204,23 @@ void Puzzle::TurnOffLight(uint8_t lamp)
 void Puzzle::TurnOnLight(uint8_t lamp)
 {
     if (lamp == 4)
-    {
-        IO_1->digitalWrite(lamp, HIGH);
+    {  
+        // IO_1->digitalWrite(lamp, HIGH);
     }
     else if (lamp < 4)
-    {
+    {  
         IO_2->digitalWrite(lamp, HIGH);
     }
 }
 
 void Puzzle::OpenDoor(uint8_t door)
 {
-    IO_1->digitalWrite(door, LOW);
+    // IO_1->digitalWrite(door, LOW);
 }
 
 void Puzzle::CloseDoor(uint8_t door)
 {
-    IO_1->digitalWrite(door, HIGH);
+    // IO_1->digitalWrite(door, HIGH);
 }
 
 void Puzzle::KnockHint(uint8_t knockAmount)
@@ -239,9 +228,9 @@ void Puzzle::KnockHint(uint8_t knockAmount)
     for (int i = 0; i < knockAmount; i++)
     {
         int knockInterval = random(100, 500);
-        IO_1->digitalWrite(KNOCKER, HIGH);
+        // IO_1->digitalWrite(KNOCKER, HIGH);
         delay(knockInterval);
-        IO_1->digitalWrite(KNOCKER, LOW);
+        // IO_1->digitalWrite(KNOCKER, LOW);
         delay(knockInterval);
     }
 }

@@ -3,9 +3,6 @@
 #include <MQTT.h>
 #include <MCP23S17.h>
 
-#define IO_1_SS 13
-#define IO_2_SS 32
-
 #define DOOR_1 1
 #define DOOR_2 2
 
@@ -29,6 +26,8 @@ class Puzzle
         void Reset();
         void Loop();
 
+        void LoadIO(MCP *_IO_1, MCP *_IO_2);
+
         void TurnOnLight(uint8_t lamp);
         void TurnOffLight(uint8_t lamp);
         void OpenDoor(uint8_t door);
@@ -48,5 +47,6 @@ class Puzzle
         MCP *IO_1;
         MCP *IO_2;
 
+        void Knocker();
         bool CheckTarget();
 };
