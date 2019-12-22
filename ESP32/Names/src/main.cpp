@@ -8,7 +8,7 @@ MQTTClient mqtt;
 Preferences preferences;
 Puzzle puzzle;
 
-const char *mqtt_server = "192.168.1.94";
+const char *mqtt_server = "192.168.2.3";
 String clientId = "Names";
 String subscribers[4] = {"Data", "Action", "Get", "Set"};
 

@@ -8,9 +8,12 @@ MQTTClient mqtt;
 Preferences preferences;
 Puzzle puzzle;
 
-const char *mqtt_server = "192.168.1.94";
+const char *mqtt_server = "192.168.2.3";
 String clientId = "AudioPlayer";
 String subscribers[4] = {"Data", "Action", "Get", "Set"};
+
+const int IO_1_SS = 13;
+MCP IO_1(0, IO_1_SS); 
 
 void HandleData(String payload);
 void HandleAction(String payload);
@@ -31,9 +34,25 @@ void setup()
 {
   Serial.begin(115200);
   
+  pinMode(IO_1_SS, OUTPUT);
+  digitalWrite(IO_1_SS, HIGH);
+
+  IO_1.begin();
+
+  for (int i = 1; i < 9; i++) {    
+    IO_1.pinMode(i, LOW);      // Use bit-write mode to Set all of the current pin on outputchip to be an output
+  }
+  for (int i = 9; i < 16; i++) {    // Since we are only workign with one bit at a time, use a loop to take action each pin (0-15)
+    IO_1.pinMode(i, HIGH);      // Use bit-write mode to set all of the current pin on inputchip to be inputs
+    IO_1.pullupMode(i, HIGH);   // Use bit-write mode to Turn on the internal pull-up resistor for the current pin
+    IO_1.inputInvert(i, LOW);  // Use bit-write mode to invert the input so that logic 0 is read as HIGH
+  }
+  
   pinMode(2, OUTPUT);
   pinMode(34, INPUT);  
+
   InitMQTT(); 
+  puzzle.LoadIO(&IO_1);
   puzzle.LoadPuzzle(preferences);  
   puzzle.LoadMQTT(&mqtt, clientId);  
 }
@@ -65,6 +84,20 @@ void HandleAction(String payload)
   {
     puzzle.Reset();
     response = "Reset";
+  }
+  else if(name == "OpenDrawer")
+  {
+    puzzle.OpenDrawer();
+    String status = "Opening Drawer";
+    response = status;
+    Serial.println("Opening Drawer");
+  }
+  else if(name == "CloseDrawer")
+  {
+    puzzle.CloseDrawer();
+    String status = "Closing Drawer";
+    response = status;    
+    Serial.println("Closing Drawer");
   }
   else if(name == "PlayAudio")
   {

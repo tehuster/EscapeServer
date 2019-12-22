@@ -4,7 +4,7 @@
 #include <Puzzle.h>
 #include <SPI.h>
 
-const int IO_1_SS = 32;
+const int IO_1_SS = 33;
 const int IO_2_SS = 13;
 
 MCP IO_1(0, IO_1_SS);            
@@ -15,7 +15,7 @@ MQTTClient mqtt;
 Preferences preferences;
 Puzzle puzzle;
 
-const char *mqtt_server = "192.168.1.94";
+const char *mqtt_server = "192.168.2.3";
 String clientId = "Knocker";
 String subscribers[4] = {"Data", "Action", "Get", "Set"};           
 

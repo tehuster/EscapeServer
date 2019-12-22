@@ -23,8 +23,8 @@ int shortKnockTresshold = 45;
 int longKnockTresshold = 160;
 
 int knockTarget[3][6] = {
-    {STARTKNOCK, LONGKNOCK, SHORTKNOCK, LONGKNOCK, SHORTKNOCK, END},
-    {STARTKNOCK, SHORTKNOCK, SHORTKNOCK, SHORTKNOCK, END, END},
+    {STARTKNOCK, SHORTKNOCK, SHORTKNOCK, END, END, END},
+    {STARTKNOCK, SHORTKNOCK, SHORTKNOCK, SHORTKNOCK, SHORTKNOCK, END},
     {STARTKNOCK, SHORTKNOCK, SHORTKNOCK, SHORTKNOCK, SHORTKNOCK, END}};
 
 int knockSequence[32];
@@ -52,10 +52,15 @@ void Puzzle::Knocker()
 
     int knockValue = analogRead(4);
 
-    if (knockValue > 500 && debounce)
+    // if(knockValue  > 50){
+    //     // Serial.println(knockValue);
+    // }    
+
+    if (knockValue > 50 && debounce)
     {
         if (knockIndex == 0)
         {
+            Serial.println("STARTKNOCK");
             knockSequence[knockIndex] = STARTKNOCK;
             knockIndex++;
         }
@@ -63,11 +68,13 @@ void Puzzle::Knocker()
         {
             if (counter < shortKnockTresshold)
             {
+                Serial.println("SHORTKNOCK");
                 knockSequence[knockIndex] = SHORTKNOCK;
                 knockIndex++;
             }
             else if (counter < longKnockTresshold)
             {
+                Serial.println("LONGKNOCK");
                 knockSequence[knockIndex] = LONGKNOCK;
                 knockIndex++;
             }
@@ -96,6 +103,7 @@ void Puzzle::Knocker()
                     phase++;
                     String eventMessage = "Completed: " + String(phase);
                     String progressMessage = String(phase) + "/33";
+                    Serial.println(eventMessage);                    
                     mqtt->publish(clientId + "/Event", eventMessage, true, 1);
                     mqtt->publish(clientId + "/Progress", progressMessage, true, 1);                       
                     if (phase > 2)
@@ -138,7 +146,8 @@ bool Puzzle::CheckTarget()
 
     if (knockIndex > knockTargetAmount || knockIndex < knockTargetAmount)
     {
-        Serial.println("Too many/few knocks");
+        Serial.print(knockIndex);
+        Serial.println(" : Too many/few knocks");
         Serial.print("Correct Amount shoud be: ");
         Serial.println(knockTargetAmount);
         correctSequence = false;
@@ -150,12 +159,13 @@ bool Puzzle::CheckTarget()
 void Puzzle::Reset()
 {
     phase = 0;
+    completed = false;
 
     Serial.println("Resetting puzzle");
-    // IO_1->digitalWrite(DOOR_1, HIGH);
-    // IO_1->digitalWrite(DOOR_2, HIGH);
-    // IO_1->digitalWrite(KNOCKER, LOW);
-    // IO_1->digitalWrite(LIGHT_REBUS, LOW);
+    IO_1->digitalWrite(DOOR_1, HIGH);
+    IO_1->digitalWrite(DOOR_2, HIGH);
+    IO_1->digitalWrite(KNOCKER, LOW);
+    IO_1->digitalWrite(LIGHT_REBUS, LOW);
     IO_2->digitalWrite(LIGHT_1, LOW);
     IO_2->digitalWrite(LIGHT_2, LOW);
     IO_2->digitalWrite(LIGHT_3, LOW);
@@ -193,7 +203,7 @@ void Puzzle::TurnOffLight(uint8_t lamp)
 {
     if (lamp == 4)
     {
-        // IO_1->digitalWrite(lamp, LOW);
+        IO_1->digitalWrite(lamp, LOW);
     }
     else if (lamp < 4)
     {
@@ -205,7 +215,7 @@ void Puzzle::TurnOnLight(uint8_t lamp)
 {
     if (lamp == 4)
     {  
-        // IO_1->digitalWrite(lamp, HIGH);
+        IO_1->digitalWrite(lamp, HIGH);
     }
     else if (lamp < 4)
     {  
@@ -215,24 +225,24 @@ void Puzzle::TurnOnLight(uint8_t lamp)
 
 void Puzzle::OpenDoor(uint8_t door)
 {
-    // IO_1->digitalWrite(door, LOW);
+    IO_1->digitalWrite(door, LOW);
 }
 
 void Puzzle::CloseDoor(uint8_t door)
 {
-    // IO_1->digitalWrite(door, HIGH);
+    IO_1->digitalWrite(door, HIGH);
 }
 
 void Puzzle::KnockHint(uint8_t knockAmount)
 {
-    for (int i = 0; i < knockAmount; i++)
-    {
-        int knockInterval = random(100, 500);
-        // IO_1->digitalWrite(KNOCKER, HIGH);
-        delay(knockInterval);
-        // IO_1->digitalWrite(KNOCKER, LOW);
-        delay(knockInterval);
-    }
+    // for (int i = 0; i < knockAmount; i++)
+    // {
+    //     int knockInterval = 250;
+    //     IO_1->digitalWrite(1, HIGH);
+    //     delay(knockInterval);
+    //     IO_1->digitalWrite(1, LOW);
+    //     delay(knockInterval);
+    // }
 }
 
 // void Puzzle::SetOpenValue(int value)
