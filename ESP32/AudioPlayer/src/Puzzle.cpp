@@ -29,6 +29,11 @@ void Puzzle::LoadPuzzle(Preferences p)
   InitAudio();
 }
 
+void Puzzle::LoadIO(MCP *_IO_1)
+{
+    IO_1 = _IO_1;
+}
+
 void Puzzle::LoadMQTT(MQTTClient *mqttClient, String _clientId)
 {
   clientId = _clientId;
@@ -99,6 +104,16 @@ void Puzzle::PlayAudio(byte num)
   Serial.println(num);
   audio.play(num);
   isPlaying = true;
+}
+
+void Puzzle::OpenDrawer()
+{
+    IO_1->digitalWrite(3, LOW);    
+}
+
+void Puzzle::CloseDrawer()
+{
+    IO_1->digitalWrite(3, HIGH);
 }
 
 void Puzzle::printDetail(uint8_t type, int value)

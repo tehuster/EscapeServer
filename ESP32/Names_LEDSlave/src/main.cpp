@@ -23,7 +23,7 @@ volatile boolean newMessage;
 #define WRITESPEED  13
 #define ENDMESSAGE 255
 
-#define NUM_LEDS 274
+#define NUM_LEDS 313
 
 
 #define DATA_PIN A0
@@ -31,8 +31,8 @@ volatile boolean newMessage;
 
 CRGB leds[NUM_LEDS];
 const int ledAmount = NUM_LEDS;
-const int nameLedAmount[6] = {54, 42, 47, 42, 39, 45};
-const int nameLedBegin[6] = {0, 55, 98, 146, 189, 229}; //Do we need this? It's current nameLedAmount + the previous ones?
+const int nameLedAmount[7] = {54, 42, 47, 42,   43, 39, 49};
+const int nameLedBegin[7] = {0, 55, 98, 146,    189, 233, 273}; //Do we need this? It's current nameLedAmount + the previous ones?
 
 int writeSpeed = 10;
 int brightness = 64;
