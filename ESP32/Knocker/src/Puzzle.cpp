@@ -25,7 +25,7 @@ int longKnockTresshold = 160;
 int knockTarget[3][6] = {
     {STARTKNOCK, SHORTKNOCK, SHORTKNOCK, END, END, END},
     {STARTKNOCK, SHORTKNOCK, SHORTKNOCK, SHORTKNOCK, SHORTKNOCK, END},
-    {STARTKNOCK, SHORTKNOCK, SHORTKNOCK, SHORTKNOCK, SHORTKNOCK, END}};
+    {STARTKNOCK, LONGKNOCK, LONGKNOCK, SHORTKNOCK, SHORTKNOCK, END}};
 
 int knockSequence[32];
 int knockIndex = 0;
@@ -52,11 +52,11 @@ void Puzzle::Knocker()
 
     int knockValue = analogRead(4);
 
-    // if(knockValue  > 50){
-    //     // Serial.println(knockValue);
-    // }    
+    if(knockValue  > 50){
+        // Serial.println(knockValue);
+    }    
 
-    if (knockValue > 50 && debounce)
+    if (knockValue > 100 && debounce)
     {
         if (knockIndex == 0)
         {
