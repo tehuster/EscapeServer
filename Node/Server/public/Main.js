@@ -14,19 +14,19 @@ socket.on('webclient', function (data) {
             location.reload();
             break;
         case 'event':
-                Notify_Event(data);
+                // Notify_Event(data);
             break;
         case 'response':
-                Notify_Response(data);
+                // Notify_Response(data);
             break;
         case 'error':
                 Notify_Error(data);
             break;
         case 'action':
-                Notify_Action(data);
+                // Notify_Action(data);
             break;
         case 'progress':
-            Notify_Action(data);
+                // Notify_Action(data);
             break;
         default:
             console.log(`Unknown server type message: ${data.type}`)            

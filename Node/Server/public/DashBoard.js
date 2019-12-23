@@ -14,7 +14,7 @@ socket.on('webclient', function (data) {
 function NewGame()
 {
     ResetUI(); 
-    // ResetPuzzles();
+    ResetPuzzles();
 }
 
 function ResetUI()
@@ -27,11 +27,22 @@ function ResetUI()
     // setTotal(totalProgress)
     setNames(namesProgress)
     setKnocker(knockerProgress)
-    setWorld(worldProgress)
+    // setWorld(worldProgress)
 
     for (let i = 0; i < 7; i++) {
         setIcon('names', i, 'waiting')   
     }
+
+    for (let i = 1; i < 4; i++) {
+        setIcon('knocker', i, 'waiting')   
+    }
+}
+
+function ResetPuzzles()
+{
+    ExecuteAction("Knocker","Reset", null);
+    ExecuteAction("Names","TurnOffLeds", null);
+    ExecuteAction("AudioPlayer","CloseDrawer", null);
 }
 
 function UpdateProgress(data)
@@ -46,15 +57,15 @@ function UpdateProgress(data)
             setIcon('names', data.event.payload_0, 'completed');
             break;
         case 'Knocker':
-            kockerProgress += data.event.payload_1 * 1
+            knockerProgress += data.event.payload_1 * 1
             setKnocker();    
-            setIcon('names', data.event.payload_0, 'completed');
+            setIcon('knocker', data.event.payload_0, 'completed');
             break;    
-        case 'World':
-            worldProgress += data.event.payload_1 * 1
-            setWorld()   
-            setIcon('names', data.event.payload_0, 'completed');        
-            break;
+        // case 'World':
+        //     worldProgress += data.event.payload_1 * 1
+        //     setWorld()   
+        //     setIcon('names', data.event.payload_0, 'completed');        
+        //     break;
         default:
             break;
     } 
@@ -91,11 +102,11 @@ function setKnocker()
     knockerProgressTextElement.innerHTML = '%' + knockerProgress;
 }
 
-function setWorld()
-{
-    worldProgressElement.setAttribute("style", `width: ${worldProgress}%`);
-    worldProgressTextElement.innerHTML   =  '%' + worldProgress;
-}
+// function setWorld()
+// {
+//     worldProgressElement.setAttribute("style", `width: ${worldProgress}%`);
+//     worldProgressTextElement.innerHTML   =  '%' + worldProgress;
+// }
 
 function setIcon(name, index, status)
 {

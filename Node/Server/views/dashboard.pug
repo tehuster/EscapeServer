@@ -4,9 +4,9 @@ block title
     | Dashboard
 
 block subheader
-    .kt-subheader__toolbar   
-        span.kt-widget4__number.kt-font-info.kt-font-bold 
-            | Timeleft:  60:00          
+    //- .kt-subheader__toolbar   
+    //-     span.kt-widget4__number.kt-font-info.kt-font-bold 
+    //-         | Timeleft:  60:00          
     .kt-subheader__toolbar                    
         .kt-subheader__wrapper      
             button.btn.btn-success.btn-sm(type="button" onclick=`NewGame()`) New Game
@@ -20,7 +20,7 @@ block content
     .kt-portlet
         .kt-portlet__body.kt-portlet__body--fit
             .row.row-no-padding.row-col-separator-lg
-                .col-md-12.col-lg-6.col-xl-3
+                .col-md-12.col-lg-6.col-xl-6
                     // begin::New Feedbacks
                     .kt-widget24
                         .kt-widget24__details
@@ -28,9 +28,9 @@ block content
                                 h4.kt-widget24__title
                                     | Names
                                 span.kt-widget24__desc
-                                    | Document with names
-                            span.kt-widget24__stats.kt-font-warning
-                                | Johannes
+                                    | List with names
+                            //- span.kt-widget24__stats.kt-font-warning
+                            //-     | Johannes
                         .progress.progress--sm
                             #progress_names.progress-bar.kt-bg-warning(role="progressbar" style="width: 84%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100")
                         .kt-widget24__action
@@ -39,7 +39,7 @@ block content
                             span#progress_names_text.kt-widget24__number
                                 | 84%
                     // end::New Feedbacks
-                .col-md-12.col-lg-6.col-xl-3
+                .col-md-12.col-lg-6.col-xl-6
                     // begin::New Orders
                     .kt-widget24
                         .kt-widget24__details
@@ -48,8 +48,8 @@ block content
                                     | Knocker
                                 span.kt-widget24__desc
                                     | Knock Puzzle
-                            span.kt-widget24__stats.kt-font-danger
-                                | 2nd Light
+                            //- span.kt-widget24__stats.kt-font-danger
+                            //-     | 2nd Light
                         .progress.progress--sm
                             #progress_knocker.progress-bar.kt-bg-danger(role="progressbar" style="width: 69%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100")
                         .kt-widget24__action
@@ -58,25 +58,25 @@ block content
                             span#progress_knocker_text.kt-widget24__number
                                 | 69%
                     // end::New Orders
-                .col-md-12.col-lg-6.col-xl-3
-                    // begin::New Users
-                    .kt-widget24
-                        .kt-widget24__details
-                            .kt-widget24__info
-                                h4.kt-widget24__title
-                                    | World
-                                span.kt-widget24__desc
-                                    | Map of the world
-                            span.kt-widget24__stats.kt-font-success
-                                | Africa
-                        .progress.progress--sm
-                            #progress_world.progress-bar.kt-bg-success(role="progressbar" style="width: 90%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100")
-                        .kt-widget24__action
-                            span.kt-widget24__change
-                                | Progress
-                            span#progress_world_text.kt-widget24__number
-                                | 90%
-                    // end::New Users
+                //- .col-md-12.col-lg-6.col-xl-3
+                //-     // begin::New Users
+                //-     .kt-widget24
+                //-         .kt-widget24__details
+                //-             .kt-widget24__info
+                //-                 h4.kt-widget24__title
+                //-                     | World
+                //-                 span.kt-widget24__desc
+                //-                     | Map of the world
+                //-             span.kt-widget24__stats.kt-font-success
+                //-                 | Africa
+                //-         .progress.progress--sm
+                //-             #progress_world.progress-bar.kt-bg-success(role="progressbar" style="width: 90%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100")
+                //-         .kt-widget24__action
+                //-             span.kt-widget24__change
+                //-                 | Progress
+                //-             span#progress_world_text.kt-widget24__number
+                //-                 | 90%
+                //-     // end::New Users
     //ROW
     .row
         //NAMES
@@ -102,15 +102,9 @@ block content
                                         p.kt-widget4__username(href="#")
                                             | Overview
                                         p.kt-widget4__text
-                                            | need to learn words...
-                                    button.btn.btn-outline-hover-warning.btn-icon(type="button" onclick=`ExecuteAction("Names","TurnOffLeds","0")`)
-                                        i.flaticon-star
+                                            | Turn Off Leds
                                     button.btn.btn-outline-hover-danger.btn-icon(type="button" onclick=`ExecuteAction("Names","TurnOffLeds","0")`)
-                                        i.flaticon-avatar                                
-                                    button.btn.btn-outline-hover-info.btn-icon(type="button" onclick=`ExecuteAction("Names","TurnOffLeds","0")`)
-                                        i.flaticon2-exclamation
-                                    button.btn.btn-outline-hover-success.btn-icon(type="button" onclick=`ExecuteAction("Names","TurnOffLeds","0")`)
-                                        i.flaticon2-accept
+                                        i.flaticon-star
                                 .kt-widget4__item
                                     .kt-widget4__pic.kt-widget4__pic--pic
                                         h1#names_icon_0.flaticon-refresh.kt-font-brand
@@ -119,7 +113,7 @@ block content
                                             | Lodeweijck Pieters
                                         p.kt-widget4__text
                                             | Gravestone
-                                    button.btn.btn-outline-hover-info.btn-icon(type="button" onclick=`ExecuteAction("Names","ShowName","0")`)
+                                    button.btn.btn-outline-hover-info.btn-icon(type="button" onclick=`ExecuteAction("AudioPlayer","PlayAudio","2")`)
                                         i.flaticon2-exclamation
                                     button.btn.btn-outline-hover-success.btn-icon(type="button" onclick=`ExecuteAction("Names","ShowName","0")`)
                                         i.flaticon2-accept
@@ -131,7 +125,7 @@ block content
                                             | Hendrik van den Bosch
                                         p.kt-widget4__text
                                             | Worldmap
-                                    button.btn.btn-outline-hover-info.btn-icon(type="button" onclick=`ExecuteAction("Names","ShowName","1")`)
+                                    button.btn.btn-outline-hover-info.btn-icon(type="button" onclick=`ExecuteAction("AudioPlayer","PlayAudio","3")`)
                                         i.flaticon2-exclamation
                                     button.btn.btn-outline-hover-success.btn-icon(type="button" onclick=`ExecuteAction("Names","ShowName","1")`)
                                         i.flaticon2-accept
@@ -143,7 +137,7 @@ block content
                                             | Catharina van den Bosch
                                         p.kt-widget4__text
                                             | Bible
-                                    button.btn.btn-outline-hover-info.btn-icon(type="button" onclick=`ExecuteAction("Names","ShowName","2")`)
+                                    button.btn.btn-outline-hover-info.btn-icon(type="button" onclick=`ExecuteAction("AudioPlayer","PlayAudio","4")`)
                                         i.flaticon2-exclamation
                                     button.btn.btn-outline-hover-success.btn-icon(type="button" onclick=`ExecuteAction("Names","ShowName","2")`)
                                         i.flaticon2-accept
@@ -155,7 +149,7 @@ block content
                                             | Rudolf Verhagen
                                         p.kt-widget4__text
                                             | Scale
-                                    button.btn.btn-outline-hover-info.btn-icon(type="button" onclick=`ExecuteAction("Names","ShowName","3")`)
+                                    button.btn.btn-outline-hover-info.btn-icon(type="button" onclick=`ExecuteAction("AudioPlayer","PlayAudio","5")`)
                                         i.flaticon2-exclamation
                                     button.btn.btn-outline-hover-success.btn-icon(type="button" onclick=`ExecuteAction("Names","ShowName","3")`)
                                         i.flaticon2-accept
@@ -167,7 +161,7 @@ block content
                                             | Bernard Willemsen
                                         p.kt-widget4__text
                                             | Maria
-                                    button.btn.btn-outline-hover-info.btn-icon(type="button" onclick=`ExecuteAction("Names","ShowName","4")`)
+                                    button.btn.btn-outline-hover-info.btn-icon(type="button" onclick=`ExecuteAction("AudioPlayer","PlayAudio","6")`)
                                         i.flaticon2-exclamation
                                     button.btn.btn-outline-hover-success.btn-icon(type="button" onclick=`ExecuteAction("Names","ShowName","4")`)
                                         i.flaticon2-accept
@@ -179,7 +173,7 @@ block content
                                             | Cornelia Rouwenhorst
                                         p.kt-widget4__text
                                             | Piano
-                                    button.btn.btn-outline-hover-info.btn-icon(type="button" onclick=`ExecuteAction("Names","ShowName","5")`)
+                                    button.btn.btn-outline-hover-info.btn-icon(type="button" onclick=`ExecuteAction("AudioPlayer","PlayAudio","7")`)
                                         i.flaticon2-exclamation
                                     button.btn.btn-outline-hover-success.btn-icon(type="button" onclick=`ExecuteAction("Names","ShowName","5")`)
                                         i.flaticon2-accept
@@ -191,7 +185,7 @@ block content
                                             | Johannes Adriaansen
                                         p.kt-widget4__text
                                             | Church
-                                    button.btn.btn-outline-hover-info.btn-icon(type="button" onclick=`ExecuteAction("Names","ShowName","6")`)
+                                    button.btn.btn-outline-hover-info.btn-icon(type="button" onclick=`ExecuteAction("AudioPlayer","PlayAudio","1")`)
                                         i.flaticon2-exclamation
                                     button.btn.btn-outline-hover-success.btn-icon(type="button" onclick=`ExecuteAction("Names","ShowName","6")`)
                                         i.flaticon2-accept
@@ -218,72 +212,96 @@ block content
                                         p.kt-widget4__username(href="#")
                                             | Overview
                                         p.kt-widget4__text
-                                            | need to learn words...
-                                    button.btn.btn-outline-hover-warning.btn-icon(type="button" onclick='ExecuteAction("AudioPlayer","CheckStatus",15)')
-                                        i.flaticon-star
-                                    button.btn.btn-outline-hover-danger.btn-icon(type="button" onclick='ExecuteAction("AudioPlayer","CheckStatus",15)')
-                                        i.flaticon-avatar                                
-                                    button.btn.btn-outline-hover-info.btn-icon(type="button" onclick='ExecuteAction("AudioPlayer","CheckStatus",15)')
-                                        i.flaticon2-exclamation
-                                    button.btn.btn-outline-hover-success.btn-icon(type="button" onclick='ExecuteAction("AudioPlayer","CheckStatus",15)')
-                                        i.flaticon2-accept
+                                            | Reset Knocker
+                                    button.btn.btn-outline-hover-danger.btn-icon(type="button" onclick='ExecuteAction("Knocker","Reset", null)')
+                                        i.flaticon-star                                    
                                 .kt-widget4__item
                                     .kt-widget4__pic.kt-widget4__pic--pic
-                                        h1.flaticon-refresh.kt-font-brand
+                                        h1#knocker_icon_1.flaticon-refresh.kt-font-brand
                                     .kt-widget4__info
                                         p.kt-widget4__username(href="#")
                                             | Light #1
                                         p.kt-widget4__text
-                                            | Symbol: Code 
-                                    button.btn.btn-outline-hover-info.btn-icon(type="button" onclick='ExecuteAction("AudioPlayer","CheckStatus",15)')
-                                        i.flaticon2-exclamation
-                                    button.btn.btn-outline-hover-success.btn-icon(type="button" onclick='ExecuteAction("AudioPlayer","CheckStatus",15)')
+                                            | Symbol of murderer: 3                                     
+                                    button.btn.btn-outline-hover-success.btn-icon(type="button" onclick='ExecuteAction("Knocker","TurnOnLight", "1"); setIcon("knocker", "0", "completed")')
                                         i.flaticon2-accept
                                 .kt-widget4__item
                                     .kt-widget4__pic.kt-widget4__pic--pic
-                                        h1.flaticon-refresh.kt-font-brand
+                                        h1#knocker_icon_2.flaticon-refresh.kt-font-brand
                                     .kt-widget4__info
                                         p.kt-widget4__username(href="#")
                                             | Light #2
                                         p.kt-widget4__text
-                                            | RIP: Code 
-                                    button.btn.btn-outline-hover-info.btn-icon(type="button" onclick='ExecuteAction("AudioPlayer","CheckStatus",15)')
-                                        i.flaticon2-exclamation
-                                    button.btn.btn-outline-hover-success.btn-icon(type="button" onclick='ExecuteAction("AudioPlayer","CheckStatus",15)')
+                                            | Date of death: 5                                    
+                                    button.btn.btn-outline-hover-success.btn-icon(type="button" onclick='ExecuteAction("Knocker","TurnOnLight", "2"); setIcon("knocker", "1", "completed")')
+                                        i.flaticon2-accept
+                                .kt-widget4__item
+                                    .kt-widget4__pic.kt-widget4__pic--pic
+                                        h1#knocker_icon_3.flaticon-refresh.kt-font-brand
+                                    .kt-widget4__info
+                                        p.kt-widget4__username(href="#")
+                                            | Light #3
+                                        p.kt-widget4__text
+                                            | Audio: - - . . .                                     
+                                    button.btn.btn-outline-hover-success.btn-icon(type="button" onclick='ExecuteAction("Knocker","TurnOnLight", "3"); setIcon("knocker", "2", "completed")')
                                         i.flaticon2-accept
                                 .kt-widget4__item
                                     .kt-widget4__pic.kt-widget4__pic--pic
                                         h1.flaticon-refresh.kt-font-brand
                                     .kt-widget4__info
                                         p.kt-widget4__username(href="#")
-                                            | Light #3
+                                            | Drawer
                                         p.kt-widget4__text
-                                            | Audio: Code 
-                                    button.btn.btn-outline-hover-info.btn-icon(type="button" onclick='ExecuteAction("AudioPlayer","CheckStatus",15)')
-                                        i.flaticon2-exclamation
-                                    button.btn.btn-outline-hover-success.btn-icon(type="button" onclick='ExecuteAction("AudioPlayer","CheckStatus",15)')
+                                            | Open last panel:                                     
+                                    button.btn.btn-outline-hover-success.btn-icon(type="button" onclick='ExecuteAction("AudioPlayer","OpenDrawer", "null")')
                                         i.flaticon2-accept
-        //WORLDMAP
         .col-xl-4 
-            // begin:: Widgets/New Users
             .kt-portlet.kt-portlet--tabs.kt-portlet--height-fluid
                 .kt-portlet__head
                     .kt-portlet__head-label
                         h3.kt-portlet__head-title
-                            | Worldmap
+                            | Coins
                     .kt-portlet__head-toolbar
                         ul.nav.nav-tabs.nav-tabs-line.nav-tabs-bold.nav-tabs-line-brand(role="tablist")
                             li.nav-item
-                                a.nav-link.active(data-toggle="tab" href="#kt_world_tab1_content" role="tab")
-                                    | Status
-                            li.nav-item
-                                a.nav-link(data-toggle="tab" href="#kt_world_tab2_content" role="tab")
+                                a.nav-link.active(data-toggle="tab" href="#kt_coins_tab2_content" role="tab")
                                     | Actions
                 .kt-portlet__body
-                    .tab-content
-                        #kt_world_tab1_content.tab-pane.active
-                            h3
-                                | Coming soon                          
-                        #kt_world_tab2_content.tab-pane
-                            h3
-                                | Coming soon              
+                    .tab-content                             
+                        #kt_coins_tab2_content.tab-pane.active
+                            .kt-widget4
+                                .kt-widget4__item
+                                    .kt-widget4__pic.kt-widget4__pic--pic
+                                        h1#knocker_icon_1.flaticon-refresh.kt-font-brand
+                                    .kt-widget4__info
+                                        p.kt-widget4__username(href="#")
+                                            | Coin Servo
+                                        p.kt-widget4__text
+                                            | Open Servo if coin thing is stuck with other coin                                
+                                    button.btn.btn-outline-hover-success.btn-icon(type="button" onclick='ExecuteAction("Coins","Toggle", "null");')
+                                        i.flaticon2-accept                                   
+                                                           
+        //- //WORLDMAP
+        //- .col-xl-4 
+        //-     // begin:: Widgets/New Users
+        //-     .kt-portlet.kt-portlet--tabs.kt-portlet--height-fluid
+        //-         .kt-portlet__head
+        //-             .kt-portlet__head-label
+        //-                 h3.kt-portlet__head-title
+        //-                     | Worldmap
+        //-             .kt-portlet__head-toolbar
+        //-                 ul.nav.nav-tabs.nav-tabs-line.nav-tabs-bold.nav-tabs-line-brand(role="tablist")
+        //-                     li.nav-item
+        //-                         a.nav-link.active(data-toggle="tab" href="#kt_world_tab1_content" role="tab")
+        //-                             | Status
+        //-                     li.nav-item
+        //-                         a.nav-link(data-toggle="tab" href="#kt_world_tab2_content" role="tab")
+        //-                             | Actions
+        //-         .kt-portlet__body
+        //-             .tab-content
+        //-                 #kt_world_tab1_content.tab-pane.active
+        //-                     h3
+        //-                         | Coming soon                          
+        //-                 #kt_world_tab2_content.tab-pane
+        //-                     h3
+        //-                         | Coming soon              
