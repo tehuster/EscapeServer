@@ -44,7 +44,7 @@ class Puzzle
         Preferences preferences;
         MQTTClient *mqtt;
         String clientId;
-        MCP *IO_1;
+        MCP *IO_RELAYBOARD;
         MCP *IO_2;
 
         void Knocker();

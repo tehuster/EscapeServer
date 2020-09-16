@@ -162,10 +162,10 @@ void Puzzle::Reset()
     completed = false;
 
     Serial.println("Resetting puzzle");
-    IO_1->digitalWrite(DOOR_1, HIGH);
-    IO_1->digitalWrite(DOOR_2, HIGH);
-    IO_1->digitalWrite(KNOCKER, LOW);
-    IO_1->digitalWrite(LIGHT_REBUS, LOW);
+    IO_RELAYBOARD->digitalWrite(DOOR_1, HIGH);
+    IO_RELAYBOARD->digitalWrite(DOOR_2, HIGH);
+    IO_RELAYBOARD->digitalWrite(KNOCKER, LOW);
+    IO_RELAYBOARD->digitalWrite(LIGHT_REBUS, LOW);
     IO_2->digitalWrite(LIGHT_1, LOW);
     IO_2->digitalWrite(LIGHT_2, LOW);
     IO_2->digitalWrite(LIGHT_3, LOW);
@@ -173,7 +173,7 @@ void Puzzle::Reset()
 
 void Puzzle::LoadIO(MCP *_IO_1, MCP *_IO_2)
 {
-    IO_1 = _IO_1;
+    IO_RELAYBOARD = _IO_1;
     IO_2 = _IO_2; 
 }
 
@@ -203,7 +203,7 @@ void Puzzle::TurnOffLight(uint8_t lamp)
 {
     if (lamp == 4)
     {
-        IO_1->digitalWrite(lamp, LOW);
+        IO_RELAYBOARD->digitalWrite(lamp, LOW);
     }
     else if (lamp < 4)
     {
@@ -215,7 +215,7 @@ void Puzzle::TurnOnLight(uint8_t lamp)
 {
     if (lamp == 4)
     {  
-        IO_1->digitalWrite(lamp, HIGH);
+        IO_RELAYBOARD->digitalWrite(lamp, HIGH);
     }
     else if (lamp < 4)
     {  
@@ -225,12 +225,12 @@ void Puzzle::TurnOnLight(uint8_t lamp)
 
 void Puzzle::OpenDoor(uint8_t door)
 {
-    IO_1->digitalWrite(door, LOW);
+    IO_RELAYBOARD->digitalWrite(door, LOW);
 }
 
 void Puzzle::CloseDoor(uint8_t door)
 {
-    IO_1->digitalWrite(door, HIGH);
+    IO_RELAYBOARD->digitalWrite(door, HIGH);
 }
 
 void Puzzle::KnockHint(uint8_t knockAmount)

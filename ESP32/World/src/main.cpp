@@ -4,20 +4,14 @@
 #include <Puzzle.h>
 #include <SPI.h>
 
-const int IO_1_SS = 32;
-const int IO_2_SS = 13;
-
-MCP IO_RELAYBOARD(0, IO_1_SS);            
-MCP IO_ONBOARD(0, IO_2_SS); 
-
 WiFiClient ethernetConnection;
 MQTTClient mqtt;
 Preferences preferences;
 Puzzle puzzle;
 
-const char *mqtt_server = "192.168.1.208";
-String clientId = "Knocker";
-String subscribers[4] = {"Data", "Action", "Get", "Set"};           
+const char *mqtt_server = "192.168.2.3";
+String clientId = "World";
+String subscribers[4] = {"Data", "Action", "Get", "Set"};
 
 void HandleData(String payload);
 void HandleAction(String payload);
@@ -37,56 +31,16 @@ unsigned long runTime = 0;
 void setup()
 {
   Serial.begin(115200);
-  pinMode(IO_1_SS, OUTPUT);
-  digitalWrite(IO_1_SS, HIGH);
-
-  pinMode(IO_2_SS, OUTPUT);
-  digitalWrite(IO_2_SS, HIGH);
-   
-  IO_RELAYBOARD.begin();
-
-  delay(500);
-
-  IO_ONBOARD.begin();
-
-  delay(500);
-
-  for (int i = 1; i < 9; i++) {    
-    IO_RELAYBOARD.pinMode(i, LOW);      // Use bit-write mode to Set all of the current pin on outputchip to be an output
-  }
-  for (int i = 9; i < 16; i++) {    // Since we are only workign with one bit at a time, use a loop to take action each pin (0-15)
-    IO_RELAYBOARD.pinMode(i, HIGH);      // Use bit-write mode to set all of the current pin on inputchip to be inputs
-    IO_RELAYBOARD.pullupMode(i, HIGH);   // Use bit-write mode to Turn on the internal pull-up resistor for the current pin
-    IO_RELAYBOARD.inputInvert(i, LOW);  // Use bit-write mode to invert the input so that logic 0 is read as HIGH
-  }
-
-  for (int i = 1; i < 9; i++) {    
-    IO_ONBOARD.pinMode(i, LOW);      // Use bit-write mode to Set all of the current pin on outputchip to be an output
-  }
-  for (int i = 9; i < 16; i++) {    // Since we are only workign with one bit at a time, use a loop to take action each pin (0-15)
-    IO_ONBOARD.pinMode(i, HIGH);      // Use bit-write mode to set all of the current pin on inputchip to be inputs
-    IO_ONBOARD.pullupMode(i, HIGH);   // Use bit-write mode to Turn on the internal pull-up resistor for the current pin
-    IO_ONBOARD.inputInvert(i, LOW);  // Use bit-write mode to invert the input so that logic 0 is read as HIGH
-  }
-
-  pinMode(4, INPUT);
-
+  
+  pinMode(2, OUTPUT);
+  pinMode(34, INPUT);  
   InitMQTT(); 
-  puzzle.LoadIO(&IO_RELAYBOARD, &IO_ONBOARD);
-  puzzle.LoadMQTT(&mqtt, clientId);  
   puzzle.LoadPuzzle(preferences);  
+  puzzle.LoadMQTT(&mqtt, clientId);  
 }
 
 void loop()
 { 
-    for (int i = 1; i < 9; i++)
-    {
-      IO_RELAYBOARD.digitalWrite(i, HIGH);
-      delay(50);
-      IO_RELAYBOARD.digitalWrite(i, LOW);
-      delay(50);
-    }
-    
     runTime = millis();
     MQTT_Update();
     puzzle.Loop();    
@@ -112,26 +66,6 @@ void HandleAction(String payload)
   {
     puzzle.Reset();
     response = "Reset";
-  }
-  else if(name == "TurnOnLight")
-  {
-      puzzle.TurnOnLight(value.toInt());
-  }
-  else if(name == "TurnOffLight")
-  {
-      puzzle.TurnOffLight(value.toInt());
-  }
-  else if(name == "OpenDoor")
-  {
-      puzzle.OpenDoor(value.toInt());
-  }
-  else if(name == "CloseDoor")
-  {
-      puzzle.CloseDoor(value.toInt());
-  }
-  else if(name == "KnockHint")
-  {
-      puzzle.KnockHint(value.toInt());
   }
   else
   {
@@ -280,12 +214,12 @@ void Connect()
 void InitMQTT()
 {
   WiFi.onEvent(WiFiEvent);
-  // ETH.begin();
+  ETH.begin();
 
   mqtt.begin(mqtt_server, ethernetConnection);
   String willTopic = clientId + "/Error";
   mqtt.setWill(willTopic.c_str(), "Device disconnected", true, 2);  //<-----------------
-  mqtt.setOptions(2, true, 777);
+  mqtt.setOptions(5, true, 777);
   mqtt.onMessage(MessageReceived);
 }
 
